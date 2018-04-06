@@ -1,18 +1,22 @@
 <?php
 namespace app\index\controller;
 
+use think\Controller;
 use think\Facade\Request;
 
-class Api
+class Api extends Controller
 {
     private $_appKeys = ["oa_attendance" => "1234567"];
 
     protected $request;
 
-    public function index()
+    public function __constructor()
     {
-        return json_encode("yeah~");
+        parent::__constructor();
+        //  允许跨域
+        header("Access-Control-Allow-Origin: *");
     }
+
     /**
      * 验证申请appToken
      *
@@ -27,6 +31,12 @@ class Api
             return false;
         }
     }
+
+    public function index()
+    {
+        return json_encode("yeah~");
+    }
+
     /**
      * Apps通过get_token换取认证app_token
      *
@@ -34,7 +44,6 @@ class Api
      */
     public function get_token()
     {
-        header("Access-Control-Allow-Origin: *");
 
         //  apps申请请求token
 
