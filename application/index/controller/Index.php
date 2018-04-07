@@ -13,10 +13,4 @@ class Index
         return 'hello,' . $name;
     }
 
-    public function api_get_token()
-    {
-        //  apps申请请求token
-        $token = $this->request->params("app_token");
-        return $token;
-    }
 }

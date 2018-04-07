@@ -1,20 +1,23 @@
 <?php
-namespace app\index\controller;
+namespace app\inforward\controller;
 
 use think\Controller;
+use think\Facade\Config;
 use think\Facade\Request;
+include_once '__DIR__/../../../../extend/weworkapi_php/api/src/CorpAPI.class.php';
 
 class Api extends Controller
 {
     private $_appKeys = ["oa_attendance" => "1234567"];
 
-    protected $request;
+    protected $request, $wxapi;
 
     public function __constructor()
     {
         parent::__constructor();
         //  允许跨域
-        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Origin:*");
+        //  加载wxword配置
     }
 
     /**
@@ -35,6 +38,17 @@ class Api extends Controller
     public function index()
     {
         return json_encode("yeah~");
+    }
+
+    /**
+     *
+     */
+    public function get_access_token()
+    {
+        $corpId = Config::get('app.wxwork_api.corp_id');
+        $corpSecret = Config::get('app.wxwork_api.corp_secret');
+        $wxapi = new \weworkapi_php\wxworkAPI($corpId,$corpSecret);
+        $wxapi->get_access_token();
     }
 
     /**
