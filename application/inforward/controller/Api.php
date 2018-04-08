@@ -4,6 +4,7 @@ namespace app\inforward\controller;
 use think\Controller;
 use think\Facade\Config;
 use think\Facade\Request;
+
 include_once '__DIR__/../../../../extend/weworkapi_php/api/src/CorpAPI.class.php';
 
 class Api extends Controller
@@ -18,6 +19,17 @@ class Api extends Controller
         //  允许跨域
         header("Access-Control-Allow-Origin:*");
         //  加载wxword配置
+    }
+
+    //  corp app connect
+    public function wx_work_connect()
+    {
+        header("Access-Control-Allow-Origin:*");
+
+        $corpId = $this->request->param('corp_id');
+        $corpSecret = $this->request->param('corp_secret');
+
+        return json(['token' => md5($corpId)]);
     }
 
     /**
@@ -35,9 +47,67 @@ class Api extends Controller
         }
     }
 
+    public function get_user_info()
+    {
+        header("Access-Control-Allow-Origin:*");
+        $userModel = [
+            "errcode" => 0,
+            "errmsg" => "ok",
+            "userid" => "zhangsan",
+            "name" => "李四",
+            "department" => [1, 2],
+            "order" => [1, 2],
+            "position" => "后台工程师",
+            "mobile" => "15913215421",
+            "gender" => "1",
+            "email" => "zhangsan@gzdev.com",
+            "isleader" => 1,
+            "avatar" => "http://wx.qlogo.cn/mmopen/ajNVdqHZLLA3WJ6DSZUfiakYe37PKnQhBIeOQBO4czqrnZDS79FH5Wm5m4X69TBicnHFlhiafvDwklOpZeXYQQ2icg/0",
+            "telephone" => "020-123456",
+            "english_name" => "jackzhang",
+            "extattr" => ["attrs" => [["name" => "爱好", "value" => "旅游"], ["name" => "卡号", "value" => "1234567234"]]],
+            "status" => 1,
+            "qr_code" => "https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=xxx",
+        ];
+        return json($userModel);
+        $userCode = $this->request->param("user_code");
+        $wxapi = $this->_weixinApi_init();
+        $result = $wxapi->GetUserInfoByCode($userCode);
+        //  返回数据
+        // {
+        //     "errcode": 0,
+        //     "errmsg": "ok",
+        //     "UserId":"USERID",
+        //     "DeviceId":"DEVICEID",
+        //     "user_ticket": "USER_TICKET"，
+        //     "expires_in":7200
+        //  }
+        if ($result['errcode'] === 0) {
+            //  没毛病,继续申请用户信息
+            $userInfo = $wxapi->GetUserDetailByUserTicket($result['user_ticket']);
+            return ($userInfo);
+        } else {
+            //  有毛病
+        }
+        return $result;
+    }
+
+    public function set_user_attendance(){
+        $restDays = $this->request->param('');
+        dump($restDays);
+    }
+
     public function index()
     {
         return json_encode("yeah~");
+    }
+
+    private function _weixinApi_init()
+    {
+        $config = Config::get('app.wxwork_api');
+        $corpId = $config['corp_id'];
+        $corpSecret = $config['corp_secret'];
+        return new \weworkapi_php\wxworkAPI($corpId, $corpSecret);
     }
 
     /**
@@ -47,7 +117,7 @@ class Api extends Controller
     {
         $corpId = Config::get('app.wxwork_api.corp_id');
         $corpSecret = Config::get('app.wxwork_api.corp_secret');
-        $wxapi = new \weworkapi_php\wxworkAPI($corpId,$corpSecret);
+        $wxapi = new \weworkapi_php\wxworkAPI($corpId, $corpSecret);
         $wxapi->get_access_token();
     }
 
