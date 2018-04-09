@@ -69,7 +69,7 @@ class Api extends Controller
             "status" => 1,
             "qr_code" => "https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=xxx",
         ];
-        return json($userModel);
+        // return json($userModel);
         $userCode = $this->request->param("user_code");
         $wxapi = $this->_weixinApi_init();
         $result = $wxapi->GetUserInfoByCode($userCode);
@@ -82,17 +82,18 @@ class Api extends Controller
         //     "user_ticket": "USER_TICKET"，
         //     "expires_in":7200
         //  }
+        
         if ($result['errcode'] === 0) {
             //  没毛病,继续申请用户信息
             $userInfo = $wxapi->GetUserDetailByUserTicket($result['user_ticket']);
-            return ($userInfo);
+            return json($userInfo);
         } else {
             //  有毛病
         }
-        return $result;
     }
 
-    public function set_user_attendance(){
+    public function set_user_attendance()
+    {
         $restDays = $this->request->param('');
         dump($restDays);
     }
@@ -104,9 +105,10 @@ class Api extends Controller
 
     private function _weixinApi_init()
     {
-        $config = Config::get('app.wxwork_api');
-        $corpId = $config['corp_id'];
-        $corpSecret = $config['corp_secret'];
+        $wxworkConfig = Config::get('app.wxwork_api');
+        $corpId = $wxworkConfig['corp_id'];
+        $corpConfig = Config::get('app.oa_attendance');
+        $corpSecret = $corpConfig['app_secret'];
         return new \weworkapi_php\wxworkAPI($corpId, $corpSecret);
     }
 
