@@ -69,7 +69,7 @@ class Api extends Controller
             "status" => 1,
             "qr_code" => "https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=xxx",
         ];
-        // return json($userModel);
+        return json($userModel);
         $userCode = $this->request->param("user_code");
         $wxapi = $this->_weixinApi_init();
         $result = $wxapi->GetUserInfoByCode($userCode);
@@ -82,7 +82,7 @@ class Api extends Controller
         //     "user_ticket": "USER_TICKET"，
         //     "expires_in":7200
         //  }
-        
+
         if ($result['errcode'] === 0) {
             //  没毛病,继续申请用户信息
             $userInfo = $wxapi->GetUserDetailByUserTicket($result['user_ticket']);
@@ -90,12 +90,6 @@ class Api extends Controller
         } else {
             //  有毛病
         }
-    }
-
-    public function set_user_attendance()
-    {
-        $restDays = $this->request->param('');
-        dump($restDays);
     }
 
     public function index()
@@ -150,5 +144,75 @@ class Api extends Controller
             $record = [['date' => '2018/4/18', 'workId' => $workerId]];
             return json($record);
         }
+    }
+
+    //  获取休息事件
+    public function get_restevents_by_month()
+    {
+        header("Access-Control-Allow-Origin:*");
+
+        $date = $this->request->param("date");
+
+        return json($date);
+    }
+
+    //  获取用户休假事件
+    public function get_rest_day_by_user()
+    {
+        header("Access-Control-Allow-Origin:*");
+
+        $userid = $this->request->param("user_id");
+
+        //  当前日期
+        $dateToday = date('Y-m-d', time());
+        $dateTodayArray = explode("-", $dateToday);
+
+        $userRestDaysModel = new \app\inforward\model\userRestDays();
+        $restDays = $userRestDaysModel->where(['userid' => $userid, 'year' => $dateTodayArray[0], 'month' => $dateTodayArray[1]])->select();
+        // dump($restDays);
+        // $restDays = [['date' => '2018-04-17'], ['date' => '2018-04-28']];
+
+        return json($restDays->toArray());
+    }
+
+    //  保存用户提交的休假事件
+    public function set_user_attendance()
+    {
+        header("Access-Control-Allow-Origin:*");
+        $oldRestDay = $this->request->param('old_day');
+        $restDay = $this->request->param('rest_day');
+        $userid = $this->request->param('user_id');
+
+        $dateArray = explode("-", $restDay);
+
+        $userRestDaysModel = new \app\inforward\model\userRestDays();
+        $saveData = ['date' => $restDay, 'userid' => $userid, 'year' => $dateArray[0], 'month' => $dateArray[1], 'day' => $dateArray[2], 'status' => 'rest', 'create_time' => time()];
+        $dateToday = date('Y-m-d', time());
+        $dateTodayArray = explode("-", $dateToday);
+
+        $exitsRestDay = $userRestDaysModel->where(['userid' => $userid, 'date' => $restDay])->select();
+        $exitsOldDay = $userRestDaysModel->where(['userid' => $userid, 'date' => $oldRestDay])->select();
+
+        if (count($exitsRestDay) == 0) {
+            //  新日期与当前休息日期不存在重复
+            $monthMaxRestDay = $userRestDaysModel->where(['userid' => $userid, 'year' => $dateToday[0], 'month' => $dateToday[1]])->select();
+            if (count($monthMaxRestDay) < 3) {
+                //  当月休息日不超过上限
+                // $submitModel = new \app\inforward\model\userRestDays();
+                // return json($submitModel->save($saveData))->code(200);
+            } else {
+                return json(['errmsg' => '当前用户当月提交休息日期超过上限'])->code(205);
+            }
+        } else {
+            return json(['errmsg' => '当前用户提交的日期已重复'])->code(206);
+        }
+
+        if ($oldRestDay == null) {
+            $userRestDaysModel->save($saveData);
+        } else {
+            $userRestDaysModel->where(['userid' => $userid, 'date' => $oldRestDay])->update($saveData);
+        }
+
+        return json(['restDay' => $restDay, 'userid' => $userid]);
     }
 }
