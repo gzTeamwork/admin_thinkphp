@@ -69,10 +69,13 @@ class Api extends Controller
             "status" => 1,
             "qr_code" => "https://open.work.weixin.qq.com/wwopen/userQRCode?vcode=xxx",
         ];
-        return json($userModel);
+        // return json($userModel);
         $userCode = $this->request->param("user_code");
         $wxapi = $this->_weixinApi_init();
         $result = $wxapi->GetUserInfoByCode($userCode);
+        // dump($result);
+        // return json($result);
+        $user_ticket = $result->user_ticket;
         //  返回数据
         // {
         //     "errcode": 0,
@@ -82,14 +85,23 @@ class Api extends Controller
         //     "user_ticket": "USER_TICKET"，
         //     "expires_in":7200
         //  }
+        //  没毛病,继续申请用户信息
+        $userInfo = $wxapi->GetUserDetailByUserTicket($user_ticket);
+        if (isset($userInfo->userid) && $userInfo->userid != null) {
+            $userModel = new \app\inforward\model\users();
+            $saveData = object_to_array($userInfo);
+            unset($saveData['department']);
+            unset($saveData['gender']);
+            // dump($saveData);
 
-        if ($result['errcode'] === 0) {
-            //  没毛病,继续申请用户信息
-            $userInfo = $wxapi->GetUserDetailByUserTicket($result['user_ticket']);
-            return json($userInfo);
-        } else {
-            //  有毛病
+            $res = $userModel->where(["userid" => $userInfo->userid])->select();
+            if (count($res) < 1) {
+                $userModel->save($saveData);
+            } else {
+                $userModel->where(["userid" => $userInfo->userid])->update($saveData);
+            }
         }
+        return json($saveData);
     }
 
     public function index()
@@ -103,7 +115,7 @@ class Api extends Controller
         $corpId = $wxworkConfig['corp_id'];
         $corpConfig = Config::get('app.oa_attendance');
         $corpSecret = $corpConfig['app_secret'];
-        return new \weworkapi_php\wxworkAPI($corpId, $corpSecret);
+        return new \weworkapi_php\wxworkAPI('wwdc02ce3b575253e3', 'bLhYfEQsgz1zO5Y1kmoCQi_p96ZVCC65uRovbEX-qPM');
     }
 
     /**
@@ -151,9 +163,18 @@ class Api extends Controller
     {
         header("Access-Control-Allow-Origin:*");
 
-        $date = $this->request->param("date");
+        //  当前日期
+        $dateToday = date('Y-m-d', time());
+        $dateTodayArray = explode("-", $dateToday);
 
-        return json($date);
+        $userRestDaysModel = new \app\inforward\model\userRestDays();
+        $restDays = $userRestDaysModel->where("month",$dateTodayArray[1])->select();
+
+        if(count($restDays) <1){
+            $restDays = null;
+        }
+
+        return json($restDays);
     }
 
     //  获取用户休假事件
@@ -215,4 +236,19 @@ class Api extends Controller
 
         return json(['restDay' => $restDay, 'userid' => $userid]);
     }
+}
+
+function object_to_array($obj)
+{
+    $obj = (array) $obj;
+    foreach ($obj as $k => $v) {
+        if (gettype($v) == 'resource') {
+            return;
+        }
+        if (gettype($v) == 'object' || gettype($v) == 'array') {
+            $obj[$k] = (array) object_to_array($v);
+        }
+    }
+
+    return $obj;
 }
