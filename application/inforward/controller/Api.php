@@ -5,6 +5,7 @@ use think\Controller;
 use think\Facade\Config;
 use think\Facade\Request;
 
+// 加载api接口类
 include_once '__DIR__/../../../../extend/weworkapi_php/api/src/CorpAPI.class.php';
 
 class Api extends Controller
@@ -101,6 +102,8 @@ class Api extends Controller
                 $userModel->where(["userid" => $userInfo->userid])->update($saveData);
             }
         }
+        $saveData['user_ticket'] = $user_ticket;
+        
         return json($saveData);
     }
 
