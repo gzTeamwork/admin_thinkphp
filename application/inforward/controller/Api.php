@@ -103,7 +103,7 @@ class Api extends Controller
             }
         }
         $saveData['user_ticket'] = $user_ticket;
-        
+
         return json($saveData);
     }
 
@@ -171,13 +171,25 @@ class Api extends Controller
         $dateTodayArray = explode("-", $dateToday);
 
         $userRestDaysModel = new \app\inforward\model\userRestDays();
-        $restDays = $userRestDaysModel->where("month",$dateTodayArray[1])->select();
+        $restDays = $userRestDaysModel->where("month", $dateTodayArray[1])->select();
 
-        if(count($restDays) <1){
+        if (count($restDays) < 1) {
             $restDays = null;
         }
 
         return json($restDays);
+    }
+
+    //  获取用户信息 - user_id
+    public function get_user_info_by_id()
+    {
+        header("Access-Control-Allow-Origin:*");
+
+        $userId = $this->request->param("user_id");
+        $userModel = new \app\inforward\model\users();
+        $curUser = $userModel->where("userid", $userId)->find();
+
+        return json($curUser);
     }
 
     //  获取用户休假事件
@@ -199,13 +211,24 @@ class Api extends Controller
         return json($restDays->toArray());
     }
 
+    //  同步员工信息
+    public function get_all_users_sync()
+    {
+        $departments = $wxapi->DepartmentList();
+        if ($departments) {
+            
+        }
+    }
+
     //  保存用户提交的休假事件
     public function set_user_attendance()
     {
         header("Access-Control-Allow-Origin:*");
+
         $oldRestDay = $this->request->param('old_day');
         $restDay = $this->request->param('rest_day');
         $userid = $this->request->param('user_id');
+        $userName = $this->request->param('username');
 
         $dateArray = explode("-", $restDay);
 
