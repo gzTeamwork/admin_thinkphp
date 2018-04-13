@@ -13,6 +13,11 @@ class Api extends Controller
     private $_appKeys = ["oa_attendance" => "1234567"];
 
     protected $request, $wxapi;
+//  返回标准化接口数据
+    private function _standard_response($response, $err_code = 200)
+    {
+        return json($response)->code($err_code);
+    }
 
     public function __constructor()
     {
@@ -48,6 +53,16 @@ class Api extends Controller
         }
     }
 
+    //  初始化配置
+    private function _weixinApi_init()
+    {
+        $wxworkConfig = Config::get('app.wxwork_api');
+        $corpId = $wxworkConfig['corp_id'];
+        $corpConfig = Config::get('app.oa_attendance');
+        $corpSecret = $corpConfig['app_secret'];
+        return new \weworkapi_php\wxworkAPI('wwdc02ce3b575253e3', 'bLhYfEQsgz1zO5Y1kmoCQi_p96ZVCC65uRovbEX-qPM');
+    }
+    //  获取企业微信员工信息
     public function get_user_info()
     {
         header("Access-Control-Allow-Origin:*");
@@ -73,52 +88,51 @@ class Api extends Controller
         // return json($userModel);
         $userCode = $this->request->param("user_code");
         $wxapi = $this->_weixinApi_init();
-        $result = $wxapi->GetUserInfoByCode($userCode);
-        // dump($result);
-        // return json($result);
-        $user_ticket = $result->user_ticket;
-        //  返回数据
-        // {
-        //     "errcode": 0,
-        //     "errmsg": "ok",
-        //     "UserId":"USERID",
-        //     "DeviceId":"DEVICEID",
-        //     "user_ticket": "USER_TICKET"，
-        //     "expires_in":7200
-        //  }
-        //  没毛病,继续申请用户信息
-        $userInfo = $wxapi->GetUserDetailByUserTicket($user_ticket);
-        if (isset($userInfo->userid) && $userInfo->userid != null) {
-            $userModel = new \app\inforward\model\users();
-            $saveData = object_to_array($userInfo);
-            unset($saveData['department']);
-            unset($saveData['gender']);
-            // dump($saveData);
+        try {
 
-            $res = $userModel->where(["userid" => $userInfo->userid])->select();
-            if (count($res) < 1) {
-                $userModel->save($saveData);
+            $response = $wxapi->GetUserInfoByCode($userCode);
+            //  返回数据
+            // {
+            //     "errcode": 0,
+            //     "errmsg": "ok",
+            //     "UserId":"USERID",
+            //     "DeviceId":"DEVICEID",
+            //     "user_ticket": "USER_TICKET"，
+            //     "expires_in":7200
+            //  }
+            //  没毛病,继续申请用户信息
+            if ($response->errcode === 0 && isset($response->userid)) {
+                $user_ticket = $response->user_ticket;
+                $userInfo = $wxapi->GetUserDetailByUserTicket($user_ticket);
+                if (isset($userInfo->userid) && $userInfo->userid != null) {
+                    $userModel = new \app\inforward\model\users();
+                    $saveData = object_to_array($userInfo);
+                    unset($saveData['department']);
+                    unset($saveData['gender']);
+                    // dump($saveData);
+                    //  已有员工,更新;新员工,新增;
+                    $res = $userModel->where(["userid" => $userInfo->userid])->select();
+                    if (count($res) < 1) {
+                        $userModel->save($saveData);
+                    } else {
+                        $userModel->where(["userid" => $userInfo->userid])->update($saveData);
+                    }
+                }
+                $saveData['user_ticket'] = $user_ticket;
+                return json($saveData);
+
             } else {
-                $userModel->where(["userid" => $userInfo->userid])->update($saveData);
+                return json(["err_msg" => "用户授权失败"])->code(300);
             }
-        }
-        $saveData['user_ticket'] = $user_ticket;
 
-        return json($saveData);
+        } catch (Exception $e) {
+            return $this->_standard_response($e, 300);
+        }
     }
 
     public function index()
     {
         return json_encode("yeah~");
-    }
-
-    private function _weixinApi_init()
-    {
-        $wxworkConfig = Config::get('app.wxwork_api');
-        $corpId = $wxworkConfig['corp_id'];
-        $corpConfig = Config::get('app.oa_attendance');
-        $corpSecret = $corpConfig['app_secret'];
-        return new \weworkapi_php\wxworkAPI('wwdc02ce3b575253e3', 'bLhYfEQsgz1zO5Y1kmoCQi_p96ZVCC65uRovbEX-qPM');
     }
 
     /**
@@ -180,6 +194,72 @@ class Api extends Controller
         return json($restDays);
     }
 
+    //  获取当月排班数据
+    public function get_month_events()
+    {
+        header("Access-Control-Allow-Origin:*");
+
+        //  当前日期
+        $dateToday = date('Y-m-d', time());
+        //  获取当前月份
+        $curDate = $this->request->param('date', $dateToday);
+
+        $dateTodayArr = explode('-', $dateToday);
+
+        $restDaysModel = new \app\inforward\model\userRestDays();
+        $curMonthRestEvents = $restDaysModel->where(['year' => $dateTodayArr[0], 'month' => $dateTodayArr[1]])->select();
+
+        if (count($curMonthRestEvents) > 0) {
+            $newCurMonthRestEvents = [];
+            // $restDays = array_column('date');
+            // $restUser = array_column('userid');
+            // foreach ($curMonthRestEvents as $key => $restEvent) {
+            //     $newCurMonthRestEvents[$restDays[$key] . '-' . $restUser[$key]] = $restEvent;
+            // }
+            // $curMonthRestEvents = $newCurMonthRestEvents;
+
+            foreach ($curMonthRestEvents as $key => $restEvent) {
+                $newCurMonthRestEvents[$restEvent->date][] = $restEvent;
+            }
+            $curMonthRestEvents = $newCurMonthRestEvents;
+        }
+
+        $userModel = new \app\inforward\model\users();
+        $allUsers = $userModel->select();
+        if (count($allUsers) > 0) {
+            $allUsers = $allUsers->toArray();
+            $userids = array_column($allUsers, 'userid');
+            // $usernames = array_column($allUsers,'name');
+            // dump($userids);
+            // dump($usernames);
+            $allUsers = array_combine($userids, $allUsers);
+            // dump($allUsers);
+        }
+
+        //  生成当月排班数据
+        $curMonthEvents = [];
+        for ($d = 1; $d < 32; $d++) {
+            $curDate = $dateTodayArr[0] . '-' . $dateTodayArr[1] . '-' . $d;
+            $curDutyUsers = $allUsers;
+            $event = ['date' => $curDate];
+            if (isset($curMonthRestEvents[$curDate])) {
+                foreach ($curMonthRestEvents[$curDate] as $restEvent) {
+                    if (isset($curDutyUsers[$restEvent->userid])) {
+                        unset($curDutyUsers[$restEvent->userid]);
+                    }
+                }
+                $event['onDuty'] = $curDutyUsers;
+                $event['onRest'] = $curMonthRestEvents[$curDate];
+            } else {
+                $event['onDuty'] = $curDutyUsers;
+            }
+            $curMonthEvents[] = $event;
+        }
+
+        return json($curMonthEvents);
+
+    }
+
     //  获取用户信息 - user_id
     public function get_user_info_by_id()
     {
@@ -190,6 +270,17 @@ class Api extends Controller
         $curUser = $userModel->where("userid", $userId)->find();
 
         return json($curUser);
+    }
+
+    //  获取所有用户信息 - get all user
+    public function get_all_user()
+    {
+        header("Access-Control-Allow-Origin:*");
+
+        $userModel = new \app\inforward\model\users();
+        $allUsers = $userModel->select();
+
+        return json($allUsers);
     }
 
     //  获取用户休假事件
@@ -216,7 +307,7 @@ class Api extends Controller
     {
         $departments = $wxapi->DepartmentList();
         if ($departments) {
-            
+
         }
     }
 
