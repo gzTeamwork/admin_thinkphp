@@ -62,6 +62,36 @@ class Api extends Controller
         $corpSecret = $corpConfig['app_secret'];
         return new \weworkapi_php\wxworkAPI('wwdc02ce3b575253e3', 'bLhYfEQsgz1zO5Y1kmoCQi_p96ZVCC65uRovbEX-qPM');
     }
+
+    public function get_user_info_by_ticket()
+    {
+        header("Access-Control-Allow-Origin:*");
+        $user_ticket = $this->request->param("user_ticket", null);
+        if ($user_ticket !== null) {
+            $wxapi = $this->_weixinApi_init();
+            $userInfo = $wxapi->GetUserDetailByUserTicket($user_ticket);
+            if (isset($userInfo->userid) && $userInfo->userid != null) {
+                $userModel = new \app\inforward\model\users();
+                $saveData = object_to_array($userInfo);
+                unset($saveData['department']);
+                unset($saveData['gender']);
+                // dump($saveData);
+                //  已有员工,更新;新员工,新增;
+                $res = $userModel->where(["userid" => $userInfo->userid])->select();
+                if (count($res) < 1) {
+                    $userModel->save($saveData);
+                } else {
+                    $userModel->where(["userid" => $userInfo->userid])->update($saveData);
+                }
+            }
+            $saveData['user_ticket'] = $user_ticket;
+            // dump($saveData);
+            return json($saveData);
+
+        } else {
+            return json(["err_msg" => "用户授权失败"])->code(300);
+        }
+    }
     //  获取企业微信员工信息
     public function get_user_info()
     {
@@ -101,7 +131,9 @@ class Api extends Controller
             //     "expires_in":7200
             //  }
             //  没毛病,继续申请用户信息
-            if ($response->errcode === 0 && isset($response->userid)) {
+            // var_dump($response);
+            // $response = object_to_array($response);
+            if (isset($response->user_ticket)) {
                 $user_ticket = $response->user_ticket;
                 $userInfo = $wxapi->GetUserDetailByUserTicket($user_ticket);
                 if (isset($userInfo->userid) && $userInfo->userid != null) {
@@ -240,6 +272,9 @@ class Api extends Controller
         $curMonthEvents = [];
         for ($d = 1; $d < 32; $d++) {
             $curDate = $dateTodayArr[0] . '-' . $dateTodayArr[1] . '-' . $d;
+            if (0 == date("w", strtotime($curDate))) {
+                continue;
+            }
             $curDutyUsers = $allUsers;
             $event = ['date' => $curDate];
             if (isset($curMonthRestEvents[$curDate])) {
