@@ -354,7 +354,7 @@ class Api extends Controller
         $oldRestDay = $this->request->param('old_day');
         $restDay = $this->request->param('rest_day');
         $userid = $this->request->param('user_id');
-        $userName = $this->request->param('username');
+        $userName = $this->request->param('user_name');
 
         $dateArray = explode("-", $restDay);
 
