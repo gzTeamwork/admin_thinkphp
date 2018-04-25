@@ -1,6 +1,8 @@
 <?php
 namespace app\inforward\controller;
 
+use app\inforward\logic\UserLogic;
+use app\inforward\logic\UserSubmitLogic;
 use think\Controller;
 use think\Facade\Config;
 use think\Facade\Request;
@@ -259,18 +261,17 @@ class Api extends Controller
         $userModel = new \app\inforward\model\users();
         $allUsers = $userModel->select();
         if (count($allUsers) > 0) {
-            $allUsers = $allUsers->toArray();
+            // $allUsers = $allUsers->toArray();
+            $userModel = new UserLogic();
+            $allUsers = $userModel->getUsers();
             $userids = array_column($allUsers, 'userid');
-            // $usernames = array_column($allUsers,'name');
-            // dump($userids);
-            // dump($usernames);
             $allUsers = array_combine($userids, $allUsers);
-            // dump($allUsers);
         }
 
         //  生成当月排班数据
         $curMonthEvents = [];
         for ($d = 1; $d < 32; $d++) {
+            //  每日排班数据
             $curDate = $dateTodayArr[0] . '-' . $dateTodayArr[1] . '-' . $d;
             if (0 == date("w", strtotime($curDate))) {
                 continue;
@@ -278,15 +279,18 @@ class Api extends Controller
             $curDutyUsers = $allUsers;
             $event = ['date' => $curDate];
             if (isset($curMonthRestEvents[$curDate])) {
-                foreach ($curMonthRestEvents[$curDate] as $restEvent) {
+                foreach ($curMonthRestEvents[$curDate] as $key => $restEvent) {
                     if (isset($curDutyUsers[$restEvent->userid])) {
                         unset($curDutyUsers[$restEvent->userid]);
+                    } else {
+                        unset($curMonthRestEvents[$curDate][$key]);
                     }
                 }
                 $event['onDuty'] = $curDutyUsers;
                 $event['onRest'] = $curMonthRestEvents[$curDate];
             } else {
                 $event['onDuty'] = $curDutyUsers;
+                $event['onRest'] = [];
             }
             $curMonthEvents[] = $event;
         }
@@ -295,15 +299,24 @@ class Api extends Controller
 
     }
 
+    public function set_user_working()
+    {
+        $userId = $this->request->param("user_id");
+        $userLogic = new UserLogic();
+        $curUser = $userLogic->updateUserById($userId, ['isWorking' => 1]);
+        return $curUser;
+    }
+
     //  获取用户信息 - user_id
     public function get_user_info_by_id()
     {
         header("Access-Control-Allow-Origin:*");
 
         $userId = $this->request->param("user_id");
-        $userModel = new \app\inforward\model\users();
-        $curUser = $userModel->where("userid", $userId)->find();
-
+        // $userModel = new \app\inforward\model\UserModel();
+        // $curUser = $userModel->where("userid", $userId)->find();
+        $userLogic = new UserLogic();
+        $curUser = $userLogic->getUsers([['userid', '=', $userId]]);
         return json($curUser);
     }
 
@@ -312,8 +325,10 @@ class Api extends Controller
     {
         header("Access-Control-Allow-Origin:*");
 
-        $userModel = new \app\inforward\model\users();
-        $allUsers = $userModel->select();
+        // $userModel = new \app\inforward\model\users();
+        // $allUsers = $userModel->select();
+        $userLogic = new UserLogic();
+        $allUsers = $userLogic->getUsers();
 
         return json($allUsers);
     }
@@ -387,6 +402,59 @@ class Api extends Controller
         }
 
         return json(['restDay' => $restDay, 'userid' => $userid]);
+    }
+
+    /*************
+     * 报餐功能 - 接口
+     */
+
+    // 生成T+7日报餐数据
+    public function get_nearby_dailymeal()
+    {
+        //  今日
+        $dateToday = date('Y-m-d', time());
+        //  七日
+        $sevenDay = date('Y-m-d', strtotime("+1 week"));
+
+        $submitLogic = new UserSubmitLogic();
+        $userSubmits = $submitLogic->getSubmits([
+            'group' => ['group', '=', 'userDailyMeal'], 
+            'update_time' => ['update_time', 'between time', [$dateToday, $sevenDay]]
+            ]);
+
+        dump($userSubmits);
+
+        if (count($userSubmits) > 0) {
+            $submitDates = array_column($userSubmits, 'update_time');
+            $userSubmits = array_combine($submitDates, $userSubmits);
+        }
+
+        $events = [];
+        for ($i = 0; $i < 7; $i++) {
+            $eventDate = date('Y-m-d', strtotime("+" . $i . " day"));
+            if (isset($userSubmits[$eventDate])) {
+                $userSubmits[$eventDate]['date'] = $eventDate;
+                $events[] = $userSubmits;
+            } else {
+                $events[] = ['date' => $eventDate];
+            }
+        }
+        dump($events);
+
+    }
+
+    //  设置员工每日报餐数据
+    public function set_dailyMeal()
+    {
+        $userId = $this->request->param('user_id', null);
+        $dailyMealDate = $this->request->param('meal_date', null);
+
+        $submitLogic = new UserSubmitLogic();
+        $result = $submitLogic->insertSubmit(['userid' => $userId, 'content' => $dailyMealDate, 'group' => 'userDailyMeal']);
+
+        // dump($result);
+
+        return json($result);
     }
 }
 
