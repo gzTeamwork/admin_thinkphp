@@ -418,9 +418,9 @@ class Api extends Controller
 
         $submitLogic = new UserSubmitLogic();
         $userSubmits = $submitLogic->getSubmits([
-            'group' => ['group', '=', 'userDailyMeal'], 
-            'update_time' => ['update_time', 'between time', [$dateToday, $sevenDay]]
-            ]);
+            'group' => ['group', '=', 'userDailyMeal'],
+            'update_time' => ['update_time', 'between time', [$dateToday, $sevenDay]],
+        ]);
 
         dump($userSubmits);
 
