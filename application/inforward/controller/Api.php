@@ -268,12 +268,16 @@ class Api extends Controller
             $allUsers = array_combine($userids, $allUsers);
         }
 
+        //  holiday - 国家法定假期
+
+        $holiday = ['04-04', '04-05', '04-06', '04-29', '04-30', '05-01'];
         //  生成当月排班数据
         $curMonthEvents = [];
         for ($d = 1; $d < 32; $d++) {
             //  每日排班数据
-            $curDate = $dateTodayArr[0] . '-' . $dateTodayArr[1] . '-' . $d;
-            if (0 == date("w", strtotime($curDate))) {
+            $day = $d < 10 ? "0" . $d : $d;
+            $curDate = $dateTodayArr[0] . '-' . $dateTodayArr[1] . '-' . $day;
+            if (0 == date("w", strtotime($curDate)) || in_array($dateTodayArr[1] . "-" . $day, $holiday)) {
                 continue;
             }
             $curDutyUsers = $allUsers;
@@ -446,6 +450,8 @@ class Api extends Controller
     //  设置员工每日报餐数据
     public function set_dailyMeal()
     {
+        header("Access-Control-Allow-Origin:*");
+
         $userId = $this->request->param('user_id', null);
         $dailyMealDate = $this->request->param('meal_date', null);
 
