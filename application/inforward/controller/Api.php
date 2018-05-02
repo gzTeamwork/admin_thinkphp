@@ -4,6 +4,8 @@ namespace app\inforward\controller;
 use app\inforward\logic\UserLogic;
 use app\inforward\logic\UserSubmitLogic;
 use think\Controller;
+use think\Exception;
+use think\exception\HttpException;
 use think\Facade\Config;
 use think\Facade\Request;
 
@@ -192,7 +194,7 @@ class Api extends Controller
 
         $token = Request::param("appToken");
 
-        return json_encode(isset($this->_appKeys[$token]) ? $this->_appKeys[$token] : null);
+        return json(isset($this->_appKeys[$token]) ? $this->_appKeys[$token] : null);
     }
     public function get_restByWorker()
     {
@@ -455,13 +457,22 @@ class Api extends Controller
         $userId = $this->request->param('user_id', null);
         $dailyMealDate = $this->request->param('meal_date', null);
 
-        $submitLogic = new UserSubmitLogic();
-        $result = $submitLogic->insertSubmit(['userid' => $userId, 'content' => $dailyMealDate, 'group' => 'userDailyMeal']);
+        try {
+            if (is_null($userId) && is_null($dailyMealDate)) {
+                throw new HttpException('300', '参数不允许为空');
+            } else {
+                $submitLogic = new UserSubmitLogic();
+                $result = $submitLogic->insertSubmit(['userid' => $userId, 'content' => $dailyMealDate, 'group' => 'userDailyMeal']);
+            }
+            // dump($result);
+            return json($result);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
 
-        // dump($result);
-
-        return json($result);
     }
+
+    
 }
 
 function object_to_array($obj)

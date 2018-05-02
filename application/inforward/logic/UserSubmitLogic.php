@@ -32,7 +32,7 @@ class UserSubmitLogic
         $data['update_time'] = date('Y-m-d H:i:s', time());
         $data['enable'] = true;
         try {
-            //  1.检查data是否包含条目id
+            //  检查data是否包含条目id
             if (isset($data['id'])) {
                 //  更新
                 $id = $data['id'];

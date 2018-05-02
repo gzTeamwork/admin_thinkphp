@@ -5,10 +5,10 @@ namespace app\inforward\logic;
 class AdminLogic
 {
 
+    //  检查用户是否为管理员
     public function isAdmin($user = null)
     {
         return issset($user['isAdmin']) ? $user['isAdmin'] === true : flase;
-
     }
 
 }
