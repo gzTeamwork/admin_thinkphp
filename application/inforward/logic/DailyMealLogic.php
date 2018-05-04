@@ -4,11 +4,15 @@ namespace app\inforward\logic;
 
 use app\inforward\model\UserMealSubmit;
 use think\Log;
-use think\facade\Log;
 
 class DailyMealLogic
 {
+  public $db = null;
 
+    public function __construct()
+    {
+        $this->db = new UserSubmitModel();
+    }
     //  增加用户报餐记录
     public function insert_user_meal($datas)
     {
