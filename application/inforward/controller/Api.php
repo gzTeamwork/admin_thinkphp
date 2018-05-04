@@ -149,6 +149,7 @@ class Api extends Controller
                     //  已有员工,更新;新员工,新增;
                     $res = $userModel->where(["userid" => $userInfo->userid])->select();
                     if (count($res) < 1) {
+                        $saveData['isWorking'] = 1;
                         $userModel->save($saveData);
                     } else {
                         $userModel->where(["userid" => $userInfo->userid])->update($saveData);
@@ -237,22 +238,17 @@ class Api extends Controller
 
         //  当前日期
         $dateToday = date('Y-m-d', time());
+
         //  获取当前月份
         $curDate = $this->request->param('date', $dateToday);
 
-        $dateTodayArr = explode('-', $dateToday);
+        $dateTodayArr = explode('-', $curDate);
 
         $restDaysModel = new \app\inforward\model\userRestDays();
         $curMonthRestEvents = $restDaysModel->where(['year' => $dateTodayArr[0], 'month' => $dateTodayArr[1]])->select();
 
         if (count($curMonthRestEvents) > 0) {
             $newCurMonthRestEvents = [];
-            // $restDays = array_column('date');
-            // $restUser = array_column('userid');
-            // foreach ($curMonthRestEvents as $key => $restEvent) {
-            //     $newCurMonthRestEvents[$restDays[$key] . '-' . $restUser[$key]] = $restEvent;
-            // }
-            // $curMonthRestEvents = $newCurMonthRestEvents;
 
             foreach ($curMonthRestEvents as $key => $restEvent) {
                 $newCurMonthRestEvents[$restEvent->date][] = $restEvent;
@@ -271,8 +267,8 @@ class Api extends Controller
         }
 
         //  holiday - 国家法定假期
-
         $holiday = ['04-04', '04-05', '04-06', '04-29', '04-30', '05-01'];
+
         //  生成当月排班数据
         $curMonthEvents = [];
         for ($d = 1; $d < 32; $d++) {
@@ -380,7 +376,7 @@ class Api extends Controller
         $dateArray = explode("-", $restDay);
 
         $userRestDaysModel = new \app\inforward\model\userRestDays();
-        $saveData = ['date' => $restDay, 'userid' => $userid, 'year' => $dateArray[0], 'month' => $dateArray[1], 'day' => $dateArray[2], 'status' => 'rest', 'create_time' => time()];
+        $saveData = ['date' => $restDay, 'userid' => $userid, 'username' => $userName, 'year' => $dateArray[0], 'month' => $dateArray[1], 'day' => $dateArray[2], 'status' => 'rest', 'create_time' => time()];
         $dateToday = date('Y-m-d', time());
         $dateTodayArray = explode("-", $dateToday);
 
@@ -472,7 +468,6 @@ class Api extends Controller
 
     }
 
-    
 }
 
 function object_to_array($obj)
