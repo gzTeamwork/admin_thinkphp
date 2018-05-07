@@ -96,6 +96,11 @@ class Api extends Controller
             return json(["err_msg" => "用户授权失败"])->code(300);
         }
     }
+    public function get_user_info_by_code()
+    {
+        header("Access-Control-Allow-Origin:*");
+        return $this->get_user_info();
+    }
     //  获取企业微信员工信息
     public function get_user_info()
     {
@@ -123,7 +128,6 @@ class Api extends Controller
         $userCode = $this->request->param("user_code");
         $wxapi = $this->_weixinApi_init();
         try {
-
             $response = $wxapi->GetUserInfoByCode($userCode);
             //  返回数据
             // {
@@ -371,7 +375,7 @@ class Api extends Controller
         $oldRestDay = $this->request->param('old_day');
         $restDay = $this->request->param('rest_day');
         $userid = $this->request->param('user_id');
-        $userName = $this->request->param('user_name');
+        $userName = $this->request->param('user_name', null);
 
         $dateArray = explode("-", $restDay);
 
@@ -404,6 +408,18 @@ class Api extends Controller
         }
 
         return json(['restDay' => $restDay, 'userid' => $userid]);
+    }
+
+    public function rem_rest_day_by_user()
+    {
+        header("Access-Control-Allow-Origin:*");
+        $cancelRestDay = $this->request->param('rest_day');
+        $userid = $this->request->param('user_id');
+        $dateArray = explode('-', $cancelRestDay);
+        $userRestDaysModel = new \app\inforward\model\userRestDays();
+        $where = ['userid' => ['userid', '=', $userid], 'date' => ['date', '=', $cancelRestDay]];
+        $res = $userRestDaysModel->where($where)->delete();
+        return is_null($res) ? json(['msg' => '删除失败'], 401) : json(['msg' => '成功删除'], 200);
     }
 
     /*************
