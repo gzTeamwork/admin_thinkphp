@@ -2,9 +2,9 @@
 
 namespace app\inforward\model;
 
-use think\console\command\make\Model;
 use think\Exception;
 use think\exception\HttpException;
+use think\Model;
 
 class UserMealSubmit extends Model
 {

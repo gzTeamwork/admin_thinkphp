@@ -1,6 +1,7 @@
 <?php
 namespace app\inforward\controller;
 
+use app\inforward\logic\DailyMealLogic;
 use app\inforward\logic\UserLogic;
 use app\inforward\logic\UserSubmitLogic;
 use think\Controller;
@@ -462,28 +463,39 @@ class Api extends Controller
     }
 
     //  设置员工每日报餐数据
-    public function set_dailyMeal()
+    public function attend_user_daily_meal()
     {
         header("Access-Control-Allow-Origin:*");
 
         $userId = $this->request->param('user_id', null);
         $dailyMealDate = $this->request->param('meal_date', null);
-
+        $dailyMealCheck = $this->request->param('meal_check', false);
+        $dailyMealCheck = $dailyMealCheck ? 1 : 0;
         try {
             if (is_null($userId) && is_null($dailyMealDate)) {
                 throw new HttpException('300', '参数不允许为空');
             } else {
-                $submitLogic = new UserSubmitLogic();
-                $result = $submitLogic->insertSubmit(['userid' => $userId, 'content' => $dailyMealDate, 'group' => 'userDailyMeal']);
+                $dailyMealLogic = new DailyMealLogic();
+                $result = $dailyMealLogic->insert_user_meal(
+                    ['user_id' => $userId, 'meal_date' => $dailyMealDate, 'need_meal' => $dailyMealCheck]
+                );
+                return json($result);
             }
-            // dump($result);
-            return json($result);
         } catch (Exception $e) {
             echo $e->getMessage();
         }
-
     }
 
+    //  获取7天内员工报餐记录
+    public function get_user_daily_meal_in_week()
+    {
+        header("Access-Control-Allow-Origin:*");
+        $userId = $this->request->param('user_id', null);
+        $beginDate = $this->request->param('begin_date', "-2 day");
+        $dailyMealLogic = new DailyMealLogic();
+        $result = $dailyMealLogic->get_user_daily_meal($userId);
+        return json($result);
+    }
 }
 
 function object_to_array($obj)
