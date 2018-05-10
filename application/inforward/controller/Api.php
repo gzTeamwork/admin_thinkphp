@@ -496,6 +496,16 @@ class Api extends Controller
         $result = $dailyMealLogic->get_user_daily_meal($userId);
         return json($result);
     }
+
+    //  获取明天报餐汇总
+    public function get_tomorrow_daily_meals()
+    {
+        header("Access-Control-Allow-Origin:*");
+        $tomorrowDate = strtotime("+1 day");
+        $dailyMealLogic = new DailyMealLogic();
+        $result = $dailyMealLogic->getTomorrowDailMeals($tomorrowDate);
+        return json($result);
+    }
 }
 
 function object_to_array($obj)

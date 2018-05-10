@@ -26,10 +26,10 @@ class DailyMealLogic
             'user_id' => ['user_id', '=', $datas['user_id']],
             'meal_date' => ['meal_date', '=', $datas['meal_date']],
         ];
-        $existSubmit = $mealSubmitModel->where($where)->select();
-        // var_dump(count($existSubmit));
+        $existSubmit = $mealSubmitModel->where($where)->select()->toArray();
+        // var_dump(empty($existSubmit));
         //  2.不存在重复则增加 - 存在则更新
-        if (count($existSubmit) == 0) {
+        if (empty($existSubmit)) {
             $mealSubmitModel = new UserMealSubmit();
             $datas['enable'] = 1;
             $res = $mealSubmitModel->allowField(true)->save($datas);
@@ -62,6 +62,12 @@ class DailyMealLogic
     {
         $date = is_null($date) ? strtotime("+1 day") : $date;
         $where = ['meal_date' => ['meal_date', '=', date('Y-m-d', $date)]];
-
+        // $this->db;
+        $result = $this->db->alias('a')->join('users b', 'a.user_id = b.userid')->where($where)->select();
+        // var_dump($this->db->getLastSql());
+        if (!empty($result)) {
+            $result = $result->toArray();
+        }
+        return $result;
     }
 }
