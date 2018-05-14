@@ -18,4 +18,19 @@ class Admin extends Controller
 
     }
 
+    //  后台管理员登陆
+    public function admin_login()
+    {
+        $account = $this->request->param('login_account');
+        $password = $this->request->param('login_password');
+
+        try {
+            if (is_null($account) || is_null($password)) {
+                throw new HttpException(405, 'params not exists');
+            }
+        } catch (Exception $e) {
+            return json('');
+        }
+    }
+
 }
