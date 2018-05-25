@@ -506,6 +506,34 @@ class Api extends Controller
         $result = $dailyMealLogic->getTomorrowDailMeals($tomorrowDate);
         return json($result);
     }
+
+    /******* 二维码管理系统 *******/
+    public function get_item_info_by_unioid()
+    {
+        header("Access-Control-Allow-Origin:*");
+        $unionId = $this->request->param('union_id', null);
+        try {
+            if (is_null($unionId)) {
+                throw new HttpException(404, '没有查找到对应的二维码信息');
+            } else {
+                $item = ['name' => '四人圆桌', 'price' => '$99999', 'unionid' => md5('inforward_item_nums' . $unionId)];
+                return json($item, 200);
+            }
+        } catch (Exception $e) {
+            return json($e->getMessage(), 404);
+        }
+    }
+
+    public function get_item_infos()
+    {
+        header("Access-Control-Allow-Origin:*");
+        $items = [];
+        $num = $this->request->param('union_id', 10);
+        for ($i = 0; $i < $num; $i++) {
+            $items[] = ['name' => '四人圆桌'.$i, 'price' => '$99999', 'unionid' => md5('inforward_item_nums' . $i)];
+        }
+        return json($items, 200);
+    }
 }
 
 function object_to_array($obj)
