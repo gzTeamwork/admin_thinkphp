@@ -1,6 +1,9 @@
 <?php
 namespace app\inforward\controller;
 
+header("Access-Control-Allow-Origin:*");
+
+use app\inforward\facade\QrcodeLogicFacade;
 use app\inforward\logic\DailyMealLogic;
 use app\inforward\logic\UserLogic;
 use app\inforward\logic\UserSubmitLogic;
@@ -11,7 +14,7 @@ use think\Facade\Config;
 use think\Facade\Request;
 
 // 加载api接口类
-include_once '__DIR__/../../../../extend/weworkapi_php/api/src/CorpAPI.class.php';
+// include_once '__DIR__/../../../../extend/weworkapi_php/api/src/CorpAPI.class.php';
 
 class Api extends Controller
 {
@@ -94,7 +97,7 @@ class Api extends Controller
             return json($saveData);
 
         } else {
-            return json(["err_msg" => "用户授权失败"])->code(300);
+            return json(["err_msg" => "用户授权失败"])->code(200);
         }
     }
     public function get_user_info_by_code()
@@ -164,11 +167,11 @@ class Api extends Controller
                 return json($saveData);
 
             } else {
-                return json(["err_msg" => "用户授权失败"])->code(300);
+                return json(["err_msg" => "用户授权失败"])->code(200);
             }
 
         } catch (Exception $e) {
-            return $this->_standard_response($e, 300);
+            return $this->_standard_response($e, 200);
         }
     }
 
@@ -473,7 +476,7 @@ class Api extends Controller
         $dailyMealCheck = $dailyMealCheck ? 1 : 0;
         try {
             if (is_null($userId) && is_null($dailyMealDate)) {
-                throw new HttpException('300', '参数不允许为空');
+                throw new HttpException('200', '参数不允许为空');
             } else {
                 $dailyMealLogic = new DailyMealLogic();
                 $result = $dailyMealLogic->insert_user_meal(
@@ -508,31 +511,60 @@ class Api extends Controller
     }
 
     /******* 二维码管理系统 *******/
-    public function get_item_info_by_unioid()
+
+    /**
+     * get_qrcode_item_by_unionid
+     * 获取单个二维码
+     *
+     * @return void
+     */
+    public function get_qrcode_item_by_unionid()
     {
         header("Access-Control-Allow-Origin:*");
-        $unionId = $this->request->param('union_id', null);
+        $unionId = $this->request->param('union_id');
         try {
-            if (is_null($unionId)) {
-                throw new HttpException(404, '没有查找到对应的二维码信息');
-            } else {
-                $item = ['name' => '四人圆桌', 'price' => '$99999', 'unionid' => md5('inforward_item_nums' . $unionId)];
-                return json($item, 200);
-            }
+            $item = QrcodeLogicFacade::getItem($unionId);
+            return json($item, 200);
         } catch (Exception $e) {
             return json($e->getMessage(), 404);
         }
     }
 
-    public function get_item_infos()
+    /**
+     * get_qrcode_items
+     * 获取多个二维码条目
+     *
+     * @return void
+     */
+    public function get_qrcode_items()
     {
         header("Access-Control-Allow-Origin:*");
-        $items = [];
-        $num = $this->request->param('union_id', 10);
-        for ($i = 0; $i < $num; $i++) {
-            $items[] = ['name' => '四人圆桌'.$i, 'price' => '$99999', 'unionid' => md5('inforward_item_nums' . $i)];
+        $qrcodes = \app\inforward\facade\QrcodeLogicFacade::getItems();
+
+        return json($qrcodes, 200);
+    }
+
+    public function set_qrcode()
+    {
+
+    }
+
+    public function set_batch_qrcodes()
+    {
+        header("Access-Control-Allow-Origin:*");
+
+        $num = Request::param('num', 0);
+        if ($num == 0) {
+            return json('Batch insert number must be bigger than 0 ', 404);
         }
-        return json($items, 200);
+        $items = [];
+        for ($i = 0; $i < $num; $i++) {
+            $dateTime = date('Y-m-d h:i:s', time() . $i);
+            $items[] = ['unionid' => md5('inforward' . time() . $i), 'create_time' => $dateTime, 'update_time' => $dateTime, 'group' => 'test', 'mode' => 'qrcode', 'author' => '梓豪'];
+            // var_dump($item);
+        }
+        QrcodeLogicFacade::insertItems($items);
+
     }
 }
 
