@@ -539,7 +539,8 @@ class Api extends Controller
     public function get_qrcode_items()
     {
         header("Access-Control-Allow-Origin:*");
-        $qrcodes = \app\inforward\facade\QrcodeLogicFacade::getItems();
+        $num = Request::param('num', 20);
+        $qrcodes = \app\inforward\facade\QrcodeLogicFacade::getItems($num);
 
         return json($qrcodes, 200);
     }
@@ -564,7 +565,6 @@ class Api extends Controller
             // var_dump($item);
         }
         QrcodeLogicFacade::insertItems($items);
-
     }
 }
 
