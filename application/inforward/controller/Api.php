@@ -1,5 +1,10 @@
 <?php
+
 namespace app\inforward\controller;
+
+/**
+ * @SWG\Info(title="inforward/controller/api", version="0.1")
+ */
 
 header("Access-Control-Allow-Origin:*");
 
@@ -14,13 +19,13 @@ use think\Facade\Config;
 use think\Facade\Request;
 
 // 加载api接口类
-// include_once '__DIR__/../../../../extend/weworkapi_php/api/src/CorpAPI.class.php';
 
 class Api extends Controller
 {
     private $_appKeys = ["oa_attendance" => "1234567"];
 
     protected $request, $wxapi;
+
 //  返回标准化接口数据
     private function _standard_response($response, $err_code = 200)
     {
@@ -71,6 +76,14 @@ class Api extends Controller
         return new \weworkapi_php\wxworkAPI('wwdc02ce3b575253e3', 'bLhYfEQsgz1zO5Y1kmoCQi_p96ZVCC65uRovbEX-qPM');
     }
 
+    /**
+     * get user info by ticket function
+     * @SWG\Get(
+     *     path="/inforward/api/resource.json",
+     *     @SWG\Response(response="200", description="An example resource")
+     * )
+     * @return void
+     */
     public function get_user_info_by_ticket()
     {
         header("Access-Control-Allow-Origin:*");
@@ -100,11 +113,13 @@ class Api extends Controller
             return json(["err_msg" => "用户授权失败"])->code(200);
         }
     }
+
     public function get_user_info_by_code()
     {
         header("Access-Control-Allow-Origin:*");
         return $this->get_user_info();
     }
+
     //  获取企业微信员工信息
     public function get_user_info()
     {
@@ -205,6 +220,7 @@ class Api extends Controller
 
         return json(isset($this->_appKeys[$token]) ? $this->_appKeys[$token] : null);
     }
+
     public function get_restByWorker()
     {
         header("Access-Control-Allow-Origin: *");
@@ -550,6 +566,11 @@ class Api extends Controller
 
     }
 
+    /**
+     * Undocumented function
+     *
+     * @SWG\Get(path="swagger/set_batch_qrcodes)
+     */
     public function set_batch_qrcodes()
     {
         header("Access-Control-Allow-Origin:*");
@@ -570,13 +591,13 @@ class Api extends Controller
 
 function object_to_array($obj)
 {
-    $obj = (array) $obj;
+    $obj = (array)$obj;
     foreach ($obj as $k => $v) {
         if (gettype($v) == 'resource') {
             return;
         }
         if (gettype($v) == 'object' || gettype($v) == 'array') {
-            $obj[$k] = (array) object_to_array($v);
+            $obj[$k] = (array)object_to_array($v);
         }
     }
 

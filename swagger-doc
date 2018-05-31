@@ -1,0 +1,20 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "inforward/controller/api",
+        "version": "0.1"
+    },
+    "paths": {
+        "/api/resource.json": {
+            "get": {
+                "summary": "get user info by ticket function",
+                "responses": {
+                    "200": {
+                        "description": "An example resource"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {}
+}
