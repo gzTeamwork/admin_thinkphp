@@ -1,1 +1,0 @@
-php ./vendor/zircote/swagger-php/bin/swagger ./application -o ./swagger-doc

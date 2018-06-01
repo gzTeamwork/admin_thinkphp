@@ -2,13 +2,6 @@
 
 namespace app\inforward\controller;
 
-/**
- * @SWG\Info(title="inforward/controller/api", version="0.1")
- */
-
-header("Access-Control-Allow-Origin:*");
-
-use app\inforward\facade\QrcodeLogicFacade;
 use app\inforward\logic\DailyMealLogic;
 use app\inforward\logic\UserLogic;
 use app\inforward\logic\UserSubmitLogic;
@@ -20,6 +13,9 @@ use think\Facade\Request;
 
 // 加载api接口类
 
+/**
+ * Api接口类
+ */
 class Api extends Controller
 {
     private $_appKeys = ["oa_attendance" => "1234567"];
@@ -76,14 +72,6 @@ class Api extends Controller
         return new \weworkapi_php\wxworkAPI('wwdc02ce3b575253e3', 'bLhYfEQsgz1zO5Y1kmoCQi_p96ZVCC65uRovbEX-qPM');
     }
 
-    /**
-     * get user info by ticket function
-     * @SWG\Get(
-     *     path="/inforward/api/resource.json",
-     *     @SWG\Response(response="200", description="An example resource")
-     * )
-     * @return void
-     */
     public function get_user_info_by_ticket()
     {
         header("Access-Control-Allow-Origin:*");
@@ -526,78 +514,17 @@ class Api extends Controller
         return json($result);
     }
 
-    /******* 二维码管理系统 *******/
-
-    /**
-     * get_qrcode_item_by_unionid
-     * 获取单个二维码
-     *
-     * @return void
-     */
-    public function get_qrcode_item_by_unionid()
-    {
-        header("Access-Control-Allow-Origin:*");
-        $unionId = $this->request->param('union_id');
-        try {
-            $item = QrcodeLogicFacade::getItem($unionId);
-            return json($item, 200);
-        } catch (Exception $e) {
-            return json($e->getMessage(), 404);
-        }
-    }
-
-    /**
-     * get_qrcode_items
-     * 获取多个二维码条目
-     *
-     * @return void
-     */
-    public function get_qrcode_items()
-    {
-        header("Access-Control-Allow-Origin:*");
-        $num = Request::param('num', 20);
-        $qrcodes = \app\inforward\facade\QrcodeLogicFacade::getItems($num);
-
-        return json($qrcodes, 200);
-    }
-
-    public function set_qrcode()
-    {
-
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @SWG\Get(path="swagger/set_batch_qrcodes)
-     */
-    public function set_batch_qrcodes()
-    {
-        header("Access-Control-Allow-Origin:*");
-
-        $num = Request::param('num', 0);
-        if ($num == 0) {
-            return json('Batch insert number must be bigger than 0 ', 404);
-        }
-        $items = [];
-        for ($i = 0; $i < $num; $i++) {
-            $dateTime = date('Y-m-d h:i:s', time() . $i);
-            $items[] = ['unionid' => md5('inforward' . time() . $i), 'create_time' => $dateTime, 'update_time' => $dateTime, 'group' => 'test', 'mode' => 'qrcode', 'author' => '梓豪'];
-            // var_dump($item);
-        }
-        QrcodeLogicFacade::insertItems($items);
-    }
 }
 
 function object_to_array($obj)
 {
-    $obj = (array)$obj;
+    $obj = (array) $obj;
     foreach ($obj as $k => $v) {
         if (gettype($v) == 'resource') {
             return;
         }
         if (gettype($v) == 'object' || gettype($v) == 'array') {
-            $obj[$k] = (array)object_to_array($v);
+            $obj[$k] = (array) object_to_array($v);
         }
     }
 
