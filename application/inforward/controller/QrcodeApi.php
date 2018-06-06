@@ -3,10 +3,14 @@
 namespace app\inforward\controller;
 
 use think\Controller;
+use app\inforward\logic\QrcodeLogic;
+
+header("Access-Control-Allow-Origin:*");
 
 class QrcodeApi extends Controller
 {
     use \app\inforward\logic\BaseController;
+    use \app\inforward\logic\QrcodeLogic;
 
     public function index()
     {
@@ -19,7 +23,6 @@ class QrcodeApi extends Controller
      */
     public function get_qrcode()
     {
-        header("Access-Control-Allow-Origin:*");
 
         $params = $this->getParam($this->request->param(), ['union_id']);
 //        try {
@@ -35,17 +38,15 @@ class QrcodeApi extends Controller
 
     public function get_qrcode_items()
     {
-        header("Access-Control-Allow-Origin:*");
-        $num = Request::param('num', 20);
-        $qrcodes = \app\inforward\facade\QrcodeLogicFacade::getItems($num);
+        $num = $this->request->param('num', 20);
+
+        $qrcodes = $this->getItems($num);
 
         return json($qrcodes, 200);
     }
 
     public function set_batch_qrcodes()
     {
-        header("Access-Control-Allow-Origin:*");
-
         $num = Request::param('num', 0);
         if ($num == 0) {
             return json('Batch insert number must be bigger than 0 ', 404);

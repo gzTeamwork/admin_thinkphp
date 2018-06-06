@@ -42,4 +42,26 @@ trait BaseController
             exit($e->getMessage());
         }
     }
+
+    public function validParams($params, $rules)
+    {
+        foreach ($params as $key => $param) {
+            if (isset($rules[$key])) {
+
+            }
+        }
+    }
+
+    public function validParam($value, $rule)
+    {
+        switch ($rule['type']) {
+
+        }
+    }
+
+    //  返回标准化接口数据
+    private function _standard_response($response, $resCode = 200)
+    {
+        return json($response)->code($resCode);
+    }
 }

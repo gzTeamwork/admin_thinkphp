@@ -13,12 +13,12 @@ class UserMealSubmit extends Model
     protected $table = 'user_meal_submit';
 
     //  专门用于检查传入参数
-    public function vaild_params($datas, $needKeys)
+    public function valid_params($params, $needKeys)
     {
         try {
             if (is_array($needKeys)) {
                 foreach ($needKeys as $key => $need) {
-                    if (isset($datas[$need]) === false) {
+                    if (isset($params[$need]) === false) {
                         throw new HttpException('501', '缺少输入的参数' . $need);
                     }
                 }
