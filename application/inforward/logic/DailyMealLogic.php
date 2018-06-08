@@ -3,7 +3,6 @@
 namespace app\inforward\logic;
 
 use app\inforward\model\UserMealSubmit;
-use think\Exception;
 use think\facade\Log;
 
 trait DailyMealLogic
@@ -12,7 +11,7 @@ trait DailyMealLogic
      * insert_user_meal
      * 增加用户报餐
      * @param $data
-     * @return \think\response\Json
+     * @return UserMealSubmit|false|int
      */
     public function insert_user_meal($data)
     {
@@ -32,35 +31,31 @@ trait DailyMealLogic
         if (is_null($existSubmit)) {
             $db = new UserMealSubmit();
             $data['enable'] = 1;
-            $res = $db->allowField(true)->save($data);
-            Log::info('[数据库增加操作]' . $data['update_time'] . ":成功新增用户提交的报餐记录,更新记录id为" . $res);
+            $result = $db->allowField(true)->save($data);
+            Log::info('[数据库增加操作]' . $data['update_time'] . ":成功新增用户提交的报餐记录,更新记录id为" . $result);
         } else {
             unset($data['create_time']);
-            $res = $db->update($data, $where);
-            Log::info('[数据库更新操作]' . $data['update_time'] . ":成功更新用户提交的报餐记录,更新记录id为" . $res);
+            $result = $db->update($data, $where);
+            Log::info('[数据库更新操作]' . $data['update_time'] . ":成功更新用户提交的报餐记录,更新记录id为" . $result);
         }
-        return json($res);
+        return $result;
     }
 
     /**
-     * get_user_daily_meal
      * 获取用户报餐数据
-     * @param $userid
+     * @param $userId
      * @param null $beginDate
      * @param null $endDate
      * @return array
      */
-    public function get_user_daily_meal($userid, $beginDate = null, $endDate = null)
+    public function select_user_daily_meal($userId, $beginDate = null, $endDate = null)
     {
         $db = new UserMealSubmit();
 
         $beginDate = is_null($beginDate) ? time() : $beginDate;
         $endDate = is_null($endDate) ? '+7 day' : $endDate;
-        $where = [
-            'user_id' => ['user_id', '=', $userid],
-            'create_time' => ['create_time', 'between time', [$beginDate, $endDate]],
-        ];
-        $result = $db->where($where)->select();
+        $result = $db->where('user_id', '=', $userId)->where('create_time', 'between time', [$beginDate, $endDate])->select();
+//        var_dump($db->getLastSql());
         if (!is_null($result)) {
             $result = $result->toArray();
             $result = array_combine(array_column($result, 'meal_date'), $result);
@@ -73,7 +68,7 @@ trait DailyMealLogic
      * 默认获取2日之内
      * @return MealsApi
      */
-    public function get_late_day_meals($lateDays = 2)
+    public function select_late_day_meals($lateDays = 2)
     {
         $db = new UserMealSubmit();
         //  今天日期

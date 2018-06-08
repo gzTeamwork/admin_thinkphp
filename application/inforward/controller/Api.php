@@ -469,7 +469,10 @@ class Api extends Controller
 
     }
 
-    //  设置员工每日报餐数据
+    /**
+     * @deprecated 本函数已弃用
+     * @return \think\response\Json
+     */
     public function attend_user_daily_meal()
     {
         header("Access-Control-Allow-Origin:*");
@@ -500,7 +503,7 @@ class Api extends Controller
         $userId = $this->request->param('user_id', null);
         $beginDate = $this->request->param('begin_date', "-2 day");
         $dailyMealLogic = new DailyMealLogic();
-        $result = $dailyMealLogic->get_user_daily_meal($userId);
+        $result = $dailyMealLogic->select_user_daily_meal($userId);
         return json($result);
     }
 

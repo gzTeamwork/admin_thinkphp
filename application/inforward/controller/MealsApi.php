@@ -31,9 +31,16 @@ class MealsApi extends Controller
      */
     public function get_recent_total()
     {
-        $lateDays = $this->request->param('days', 2);
         try {
-            $result = $this->get_late_day_meals($lateDays);
+            $lateDays = $this->request->param('days', 2);
+            $result = $this->select_late_day_meals($lateDays);
+
+            //  数据不足时需要填补空白数据
+            if (count($result) < $lateDays) {
+                for ($i = 0; $i < $lateDays; $i++) {
+                    $result[date("Y-m-d", strtotime('+' . ($i + 1) . ' day'))] = [];
+                }
+            }
             return $this->_standard_response($result, 200);
         } catch (Exception $e) {
             return $this->_standard_response($e->getMessage(), 400);
@@ -48,13 +55,16 @@ class MealsApi extends Controller
     {
         try {
             //  获取日期 - 默认从今日算起
-            $beginDay = $this->request->param('beginDay', time());
-            $userId = $this->request->param('user_id', function () {
+            $beginDate = $this->request->param('beginDay', strtotime('-7 days'));
+            $endDate = strtotime('+7 days');
+            $userId = $this->request->param('user_id', null);
+            if (is_null($userId)) {
                 throw new HttpException(400, '缺少用户id');
-            });
-//            $result = $this->get_user_daily_meal();
+            }
+            $result = $this->select_user_daily_meal($userId, $beginDate, $endDate);
+            return $this->_standard_response($result, 200);
         } catch (Exception $e) {
-            return json(400, $e->getMessage());
+            return $this->_standard_response($e->getMessage(), 400);
         }
     }
 
@@ -66,10 +76,36 @@ class MealsApi extends Controller
     {
         try {
             //  获取时间段
-            $beginDate = $this->request->param('begin_date', strtotime("-7 days"));
+            $beginDate = $this->request->param('begin_date', strtotime('-7 days'));
             $endDate = $this->request->param('end_date', strtotime("+7 days"));
             $result = $this->get_menu_recent($beginDate, $endDate);
+            $this->getResultByCol($result, 'meal_date');
             return $this->_standard_response($result, 200);
+        } catch (Exception $e) {
+            return $this->_standard_response($e->getMessage(), 400);
+        }
+    }
+
+    /**
+     * 处理用户报餐提交
+     * @return \think\response\Json
+     */
+    public function attend_user_meal()
+    {
+        $userId = $this->request->param('user_id', null);
+        $dailyMealDate = $this->request->param('meal_date', null);
+        $dailyMealCheck = $this->request->param('meal_check', false);
+        $dailyMealCheck = $dailyMealCheck ? 1 : 0;
+        try {
+            if (is_null($userId) && is_null($dailyMealDate)) {
+                throw new HttpException(400, '参数不允许为空');
+            } else {
+                $result = $this->insert_user_meal(
+                    ['user_id' => $userId, 'meal_date' => $dailyMealDate, 'need_meal' => $dailyMealCheck]
+                );
+//                var_dump($result);
+                return $this->_standard_response($result, 200);
+            }
         } catch (Exception $e) {
             return $this->_standard_response($e->getMessage(), 400);
         }

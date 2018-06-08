@@ -3,7 +3,6 @@
 namespace app\inforward\logic;
 
 use think\Exception;
-use app\inforward\logic\ThrowException;
 
 trait BaseController
 {

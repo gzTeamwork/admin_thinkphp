@@ -8,11 +8,13 @@
 
 namespace app\inforward\logic\meal;
 
+use app\inforward\logic\base\BaseModelLogic;
 use think\Exception;
 use  app\inforward\model\MealMenu as MealMenuModel;
 
 trait mealMenuLogic
 {
+    use BaseModelLogic;
 
     /**
      * 获取最近菜单数据

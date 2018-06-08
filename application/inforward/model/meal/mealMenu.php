@@ -9,10 +9,10 @@
 namespace app\inforward\model;
 
 use think\Model;
-use app\inforward\logic\BaseModel;
+use app\inforward\logic\BaseModelLogic;
 
 class MealMenu extends Model
 {
     protected $table = 'mealMenuLogic';
-    use BaseModel;
+    use BaseModelLogic;
 }
