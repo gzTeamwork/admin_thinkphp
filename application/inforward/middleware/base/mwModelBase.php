@@ -2,18 +2,18 @@
 /**
  * Created by PhpStorm.
  * User: zico
- * Date: 2018/6/6
- * Time: 上午11:23
+ * Date: 2018/6/19
+ * Time: 上午9:01
  */
 
-namespace app\inforward\logic\base;
+namespace app\inforward\middleware\base;
 
 use think\db\exception\DataNotFoundException;
 
-trait BaseModelLogic
+trait mwModelBase
 {
     /**
-     * 获取数据查询预处理结果
+     * 预处理获取数据结果
      * @param $result
      * @return null
      * @throws DataNotFoundException
@@ -22,9 +22,9 @@ trait BaseModelLogic
     {
         if (is_null($result)) {
             throw new DataNotFoundException();
-            return nulll;
+            return null;
         } else {
-            return $result->toArray();
+            return is_array($result) ? $result : $result->toArray();
         }
     }
 
@@ -32,14 +32,11 @@ trait BaseModelLogic
      * 以列值为数组key返回结果
      * @param $result
      * @param $colName
-     * @return array|null
+     * @return array
      */
-    public function getResultByCol($result, $colName)
+    public function getResultByCol(&$result, $colName)
     {
-        if (is_null($result)) {
-            return null;
-        } else {
-            return array_combine(array_column($result, $colName), $result);
-        }
+        return array_combine(array_column($result, $colName), $result);
     }
+
 }

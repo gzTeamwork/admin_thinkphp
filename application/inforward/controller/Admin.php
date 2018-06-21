@@ -2,34 +2,58 @@
 
 namespace app\inforward\controller;
 
+use app\inforward\unit\userUnit;
+use think\App;
 use think\Controller;
-use think\Request;
+use think\Exception;
 
 class Admin extends Controller
 {
-    public function __construct(Request $request)
+    public function __construct(App $app = null)
     {
-        parent::__construct($request);
+        parent::__construct($app);
     }
 
+    /**
+     * 默认首页
+     */
+    public function index()
+    {
+        $this->dashboard();
+    }
+
+    /**
+     * 管理后台面板
+     */
     public function dashboard()
     {
-        //  后台首页
+        $user = new userUnit();
+//        $user->isAdmin() ? '' : $this->redirect('inforward/admin/login');
+        $this->fetch('admin/index');
     }
 
-    //  后台管理员登陆
-    public function admin_login()
+    /**
+     * 管理员登录入口
+     * @return mixed
+     */
+    public function login()
     {
-        $account = $this->request->param('login_account');
-        $password = $this->request->param('login_password');
-
-        try {
-            if (is_null($account) || is_null($password)) {
-                throw new HttpException(405, 'params not exists');
-            }
-        } catch (Exception $e) {
-            return json('');
-        }
+        return $this->fetch('admin/login');
     }
+
+//
+//    public function admin_login()
+//    {
+//        $account = $this->request->param('login_account');
+//        $password = $this->request->param('login_password');
+//
+//        try {
+//            if (is_null($account) || is_null($password)) {
+//                throw new Exception('用户登录缺少帐号或密码', 304);
+//            }
+//        } catch (Exception $e) {
+//            return json();
+//        }
+//    }
 
 }

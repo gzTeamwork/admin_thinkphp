@@ -11,17 +11,7 @@ namespace app\inforward\controller;
 
 use think\Controller;
 
-class Index extends Controller
+class Index extends Admin
 {
-    public function __construction()
-    {
-        parent::__construction();
-    }
-
-    public function index()
-    {
-        return "hello,this is inforward interface api enter;"; # code...
-    }
-
-    
 }
+;

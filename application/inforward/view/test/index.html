@@ -1,0 +1,91 @@
+{include file="public/pageHead" /}
+<section id="app">
+    <form action="">
+        <div>
+            <label v-for="(e,i) in preHead" :key="i">
+                <input type="radio" name="mode" :value="e" v-model="head"/>
+                {{e}}
+            </label>
+        </div>
+        <div>
+            <label for="host">
+                服务器地址
+                <input type="text" name="host" :value="host" v-model="host"/>
+            </label>
+        </div>
+        <div>
+            <label for="api">
+                端口地址
+                <input type="text" name="api" :value="api" v-model="api"/>
+            </label>
+        </div>
+        <p>api参数</p>
+        <ul>
+            <li v-for="(e,i) in args" :key="i">
+                <label :for="e.name">
+                    键
+                    <input type="text" :name="e.name" :value="e.name" v-model="e.name"/>
+                </label>
+                <label :for="e.name">
+                    值
+                    <input type="text" :name="e.value" :value="e.value" v-model="e.value"/>
+                </label>
+            </li>
+            <button type="button" @click="addNewItem">增加项目</button>
+        </ul>
+        <button type="button" @click="sendAjax">提交</button>
+        <section>
+            <p>接口地址</p>
+            <div>{{apiUrl}}</div>
+        </section>
+        <section v-if="response.status !== undefined">
+            <p>接受反馈 - <span v-if="response.status == 200">通信成功</span><span v-else>通信失败</span></p>
+            {{response.responseText}}
+        </section>
+
+    </form>
+</section>
+<script>
+    const app = new Vue({
+        model: 'production',
+        el: '#app',
+        data() {
+            return {
+                host: '',
+                api: '',
+                args: [
+                    {name: 'keyName', value: 'keyValue'}
+                ],
+                head: 'http',
+                apiUrl: null,
+                preHead: ['http', 'https'],
+                response: [],
+            }
+        },
+        mounted() {
+            this.host = window.location.host;
+        },
+        methods: {
+            addNewItem: function () {
+                this.args.push({name: 'keyName', value: 'keyValue'});
+            },
+            sendAjax: function () {
+                let vm = this;
+                let ajaxUrl = vm.host + '/' + vm.api;
+                let ajaxQuery = '';
+                vm.args.map((e, i) => {
+                    ajaxQuery += e.name + '=' + e.value + ((i + 1 === vm.args.length) ? '' : '&');
+                });
+                vm.apiUrl = vm.head + '://' + ajaxUrl + '?' + ajaxQuery;
+                $.ajax({
+                        type: 'get', url: vm.apiUrl, success: function (response, status, hrx) {
+                            app.response = hrx;
+                            console.log(hrx);
+                        }
+                    },
+                )
+            }
+        }
+    })
+</script>
+{include file="public/pageFooter" /}

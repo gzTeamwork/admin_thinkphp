@@ -8,11 +8,12 @@
 
 namespace app\inforward\model;
 
+use app\inforward\middleware\mwModelBase;
 use think\Model;
-use app\inforward\logic\BaseModelLogic;
 
 class MealMenu extends Model
 {
     protected $table = 'mealMenuLogic';
-    use BaseModelLogic;
+    use mwModelBase;
+
 }

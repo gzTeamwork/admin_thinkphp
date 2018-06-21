@@ -59,7 +59,7 @@ trait BaseController
     }
 
     //  返回标准化接口数据
-    private function _standard_response($response, $resCode = 200)
+    function standard_response($response, $resCode = 200)
     {
         return json($response)->code($resCode);
     }
