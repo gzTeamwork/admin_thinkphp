@@ -5,7 +5,6 @@ namespace app\inforward\controller;
 use app\inforward\unit\userUnit;
 use think\App;
 use think\Controller;
-use think\Exception;
 
 class Admin extends Controller
 {
@@ -19,7 +18,7 @@ class Admin extends Controller
      */
     public function index()
     {
-        $this->dashboard();
+        return $this->dashboard();
     }
 
     /**
@@ -28,8 +27,10 @@ class Admin extends Controller
     public function dashboard()
     {
         $user = new userUnit();
+        $this->view->engine->layout('admin/layout');
 //        $user->isAdmin() ? '' : $this->redirect('inforward/admin/login');
-        $this->fetch('admin/index');
+
+        return $this->fetch('admin/index');
     }
 
     /**
