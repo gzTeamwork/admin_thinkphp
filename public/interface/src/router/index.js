@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import AdminRouter from '@/pages/admin/adminRouter'
 
 Vue.use(Router);
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -15,4 +15,16 @@ export default new Router({
       children: [AdminRouter]
     }
   ]
-})
+});
+
+//  总路由守卫,用于检查管理员身份和页面访问权限
+router.beforeEach((to, from, next) => {
+  window.$store.dispatch('adminUserInit');
+  if (window.$store.isAdmin || to.path.match('admin/login')) {
+    next()
+  } else {
+    next('admin/login')
+  }
+});
+
+export default router;

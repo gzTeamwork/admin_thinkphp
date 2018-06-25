@@ -1,53 +1,41 @@
 <template>
-  <mu-flex justify-content="center">
-    <mu-flex direction="column" justify-content="start" align-items="center">
-      <h2>管理员登陆</h2>
-      <mu-form :model="form" :label-position="labelPosition">
-        <!--登录账户-->
-        <mu-form-item prop="input" label="管理员账户">
-          <mu-text-field v-model="form.account"></mu-text-field>
-        </mu-form-item>
-        <!--登录密码-->
-        <mu-form-item prop="input" label="登录密码">
-          <mu-text-field v-model="form.password"></mu-text-field>
-        </mu-form-item>
-        <!--是否自动登录-->
-        <mu-form-item prop="switch" label="自动登录">
-          <mu-switch v-model="form.isAutoLogin"></mu-switch>
-        </mu-form-item>
-        <mu-flex direction="row">
-          <mu-button color="pink300">新用户</mu-button>
-          <mu-button color="primary" @click="adminLoginSub">登录</mu-button>
-          <mu-button color="blueGrey100">重填</mu-button>
-        </mu-flex>
-      </mu-form>
+  <mu-container>
+    <mu-flex class="align-center-abs" justify-content="center" align-items="center">
+      <mu-flex class="adminLoginBox" direction="column" justify-content="start" align-items="center">
+        <mu-tabs :value.sync="tabActive" inverse color="blue300" indicator-color="blue300" text-color="rgba(0, 0, 0, .54)" center>
+          <mu-tab>新用户</mu-tab>
+          <mu-tab>登录</mu-tab>
+          <mu-tab>扫码登录</mu-tab>
+        </mu-tabs>
+        <!--<transition name="fade">-->
+        <com-login-form v-if="tabActive === 1"></com-login-form>
+        <com-register-form v-if="tabActive === 0"></com-register-form>
+        <!--</transition>-->
+      </mu-flex>
     </mu-flex>
-  </mu-flex>
+  </mu-container>
 </template>
 
 <script>
+  const LoginForm = () => import('./components/loginForm');
+  const RegisterForm = () => import('./components/registerForm');
   export default {
     name: "login",
     data() {
       return {
-        labelPosition: 'top',
-        form: {
-          account: '',
-          password: '',
-          isAutoLogin: true,
-        }
+        tabActive: 1
       }
     },
-    methods: {
-      adminLoginSub: function () {
-        let vm = this;
-      }
+    methods: {},
+    components: {
+      'com-login-form': LoginForm,
+      'com-register-form': RegisterForm,
     }
   }
 </script>
 
-<style scoped>
-  .mu-button {
-    margin: 8px;
+<style>
+  .adminLoginBox {
+    min-height: 680px;
   }
 </style>

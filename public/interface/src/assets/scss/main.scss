@@ -1,0 +1,12 @@
+@charset "UTF-8";
+.panel {
+  &-flex {
+    display: flex;
+  }
+}
+
+.text {
+  &-center {
+    text-align: center;
+  }
+}

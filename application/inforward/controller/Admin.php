@@ -2,12 +2,17 @@
 
 namespace app\inforward\controller;
 
+use app\inforward\middleware\base\mwControllerBase;
 use app\inforward\unit\userUnit;
 use think\App;
 use think\Controller;
+use think\Exception;
 
 class Admin extends Controller
 {
+    use mwControllerBase;
+    use mwAp;
+
     public function __construct(App $app = null)
     {
         parent::__construct($app);
@@ -40,6 +45,21 @@ class Admin extends Controller
     public function login()
     {
         return $this->fetch('admin/login');
+    }
+
+
+    public function api_admin_login()
+    {
+        try {
+            $account = $this->getParam('account', null, true);
+            $password = $this->getParam('password', null, true);
+            if (is_null($account) || is_null($password)) {
+                throw new Exception('缺少必要参数', 403);
+            }
+        } catch (Exception $exception) {
+            $this->error($exception->getMessage(), $exception->getCode());
+        }
+
     }
 
 //

@@ -3,14 +3,26 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import App from './App'
-import Axios from 'axios'
 import router from './router'
+import store from './store'
 
+//  加载muse ui
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css';
 
+//  加载cookies插件
+import VueCookies from 'vue-cookies'
+//  加载axios插件
+import Axios from 'axios'
+// 加载全局scss
+// import '@/assets/scss/main.scss';
+import '../static/iconfont/material-icons.css'
+window.$cookies = VueCookies;
+window.$store = store;
+
 Vue.use(Vuex);
 Vue.use(MuseUI);
+Vue.use(VueCookies);
 
 Vue.prototype.$http = Axios;
 
@@ -19,7 +31,9 @@ Vue.config.productionTip = false;
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  router,
+  router, store,
   components: {App},
   template: '<App/>'
 })
+
+
