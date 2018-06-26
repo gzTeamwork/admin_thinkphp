@@ -2,6 +2,7 @@
 
 namespace app\inforward\controller;
 
+use app\inforward\middleware\base\mwApi;
 use app\inforward\middleware\base\mwControllerBase;
 use app\inforward\unit\userUnit;
 use think\App;
@@ -11,7 +12,7 @@ use think\Exception;
 class Admin extends Controller
 {
     use mwControllerBase;
-    use mwAp;
+    use mwApi;
 
     public function __construct(App $app = null)
     {
@@ -47,7 +48,10 @@ class Admin extends Controller
         return $this->fetch('admin/login');
     }
 
-
+    /**
+     * 数据接口 - 管理员登陆
+     * @return \think\response\Json
+     */
     public function api_admin_login()
     {
         try {
@@ -55,9 +59,15 @@ class Admin extends Controller
             $password = $this->getParam('password', null, true);
             if (is_null($account) || is_null($password)) {
                 throw new Exception('缺少必要参数', 403);
+            } else {
+                if ($account == 'admin' && $password == '123456') {
+                    $this->success('管理员' . $account . '成功登录', '', ['nick' => '管理员', 'account' => 'admin', 'isAdmin' => true]);
+                } else {
+                    throw new Exception('管理员账户或密码错误');
+                }
             }
         } catch (Exception $exception) {
-            $this->error($exception->getMessage(), $exception->getCode());
+            $this->error('管理员登陆失败', '', ['msg' => $exception->getMessage()]);
         }
 
     }

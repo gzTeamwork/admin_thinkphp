@@ -56,7 +56,7 @@ trait mwControllerBase
         if ($isMust && Request::has($key)) {
             return $param = Request::param($key, $default);
         } else {
-            new Exception("缺少接口参数:" + $key, 404);
+            new Exception("缺少接口参数:" .$key, 404);
             return $default;
         }
     }
