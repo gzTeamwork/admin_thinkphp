@@ -18,6 +18,24 @@ trait mwApi
 {
     use \traits\controller\Jump;
 
+    /**
+     * _api_getParam
+     * 获取单个接口参数
+     * @param $key
+     * @param null $default
+     * @param bool $isMust
+     * @return mixed|null
+     */
+    private function _api_getParam($key, $default = null, $isMust = false)
+    {
+        if ($isMust && Request::has($key)) {
+            return $param = Request::param($key, $default);
+        } else {
+            new Exception("缺少接口参数:" . $key, 404);
+            return $default;
+        }
+    }
+
     public function api()
     {
         header('Access-Control-Allow-Origin: *');

@@ -17,6 +17,7 @@ import Axios from 'axios'
 // 加载全局scss
 // import '@/assets/scss/main.scss';
 import '../static/iconfont/material-icons.css'
+
 window.$cookies = VueCookies;
 window.$store = store;
 
