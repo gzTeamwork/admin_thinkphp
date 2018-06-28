@@ -22,14 +22,14 @@ ajaxAxios.interceptors.request.use(config => {
 ajaxAxios.interceptors.response.use(
   response => {
     console.log('ajax交互完毕' + new Date())
-    if (response.status === 200) {
-      if (response.code === 0) {
+    if (response.status === 200 && response.data !== undefined) {
+      if (response.data.code === 0) {
         //  精准的交互失败处理
-        console.log('本次ajax数据交互失败,原因是' + response.msg)
-      } else {
-        return response.data;
+        console.log('本次ajax数据交互失败,原因是' + response.data.msg)
       }
+      return response.data;
     } else {
+      // @todo 修复交互链接失败
       const err = new Error(data.description)
       err.data = data
       err.response = response

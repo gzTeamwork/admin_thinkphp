@@ -21,6 +21,14 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+    .full {
+      &-width {
+        width: 100%;
+      }
+      &-height {
+        height: 100%;
+      }
+    }
     .text {
       &-center {
         text-align: center;

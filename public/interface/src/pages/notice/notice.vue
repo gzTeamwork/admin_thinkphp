@@ -13,31 +13,50 @@
     name: "notice",
     data() {
       return {
-        status: 'default',
-        color: 'info',
+        status: 'info',
         message: '',
         show: false,
-        timeout: 1500,
+        timeout: 3500,
         timer: null,
       }
     },
     computed: {
+      /**
+       * 消息弹框颜色
+       * @returns {*}
+       */
+      color() {
+        return {
+          success: 'green300',
+          info: 'blue200',
+          warning: 'orange200',
+          error: 'red200',
+        }[this.status]
+      },
+      /**
+       * 消息弹框图标
+       * @returns {*}
+       */
       icon() {
         return {
           success: 'check_circle',
           info: 'info',
           warning: 'priority_high',
           error: 'warning'
-        }[this.color]
+        }[this.status]
       },
-      //  计算通知消息
-      handlerNoticeMessage: function () {
-        return this.$store.getters.getNoticeMessage;
+      //  计算通知发生时间戳
+      handlerNoticeTimeStamp: function () {
+        return this.$store.getters.getNoticeTimeStamp;
       },
-      //  计算通知状态
-      handlerNoticeStatus: function () {
-        return this.$store.getters.getNoticeStatus;
-      }
+      // //  计算通知消息
+      // handlerNoticeMessage: function () {
+      //   return this.$store.getters.getNoticeMessage;
+      // },
+      // //  计算通知状态
+      // handlerNoticeStatus: function () {
+      //   return this.$store.getters.getNoticeStatus;
+      // }
     },
     watch: {
       status: function (v, ov) {
@@ -48,22 +67,21 @@
           warning: 'warning',
         }[v]
       },
-      handlerNoticeMessage: function (v, ov) {
-        this.openColorSnackbar(v);
+      //  消息时间戳发生改变 - 有新消息
+      handlerNoticeTimeStamp: function () {
+        this.openColorSnackbar();
       },
-      handlerNoticeStatus: function (v, ov) {
-        this.status = v || 'default';
-      }
     },
     methods: {
-      openColorSnackbar(msg) {
-        // if (this.timer) clearTimeout(this.timer);
+      openColorSnackbar() {
+        if (this.timer) clearTimeout(this.timer);
+        this.message = this.$store.getters.getNoticeMessage;
+        this.status = this.$store.getters.getNoticeStatus;
         this.show = true;
-        this.message = msg;
         this.timer = setTimeout(() => {
           this.message = null;
           this.show = false;
-          this.status = 'default'
+          this.status = 'info'
         }, this.timeout);
       }
     }

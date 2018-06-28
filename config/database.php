@@ -21,7 +21,7 @@ return [
     // 密码
     'password' => 'rain198793!',
     // 端口
-    'hostport' => '',
+    'hostport' => '3306',
     // 连接dsn
     'dsn' => '',
     // 数据库连接参数
@@ -58,4 +58,32 @@ return [
     'break_reconnect' => false,
     // 断线标识字符串
     'break_match_str' => [],
+    'db_user_center' => [
+        // 数据库类型
+        'type' => 'mysql',
+        // 服务器地址
+        'hostname' => '120.79.25.119',
+        // 数据库名
+        'database' => 'user_center',
+        // 数据库用户名
+        'username' => 'zico',
+        // 数据库密码
+        'password' => 'Rain198793',
+        // 数据库编码默认采用utf8
+        'charset' => 'utf8mb4',
+    ],
+    'db_admin_core' => [
+        // 数据库类型
+        'type' => 'mysql',
+        // 服务器地址
+        'hostname' => '120.79.25.119',
+        // 数据库名
+        'database' => 'inforward_admin',
+        // 数据库用户名
+        'username' => 'zico',
+        // 数据库密码
+        'password' => 'Rain198793',
+        // 数据库编码默认采用utf8
+        'charset' => 'utf8mb4',
+    ],
 ];

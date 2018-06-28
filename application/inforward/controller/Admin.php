@@ -3,6 +3,8 @@
 namespace app\inforward\controller;
 
 use app\inforward\controller\apiHandler\AdminApiHandler;
+use app\inforward\controller\apiHandler\SystemApiHandler;
+use app\inforward\controller\apiHandler\UserApiHandler;
 use app\inforward\middleware\base\mwApi;
 use app\inforward\middleware\base\mwControllerBase;
 use app\inforward\unit\userUnit;
@@ -14,10 +16,17 @@ class Admin extends Controller
 {
     use mwControllerBase;
     use AdminApiHandler;
+    use UserApiHandler;
+    use SystemApiHandler;
 
     public function __construct(App $app = null)
     {
         parent::__construct($app);
+    }
+
+    public function api()
+    {
+        return mwApi::api($this);
     }
 
     /**
@@ -49,21 +58,5 @@ class Admin extends Controller
         return $this->fetch('admin/login');
     }
 
-
-
-//
-//    public function admin_login()
-//    {
-//        $account = $this->request->param('login_account');
-//        $password = $this->request->param('login_password');
-//
-//        try {
-//            if (is_null($account) || is_null($password)) {
-//                throw new Exception('用户登录缺少帐号或密码', 304);
-//            }
-//        } catch (Exception $e) {
-//            return json();
-//        }
-//    }
 
 }
