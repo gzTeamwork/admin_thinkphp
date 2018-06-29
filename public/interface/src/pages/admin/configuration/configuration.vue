@@ -17,6 +17,7 @@
     name: "adminConfiguration",
     data() {
       return {
+        options: {},
         form: {}
       }
     },
@@ -24,9 +25,21 @@
       //  配置页面创建的时候,加载服务器数据
       adminApi.getSystemConfiguration();
     },
-    computed:{
-      handleSystemConfiguration:function(){
-        // return this.$store.getters.
+    computed: {
+      /**
+       * 从store获取配置数据
+       * @returns {getters.getSystemConfig}
+       */
+      handleSystemConfiguration: function () {
+        return this.$store.getters.getSystemConfigs;
+      }
+    },
+    watch: {
+      /**
+       * 监听store配置数据
+       */
+      handleSystemConfiguration: function (v) {
+        this.options = v;
       }
     },
     methods: {

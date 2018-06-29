@@ -28,10 +28,9 @@ export default {
    * @param form
    */
   userRegisterSub: function (form) {
-    httpAxios.post('do/api_user_register', {
-      account: form.account || '',
-      password: form.password || '',
-    }).then(response => {
+    // console.log(form);
+    httpAxios.post('do/api_user_register', form
+    ).then(response => {
       if (response.code === 1) {
         //  注册成功
         window.$store.commit('NOTICE_SUCCESS', response.msg);
@@ -63,7 +62,7 @@ export default {
       params: {}
     }).then(response => {
       if (response.code === 1) {
-        window.$store.dispatch('systemConfigs')
+        window.$store.dispatch('systemConfigs', response.data);
       }
     })
   }

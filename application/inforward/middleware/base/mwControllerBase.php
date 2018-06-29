@@ -50,13 +50,14 @@ trait mwControllerBase
      * @param null $default
      * @param bool $isMust
      * @return mixed|null
+     * @throws Exception
      */
     public function getParam($key, $default = null, $isMust = false)
     {
         if ($isMust && Request::has($key)) {
             return $param = Request::param($key, $default);
         } else {
-            new Exception("缺少接口参数:" . $key, 404);
+            throw new Exception("缺少接口参数:" . $key, 404);
             return $default;
         }
     }

@@ -20,7 +20,7 @@ export default {
         },
         {
           //  默认页面
-          path: '*',
+          path: '',
           component: () => import('@/pages/admin/index'),
         }
       ]

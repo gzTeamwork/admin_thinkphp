@@ -2,7 +2,6 @@
 //  系统配置vuex
 const state = {
   systemConfigs: {}
-
 };
 
 const getters = {
@@ -11,7 +10,7 @@ const getters = {
    * @param state
    * @returns {{}|state.systemConfigs}
    */
-  getSystemConfig: state => {
+  getSystemConfigs: state => {
     return state.systemConfigs;
   }
 };
@@ -24,7 +23,7 @@ const actions = {
 
 const mutations = {
   SYSTEM_CONFIGS: (state, payload) => {
-    console.log(payload)
+    console.log(payload);
     state.systemConfigs = payload
   }
 };

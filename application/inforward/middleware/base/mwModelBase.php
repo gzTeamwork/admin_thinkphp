@@ -9,23 +9,35 @@
 namespace app\inforward\middleware\base;
 
 use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
 
 trait mwModelBase
 {
+    /**
+     * 过滤查询字段
+     * @param $fields
+     * @param $query
+     */
+    public function filterFields($fields, $query)
+    {
+        return array_intersect_key($query, array_flip($fields));
+    }
+
     /**
      * 预处理获取数据结果
      * @param $result
      * @return null
      * @throws DataNotFoundException
+     * @throws ModelNotFoundException
      */
     public function getResult(&$result)
     {
-        if (is_null($result)) {
-            throw new DataNotFoundException();
-            return null;
-        } else {
-            return is_array($result) ? $result : $result->toArray();
+
+        if (empty($result->toArray())) {
+            throw new ModelNotFoundException('查找结果为空');
         }
+        return $result->toArray();
+
     }
 
     /**
