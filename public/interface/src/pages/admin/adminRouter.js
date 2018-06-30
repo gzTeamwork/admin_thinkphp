@@ -19,9 +19,14 @@ export default {
           component: () => import('@/pages/admin/configuration/configuration.vue')
         },
         {
+          path: 'user/list',
+          component: () => import('@/pages/admin/user/userList.vue'),
+        },
+        {
           //  默认页面
-          path: '',
-          component: () => import('@/pages/admin/index'),
+          path: '*',
+          component:
+            () => import('@/pages/admin/index'),
         }
       ]
     }

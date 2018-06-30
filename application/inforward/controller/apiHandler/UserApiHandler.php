@@ -57,6 +57,7 @@ trait UserApiHandler
             if (is_null($res)) {
                 throw new Exception($params['account'] . '用户登录失败!');
             } else {
+                $res['password'] ?? array_pop($res['password']);
                 $this->success($params['account'] . '用户登录成功', '', $res);
             }
 //            if ($account == 'admin' && $password == '123456') {
@@ -68,5 +69,19 @@ trait UserApiHandler
         } catch (Exception $exception) {
             $this->error('后台登陆失败', '', ['msg' => $exception->getMessage()]);
         }
+    }
+
+    /**
+     * 数据接口 - 获取用户列表
+     */
+    public function api_get_users_list()
+    {
+        try {
+            $userList = mwUser::getUsers([]);
+            $this->success('成功获取多个用户信息', '', $userList);
+        } catch (Exception $exception) {
+            $this->error('获取多个用户信息失败', '', ['msg' => $exception->getMessage()]);
+        }
+
     }
 }

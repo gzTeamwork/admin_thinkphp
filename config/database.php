@@ -62,13 +62,14 @@ return [
         // 数据库类型
         'type' => 'mysql',
         // 服务器地址
-        'hostname' => '120.79.25.119',
+        'hostname' => '127.0.0.1',
+        'hostport' => '3306',
         // 数据库名
-        'database' => 'user_center',
+        'database' => 'inforward_user_center',
         // 数据库用户名
-        'username' => 'zico',
+        'username' => 'root',
         // 数据库密码
-        'password' => 'Rain198793',
+        'password' => 'yfyt666666',
         // 数据库编码默认采用utf8
         'charset' => 'utf8mb4',
     ],
@@ -76,13 +77,14 @@ return [
         // 数据库类型
         'type' => 'mysql',
         // 服务器地址
-        'hostname' => '120.79.25.119',
+        'hostname' => '127.0.0.1',
+        'hostport' => '3306',
         // 数据库名
         'database' => 'inforward_admin',
         // 数据库用户名
-        'username' => 'zico',
+        'username' => 'root',
         // 数据库密码
-        'password' => 'Rain198793',
+        'password' => 'yfyt666666',
         // 数据库编码默认采用utf8
         'charset' => 'utf8mb4',
     ],

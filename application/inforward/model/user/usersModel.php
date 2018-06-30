@@ -20,9 +20,5 @@ class usersModel extends Model
     protected $connection = 'db_user_center';
     protected $table = 'user_list';
 
-    public function __construct($data = [])
-    {
-        parent::__construct($data);
-    }
 
 }

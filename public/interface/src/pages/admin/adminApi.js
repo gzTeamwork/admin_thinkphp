@@ -13,7 +13,7 @@ export default {
         password: form.password || ''
       }
     }).then(response => {
-      console.log(response)
+      console.log(response);
       if (response.code === 1) {
         //  登录成功,返回管理员信息
         window.$store.commit('NOTICE_SUCCESS', response.msg);
@@ -54,6 +54,18 @@ export default {
       }
     })
   },
+  getAdminProfileMenu: function () {
+    httpAxios.get('do/api_admin_profile_menu', {
+      params: {
+        uid: window.$store.getters.adminUid || null
+      }
+    }).then(response => {
+      if (response.code === 1) {
+        window.$store.dispatch('getAdminProfileMenu', response.data);
+      }
+      return response;
+    })
+  },
   /**
    * 获取系统配置项
    */
@@ -65,5 +77,5 @@ export default {
         window.$store.dispatch('systemConfigs', response.data);
       }
     })
-  }
+  },
 }

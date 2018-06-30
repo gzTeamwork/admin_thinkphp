@@ -8,6 +8,9 @@
 
 namespace app\inforward\controller\apiHandler;
 
+use app\inforward\middleware\base\mwModelBase;
+use app\inforward\middleware\dashboard\mwDashboard;
+use think\Exception;
 use think\facade\Cache;
 
 trait AdminApiHandler
@@ -18,36 +21,33 @@ trait AdminApiHandler
      */
     public function api_admin_menu()
     {
-        $menu = $this->_adminMenuInit();
-        $this->success('成功获取后台菜单数据', '', $menu);
+        try {
+            $where = ['group' => ['post', 'category', 'configuration', 'total', 'user']];
+            $menus = self::_getAdminMenu($where);
+            $this->success('成功获取后台菜单数据', '', $menus);
+        } catch (Exception $exception) {
+            $this->error('获取后台菜单数据失败', '', ['msg' => $exception->getMessage()]);
+        }
     }
 
     /**
      * 后台菜单初始化
      * @todo 追加不同用户的菜单缓存
      */
-    protected function _adminMenuInit()
+    protected function _getAdminMenu(array $where = [], bool $isCache = false): array
     {
-        $adminMenu = Cache::get('admin_menu', null);
-        if (is_null($adminMenu)) {
-            $adminMenu = [
-                'config' => [
-                    'adminConfig' => [
-                        'path' => '/admin/configuration',
-                        'icon' => '',
-                        'label' => '后台配置',
-                        'name' => 'adminConfig',
-                    ],
-                    'test' => [
-                        'path' => '/admin/test',
-                        'icon' => '',
-                        'label' => '测试链接',
-                        'name' => 'testPage'
-                    ]
-                ]
-            ];
-            Cache::set('admin_menu', $adminMenu, 7200);
-        }
+        $adminMenu = ($isCache && Cache::has('admin_menu')) ? Cache::get('admin_menu') : mwDashboard::getMenusTree($where);
+        $isCache ? Cache::set('admin_menu', $adminMenu, 7200) : null;
         return $adminMenu;
+    }
+
+    public function api_admin_profile_menu()
+    {
+        try {
+            $menus = $this->_getAdminMenu(['group' => 'userProfile']);
+            $this->success('成功获取管理员用户菜单', '', $menus);
+        } catch (Exception $exception) {
+            $this->error('获取管理员菜单失败', '', ['msg' => $exception->getMessage()]);
+        }
     }
 }

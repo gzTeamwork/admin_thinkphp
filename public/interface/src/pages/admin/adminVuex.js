@@ -2,6 +2,7 @@
 const state = {
   adminUser: {},
   adminMenu: {},
+  adminProfileMenu: {},
   isAdmin: false,
   isLogin: false
 };
@@ -17,11 +18,14 @@ const getters = {
   },
   //  是否管理员
   isAdmin: state => {
-    state.isAdmin = state.adminUser.isAdmin || false
+    return state.isAdmin = state.adminUser.isAdmin || false
   },
   //  是否已经登录
   isLogin: state => {
     return state.adminUser.nick !== undefined
+  },
+  getAdminProfileMenu: state => {
+    return state.adminProfileMenu;
   }
 };
 
@@ -59,6 +63,15 @@ const actions = {
     setTimeout(() => {
       location.href = "/admin/dashboard";
     }, 1000)
+  },
+  /**
+   * 获取管理后台用户菜单
+   * @param context
+   * @param data
+   */
+  getAdminProfileMenu: (context, data) => {
+    console.log(data);
+    state.adminProfileMenu = data;
   }
 };
 

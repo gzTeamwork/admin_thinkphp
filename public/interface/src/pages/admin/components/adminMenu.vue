@@ -11,21 +11,24 @@
       <mu-divider></mu-divider>
       <!--管理后台菜单-->
       <mu-list toggle-nested>
-        <mu-list-item v-for="(e,i) in adminMenu" :key="i" button :ripple="false" nested :open="open === 'send'"
-                      @toggle-nested="open = arguments[0] ? 'send' : ''">
+        <mu-list-item v-for="(e,i) in adminMenu" :key="i" button :ripple="false" nested
+                      :open="open === e.name"
+                      @toggle-nested="open = arguments[0] ? e.name : ''">
           <mu-list-item-action>
-            <mu-icon value="send"></mu-icon>
+            <mu-icon v-if="e.icon" class="toggle-icon" size="24" :value="e.icon"></mu-icon>
           </mu-list-item-action>
-          <mu-list-item-title>{{i}}</mu-list-item-title>
+          <mu-list-item-title>{{e.label}}</mu-list-item-title>
           <mu-list-item-action>
-            <mu-icon class="toggle-icon" size="24" value="keyboard_arrow_down"></mu-icon>
+            <mu-icon class="toggle-icon" size="24"
+                     :value="open === e.name?'keyboard_arrow_down':'keyboard_arrow_left'"></mu-icon>
           </mu-list-item-action>
-          <mu-list-item v-for="(o,n) in e" :key="n" :to="o.path" button :ripple="false" slot="nested">
-            <mu-list-item-title>{{o.label}}</mu-list-item-title>
+          <mu-list-item v-for="(o,n) in e.sub" :key="n" :to="o.path" button :ripple="false" slot="nested">
+            <mu-list-item-title>
+              <small>{{o.label}}</small>
+            </mu-list-item-title>
           </mu-list-item>
         </mu-list-item>
       </mu-list>
-
     </mu-paper>
   </mu-container>
 </template>

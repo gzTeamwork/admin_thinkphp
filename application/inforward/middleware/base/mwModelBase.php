@@ -8,11 +8,23 @@
 
 namespace app\inforward\middleware\base;
 
+use Monolog\Handler\ElasticSearchHandler;
+use PhpParser\Node\Expr\Array_;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
 
 trait mwModelBase
 {
+    /**
+     * @param array $needles
+     * @param array $where
+     * @return array
+     */
+    public function needQueryFields(array $needles = [], array $where = []): array
+    {
+        return empty($needles) ? $where : array_merge($where, $needles);
+    }
+
     /**
      * 过滤查询字段
      * @param $fields

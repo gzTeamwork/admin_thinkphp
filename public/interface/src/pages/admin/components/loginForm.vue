@@ -1,6 +1,9 @@
 <template>
   <mu-container>
     <h2>管理员登陆</h2>
+    <mu-chip v-if="!!adminUser">
+      {{adminUser.nick_name}}
+    </mu-chip>
     <mu-form :model="form" :label-position="labelPosition">
       <!--登录账户-->
       <mu-form-item prop="input" label="管理员账户">
@@ -47,6 +50,7 @@
     data() {
       return {
         labelPosition: 'top',
+        adminUser: {},
         form: {
           account: '',
           password: '',
@@ -59,6 +63,16 @@
       adminLoginSub: function (event) {
         console.log(event);
         adminApi.adminLoginSub(this.form);
+      }
+    },
+    computed: {
+      handlerAdminUser: function () {
+        return this.$store.getters.getAdminUser;
+      }
+    },
+    watch: {
+      handlerAdminUser: function (v) {
+        this.adminUser = v;
       }
     }
   }

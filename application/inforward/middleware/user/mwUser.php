@@ -29,11 +29,27 @@ trait mwUser
      * 生成用户唯一id
      * @return bool|string
      */
-    static public function buildUnionId()
+    static public function buildUnionId(): string
     {
-        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@_';
-        $random = substr(str_shuffle($chars), 0, 12) . time();
-        return $random;
+        /*
+         * Use OpenSSL (if available)
+         */
+        $length = 20;
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $bytes = openssl_random_pseudo_bytes($length * 2);
+
+            if ($bytes === false)
+                throw new RuntimeException('Unable to generate a random string');
+
+            return substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $length);
+        }
+
+        $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        return substr(str_shuffle(str_repeat($pool, 5)), 0, $length);
+        //        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@_';
+        //        $random = substr(str_shuffle($chars), 0, 12) . time();
+        //        return $random;
     }
 
     /**
@@ -70,17 +86,23 @@ trait mwUser
     {
         $userModel = new usersModel();
         try {
+            //  密码加密处理
             if (isset($where['password'])) {
                 $where['password'] = md5($where['password']);
             }
+            //  是否只检索活动帐号
+            if (isset($where['active'])) {
+                $where['active'] = 1;
+            }
 
             $where = $userModel->filterFields($userModel->getTableFields(), $where);
-            var_dump($where);
+//            var_dump($where);
 
-            $res = $userModel->select($where);
-            return $res = $userModel->getResult($res);
+            $res = $userModel->where($where)->select();
+            $res = $userModel->getResult($res);
+            return $res[0];
         } catch (ModelNotFoundException $exception) {
-
+//            var_dump($userModel->getLastSql());
         }
     }
 
@@ -110,6 +132,24 @@ trait mwUser
         $userTemplate['isActive'] = true;
         $userTemplate['create_time'] = $userTemplate['update_time'] = time();
         return $userTemplate;
+    }
+
+    /**
+     * 获取多个用户信息
+     * @param array $where
+     * @return array
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    static public function getUsers(array $where): array
+    {
+        $userModel = new usersModel();
+        $where = $userModel->filterFields($userModel->getTableFields(), $where);
+        $where = $userModel->needQueryFields(['isActive' => 1], $where);
+        $users = $userModel->where($where)->select();
+        $users = $userModel->getResult($users);
+        return $users;
     }
 
 
