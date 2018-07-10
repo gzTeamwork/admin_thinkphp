@@ -3,8 +3,6 @@ const state = {
   adminUser: {},
   adminMenu: {},
   adminProfileMenu: {},
-  isAdmin: false,
-  isLogin: false
 };
 
 const getters = {
@@ -14,15 +12,15 @@ const getters = {
   },
   //  获取adminUser
   getAdminUser: state => {
-    return state.adminUser;
+    return state.adminUser || false;
   },
   //  是否管理员
   isAdmin: state => {
-    return state.isAdmin = state.adminUser.isAdmin || false
+    return state.adminUser.isAdmin === 1 || false;
   },
   //  是否已经登录
   isLogin: state => {
-    return state.adminUser.nick !== undefined
+    return state.adminUser.nick_name || false;
   },
   getAdminProfileMenu: state => {
     return state.adminProfileMenu;
@@ -65,6 +63,18 @@ const actions = {
     }, 1000)
   },
   /**
+   * 当前管理员注销登出
+   * @param context
+   * @param data
+   */
+  adminUserLogout: (context, data) => {
+    console.log('用户登出');
+    window.$cookies.remove('inforward_adminUser');
+    setTimeout(() => {
+      location.href = "/admin/dashboard";
+    }, 1000)
+  },
+  /**
    * 获取管理后台用户菜单
    * @param context
    * @param data
@@ -72,7 +82,8 @@ const actions = {
   getAdminProfileMenu: (context, data) => {
     console.log(data);
     state.adminProfileMenu = data;
-  }
+  },
+
 };
 
 const mutations = {
@@ -93,4 +104,7 @@ const mutations = {
 export default {
   state: state, getters: getters, actions: actions, mutations: mutations
 }
+
+
+
 

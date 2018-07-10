@@ -1,10 +1,19 @@
 <template>
   <mu-container>
     <h2>管理员登陆</h2>
-    <mu-chip v-if="!!adminUser">
-      {{adminUser.nick_name}}
-    </mu-chip>
-    <mu-form :model="form" :label-position="labelPosition">
+
+    <template v-if="handlerAdminIsLogin">
+      <mu-paper>
+        当前已登录用户为
+        {{adminUser.nick_name}}
+      </mu-paper>
+      <mu-button primary>
+        快捷登录
+      </mu-button>
+    </template>
+
+    <mu-form :model="form" :label-position="labelPosition" v-else>
+
       <!--登录账户-->
       <mu-form-item prop="input" label="管理员账户">
         <mu-text-field v-model="form.account"></mu-text-field>
@@ -17,6 +26,7 @@
       <mu-form-item prop="switch" label="自动登录">
         <mu-switch class="align-center" v-model="form.isAutoLogin"></mu-switch>
       </mu-form-item>
+
       <mu-flex direction="row" align-items="center" justify-content="center">
         <mu-flex fill></mu-flex>
         <mu-flex direction="column" align="center">
@@ -61,20 +71,24 @@
     methods: {
       //  管理员登陆
       adminLoginSub: function (event) {
-        console.log(event);
-        adminApi.adminLoginSub(this.form);
+        return adminApi.adminLoginSub(this.form);
       }
     },
     computed: {
       handlerAdminUser: function () {
         return this.$store.getters.getAdminUser;
+      },
+      handlerAdminIsLogin: function () {
+        return this.$store.getters.isLogin;
       }
     },
     watch: {
       handlerAdminUser: function (v) {
+
         this.adminUser = v;
       }
-    }
+    },
+
   }
 </script>
 

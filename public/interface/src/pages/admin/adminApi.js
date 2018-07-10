@@ -18,8 +18,10 @@ export default {
         //  登录成功,返回管理员信息
         window.$store.commit('NOTICE_SUCCESS', response.msg);
         window.$store.dispatch('adminLoginSuccess', response.data);
+        return true;
       } else {
         window.$store.commit('NOTICE_ERROR', response.msg);
+        return false;
       }
     })
   },

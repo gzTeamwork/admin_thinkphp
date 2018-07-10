@@ -20,7 +20,7 @@ trait mwModelBase
      * @param array $where
      * @return array
      */
-    public function needQueryFields(array $needles = [], array $where = []): array
+    public function needQueryFields(array $needles = [], array $where = [])
     {
         return empty($needles) ? $where : array_merge($where, $needles);
     }
@@ -63,4 +63,13 @@ trait mwModelBase
         return array_combine(array_column($result, $colName), $result);
     }
 
+    public function setIsActiveAttr($value)
+    {
+        return $value === true ? true : false;
+    }
+
+    public function getIsActiveAttr($value)
+    {
+//        return
+    }
 }

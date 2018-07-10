@@ -14,7 +14,6 @@ const Store = new Vuex.Store({
     noticeStore,
     configurationStore,
     usersStore,
-
   }
 })
 
