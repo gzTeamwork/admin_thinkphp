@@ -75,7 +75,7 @@ trait DailyMealLogic
         $today = date('Y-m-d', time());
         //  明天日期
         $tomorrow = date('Y-m-d', strtotime("+1 day"));
-        $result = $db->alias('a')->join('users b', 'a.user_id = b.userid')->where('meal_date', ['eq', $today], ['eq', $tomorrow], 'or')->order('meal_date', 'asc')->select();
+        $result = $db->alias('a')->join('roleList b', 'a.user_id = b.userid')->where('meal_date', ['eq', $today], ['eq', $tomorrow], 'or')->order('meal_date', 'asc')->select();
         $result = is_null($result) ? null : $result->toArray();
         if (!is_null($result)) {
             $resData = [];
@@ -103,7 +103,7 @@ trait DailyMealLogic
         $where = ['meal_date' => ['meal_date', '=', date('Y-m-d', $date)]];
         // $this->db;
         $db = new UserMealSubmit();
-        $result = $db->alias('a')->join('users b', 'a.user_id = b.userid')->where($where)->select();
+        $result = $db->alias('a')->join('roleList b', 'a.user_id = b.userid')->where($where)->select();
         // var_dump($this->db->getLastSql());
         if (!empty($result)) {
             $result = $result->toArray();
