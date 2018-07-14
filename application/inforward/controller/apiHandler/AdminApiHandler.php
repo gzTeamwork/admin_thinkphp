@@ -8,7 +8,6 @@
 
 namespace app\inforward\controller\apiHandler;
 
-use app\inforward\middleware\base\mwModelBase;
 use app\inforward\middleware\dashboard\mwDashboard;
 use think\Exception;
 use think\facade\Cache;
@@ -41,10 +40,13 @@ trait AdminApiHandler
         return $adminMenu;
     }
 
+    /**
+     * 获取管理员用户菜单
+     */
     public function api_admin_profile_menu()
     {
         try {
-            $menus = $this->_getAdminMenu(['group' => 'userProfile']);
+            $menus = $this->_getAdminMenu(['group' => ['userProfile']]);
             $this->success('成功获取管理员用户菜单', '', $menus);
         } catch (Exception $exception) {
             $this->error('获取管理员菜单失败', '', ['msg' => $exception->getMessage()]);

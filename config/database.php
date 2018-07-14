@@ -67,9 +67,9 @@ return [
         // 数据库名
         'database' => 'inforward_user_center',
         // 数据库用户名
-        'username' => 'root',
+        'username' => 'zico',
         // 数据库密码
-        'password' => 'yfyt666666',
+        'password' => 'rain198793',
         // 数据库编码默认采用utf8
         'charset' => 'utf8mb4',
     ],
@@ -82,9 +82,9 @@ return [
         // 数据库名
         'database' => 'inforward_admin',
         // 数据库用户名
-        'username' => 'root',
+        'username' => 'zico',
         // 数据库密码
-        'password' => 'yfyt666666',
+        'password' => 'rain198793',
         // 数据库编码默认采用utf8
         'charset' => 'utf8mb4',
     ],
