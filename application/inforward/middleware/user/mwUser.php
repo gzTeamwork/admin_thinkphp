@@ -10,7 +10,7 @@
 namespace app\inforward\middleware\user;
 
 use app\inforward\controller\User;
-use app\inforward\model\user\usersModel;
+use app\inforward\model\user\userModel;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
 use think\Exception;
@@ -64,7 +64,7 @@ trait mwUser
         //  生成密码
         $user['password'] = md5($user['password']);
         $user['nick_name'] = $user['account'];
-        $userModel = new usersModel();
+        $userModel = new userModel();
         try {
             $res = $userModel->where('account', '=', $user['account'])->select();
             $res = $userModel->getResult($res);
@@ -84,7 +84,7 @@ trait mwUser
      */
     static public function findUser(Array $where)
     {
-        $userModel = new usersModel();
+        $userModel = new userModel();
         try {
             //  密码加密处理
             if (isset($where['password'])) {
@@ -112,7 +112,7 @@ trait mwUser
      */
     static public function createEmptyUser()
     {
-        $userModel = new usersModel();
+        $userModel = new userModel();
         $fields = $userModel->getTableFields();
         $userEmpty = array_map(function ($v) {
             $v = null;
@@ -142,11 +142,11 @@ trait mwUser
      * @throws ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    static public function getUsers(array $where): array
+    static public function getUsers(array $where)
     {
-        $userModel = new usersModel();
+        $userModel = new userModel();
         $where = $userModel->filterFields($userModel->getTableFields(), $where);
-        $where = $userModel->needQueryFields(['isActive' => 1], $where);
+//        $where = $userModel->needQueryFields(['isActive' => 1], $where);
         $users = $userModel->where($where)->select();
         $users = $userModel->getResult($users);
         return $users;

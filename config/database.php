@@ -65,7 +65,7 @@ return [
         'hostname' => '127.0.0.1',
         'hostport' => '3306',
         // 数据库名
-        'database' => 'inforward_user_center',
+        'database' => 'inforward_admin',
         // 数据库用户名
         'username' => 'zico',
         // 数据库密码

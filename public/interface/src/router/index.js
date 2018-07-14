@@ -5,15 +5,9 @@ import AdminRouter from '@/pages/admin/adminRouter'
 Vue.use(Router);
 const router = new Router({
   mode: 'history',
+
   routes: [
-    {
-      path: '',
-      name: 'rootRouter',
-      component: {
-        template: '<router-view/>'
-      },
-      children: [AdminRouter]
-    }
+    AdminRouter
   ]
 });
 

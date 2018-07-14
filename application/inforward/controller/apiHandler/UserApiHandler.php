@@ -8,8 +8,9 @@
 
 namespace app\inforward\controller\apiHandler;
 
+use app\inforward\middleware\user\mwRole;
 use app\inforward\middleware\user\mwUser;
-use app\inforward\model\user\usersModel;
+use app\inforward\model\user\userModel;
 use think\Exception;
 use think\facade\Request;
 
@@ -44,7 +45,7 @@ trait UserApiHandler
      */
     public function api_user_login()
     {
-        $userCenterModel = new usersModel();
+        $userCenterModel = new userModel();
         try {
             //  账户 & 密码
             $params = Request::param();
@@ -60,11 +61,6 @@ trait UserApiHandler
                 $res['password'] ?? array_pop($res['password']);
                 $this->success($params['account'] . '用户登录成功', '', $res);
             }
-//            if ($account == 'admin' && $password == '123456') {
-//                $this->success('后台账户' . $account . '成功登录', '', ['nick_name' => '管理员', 'account' => 'admin', 'isAdmin' => true]);
-//            } else {
-//                throw new Exception('后台账户或密码错误');
-//            }
 
         } catch (Exception $exception) {
             $this->error('后台登陆失败', '', ['msg' => $exception->getMessage()]);
@@ -74,7 +70,7 @@ trait UserApiHandler
     /**
      * 数据接口 - 获取用户列表
      */
-    public function api_get_users_list()
+    public function api_get_user_list()
     {
         try {
             $userList = mwUser::getUsers([]);
@@ -82,6 +78,42 @@ trait UserApiHandler
         } catch (Exception $exception) {
             $this->error('获取多个用户信息失败', '', ['msg' => $exception->getMessage()]);
         }
+    }
 
+    /**
+     * 数据接口 - 获取权限列表
+     */
+    public function api_get_role_list()
+    {
+        try {
+            $roleList = mwRole::getRoles([]);
+            $this->success('成功获取权限列表', '', $roleList);
+        } catch (Exception $exception) {
+            $this->error('获取权限列表失败', '', ['msg' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * 数据接口 - 获取权限角色字段
+     */
+    public function api_get_role_fields()
+    {
+        try {
+            $roleFields = mwRole::getRoleFields();
+            $this->success('成功获取权限字段', '', $roleFields);
+        } catch (Exception $exception) {
+            $this->error('获取字段失败', '', ['msg' => $exception->getMessage()]);
+        }
+    }
+
+    public function api_set_new_role()
+    {
+        try {
+            $datas = Request::param();
+            $res = mwRole::setNewRole($datas);
+            $this->success('成功增加新的权限角色', '', $res);
+        } catch (Exception $exception) {
+            $this->error($exception->getMessage(), '', ['msg' => $exception->getMessage()]);
+        }
     }
 }

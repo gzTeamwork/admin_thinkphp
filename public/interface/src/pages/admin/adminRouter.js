@@ -1,34 +1,21 @@
+import userRouter from '@/pages/admin/user/userRouter.js';
+
+//  后台子路由
+let subRouter = [
+  {
+    path: 'login',
+    name: 'adminLogin',
+    component: () => import('@/pages/admin/login'),
+  }, userRouter, {
+    path: '*',
+    component: () => import('@/pages/admin/index'),
+  }
+]
+
+
 export default {
-  path: 'admin',
-  component: {
-    template: '<router-view/>'
-  },
-  children: [
-    {
-      path: 'login',
-      name: 'adminLogin',
-      component: () => import('@/pages/admin/login'),
-    },
-    {
-      path: '',
-      component: () => import('@/pages/admin/dashboard'),
-      children: [
-        {
-          //  系统配置页面
-          path: 'configuration',
-          component: () => import('@/pages/admin/configuration/configuration.vue')
-        },
-        {
-          path: 'user/list',
-          component: () => import('@/pages/admin/user/userList.vue'),
-        },
-        {
-          //  默认页面
-          path: '*',
-          component:
-            () => import('@/pages/admin/index'),
-        }
-      ]
-    }
-  ]
+  path: '/admin',
+  name: '系统首页',
+  component: () => import('@/pages/admin/dashboard'),
+  children: subRouter
 }

@@ -22,7 +22,9 @@
             <mu-icon class="toggle-icon" size="24"
                      :value="open === e.name?'keyboard_arrow_down':'keyboard_arrow_left'"></mu-icon>
           </mu-list-item-action>
-          <mu-list-item v-for="(o,n) in e.sub" :key="n" :to="o.path" button :ripple="false" slot="nested">
+          <mu-list-item v-for="(o,n) in e.sub" :key="n" :to="o.path" button :ripple="false" slot="nested"
+                        :class="currentMenu === o.path?'isActive':''"
+                        @click="menuClick">
             <mu-list-item-title>
               <small>{{o.label}}</small>
             </mu-list-item-title>
@@ -42,10 +44,12 @@
       return {
         adminMenu: {},
         open: null,
+        currentMenu: null,
       }
     },
     created() {
       adminApi.getAdminDashboardMenu();
+      this.currentMenu = this.$route.path;
     },
     computed: {
       handlerAdminMenu: function () {
@@ -55,14 +59,35 @@
     watch: {
       handlerAdminMenu: function (v) {
         this.adminMenu = v;
+      },
+      '$route.path': function (v) {
+        this.currentMenu = v;
       }
     },
     components: {
       'com-admin-user-info': () => import('./adminUserInfo.vue'),
+    },
+    methods: {
+      menuClick: function (event) {
+
+      }
     }
   }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  .isActive {
+    position: relative;
+    &::before, &::after {
+      content: ' ';
+      width: 6px;
+      height: 100%;
+      position: absolute;
+      background: #999;
+    }
+    &::after {
+      right: 0;
+      top: 0;
+    }
+  }
 </style>

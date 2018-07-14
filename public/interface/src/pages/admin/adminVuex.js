@@ -3,8 +3,6 @@ const state = {
   adminUser: {},
   adminMenu: {},
   adminProfileMenu: {},
-  isAdmin: false,
-  isLogin: false
 };
 
 const getters = {
@@ -18,7 +16,7 @@ const getters = {
   },
   //  是否管理员
   isAdmin: state => {
-    return state.isAdmin = state.adminUser.isAdmin || false
+    return state.adminUser.isAdmin === 1 || false;
   },
   //  是否已经登录
   isLogin: state => {

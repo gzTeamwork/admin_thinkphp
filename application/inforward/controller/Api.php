@@ -339,7 +339,7 @@ class Api extends Controller
     {
         header("Access-Control-Allow-Origin:*");
 
-        // $userModel = new \app\inforward\model\users();
+        // $userModel = new \app\inforward\model\roleList();
         // $allUsers = $userModel->select();
         $userLogic = new UserLogic();
         $allUsers = $userLogic->getUsers();

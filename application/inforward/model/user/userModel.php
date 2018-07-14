@@ -13,7 +13,7 @@ use app\inforward\middleware\base\mwModelBase;
 use think\facade\Config;
 use think\Model;
 
-class usersModel extends Model
+class userModel extends Model
 {
     use mwModelBase;
     // 设置当前模型对应的完整数据表名称
