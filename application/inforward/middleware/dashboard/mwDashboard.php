@@ -25,17 +25,23 @@ class mwDashboard
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    static public function getMenus(array $where = []): array
+    public static function getMenus(array $where = []): array
     {
-        $menuModel = new menuModel();
-        $where = $menuModel->needQueryFields(['isActive' => 1, 'isShow' => 1], $where);
-        $res = $menuModel->where($where)->select();
-        $res = $menuModel->getResult($res);
-//        var_dump($res);
-        return $res;
+        try {
+
+            $menuModel = new menuModel();
+            $where = $menuModel->needQueryFields(['isActive' => 1, 'isShow' => 1], $where);
+//        var_dump($where);
+            $res = $menuModel->where($where)->select();
+            $res = $menuModel->getResult($res);
+            return $res;
+        } catch (Exception $exception) {
+            var_dump($menuModel->getLastSql());
+        }
+
     }
 
-    static public function getMenusTree(array $where = []): array
+    public static function getMenusTree(array $where = []): array
     {
         $menus = self::getMenus($where);
         $menus = mwHelper::hTree($menus);

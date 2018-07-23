@@ -6,6 +6,7 @@ import AdminRouter from '@/pages/admin/adminRouter'
 Vue.use(Router);
 const router = new Router({
   mode: 'history',
+
   routes: [
     AdminRouter
   ]

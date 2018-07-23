@@ -68,8 +68,8 @@ trait mwModelBase
         return $value === true ? true : false;
     }
 
-    public function getIsActiveAttr($value)
-    {
+//    public function getIsActiveAttr($value)
+//    {
 //        return
-    }
+//    }
 }

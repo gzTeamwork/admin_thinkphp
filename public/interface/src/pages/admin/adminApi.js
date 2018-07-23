@@ -1,6 +1,6 @@
 // import axios from 'axios';
 import httpAxios from '@/public/http.js';
-
+import './adminApiMock.js';
 export default {
   /**
    * 管理员登陆表单提交

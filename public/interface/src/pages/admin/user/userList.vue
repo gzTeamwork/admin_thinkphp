@@ -81,9 +81,11 @@
     components: {
       // 'com-bread-crumbs': () => import('@/pages/admin/components/breadcrumbs'),
     }
+  },
+  components: {
+    // 'com-bread-crumbs': () => import('@/pages/admin/components/breadcrumbs'),
   }
+};
 </script>
-
 <style scoped>
-
 </style>

@@ -53,18 +53,39 @@
 </template>
 
 <script>
-  import adminApi from '@/pages/admin/adminApi.js';
+    import adminApi from '@/pages/admin/adminApi.js';
 
-  export default {
-    name: "loginForm",
-    data() {
-      return {
-        labelPosition: 'top',
-        adminUser: {},
-        form: {
-          account: '',
-          password: '',
-          isAutoLogin: true,
+
+
+    export default {
+        name: "loginForm",
+        data() {
+            return {
+                labelPosition: 'top',
+                adminUser: {},
+                form: {
+                    account: '',
+                    password: '',
+                    isAutoLogin: true,
+                }
+            }
+        },
+        methods: {
+            //  管理员登陆
+            adminLoginSub: function (event) {
+                console.log(event);
+                adminApi.adminLoginSub(this.form);
+            }
+        },
+        computed: {
+            handlerAdminUser: function () {
+                return this.$store.getters.getAdminUser;
+            }
+        },
+        watch: {
+            handlerAdminUser: function (v) {
+                this.adminUser = v;
+            }
         }
       }
     },
@@ -93,7 +114,7 @@
 </script>
 
 <style scoped>
-  div.container {
-    padding: 2em;
-  }
+    div.container {
+        padding: 2em;
+    }
 </style>
