@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "axios": "^0.18.0",
-    "muse-ui": "^3.0.0-rc.4"
+    "muse-ui": "^3.0.0-rc.4",
+    "tinymce": "^4.8.0"
   }
 }

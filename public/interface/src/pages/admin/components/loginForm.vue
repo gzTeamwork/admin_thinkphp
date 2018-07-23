@@ -7,7 +7,7 @@
         当前已登录用户为
         {{adminUser.nick_name}}
       </mu-paper>
-      <mu-button primary>
+      <mu-button primary @click="adminLoginSubLight">
         快捷登录
       </mu-button>
     </template>
@@ -53,39 +53,18 @@
 </template>
 
 <script>
-    import adminApi from '@/pages/admin/adminApi.js';
+  import adminApi from '@/pages/admin/adminApi.js';
 
-
-
-    export default {
-        name: "loginForm",
-        data() {
-            return {
-                labelPosition: 'top',
-                adminUser: {},
-                form: {
-                    account: '',
-                    password: '',
-                    isAutoLogin: true,
-                }
-            }
-        },
-        methods: {
-            //  管理员登陆
-            adminLoginSub: function (event) {
-                console.log(event);
-                adminApi.adminLoginSub(this.form);
-            }
-        },
-        computed: {
-            handlerAdminUser: function () {
-                return this.$store.getters.getAdminUser;
-            }
-        },
-        watch: {
-            handlerAdminUser: function (v) {
-                this.adminUser = v;
-            }
+  export default {
+    name: "loginForm",
+    data() {
+      return {
+        labelPosition: 'top',
+        adminUser: {},
+        form: {
+          account: '',
+          password: '',
+          isAutoLogin: true,
         }
       }
     },
@@ -93,6 +72,9 @@
       //  管理员登陆
       adminLoginSub: function (event) {
         return adminApi.adminLoginSub(this.form);
+      },
+      adminLoginSubLight:function (event) {
+        return adminApi.adminLoginSubLight(this.adminUser);
       }
     },
     computed: {
@@ -105,16 +87,14 @@
     },
     watch: {
       handlerAdminUser: function (v) {
-
         this.adminUser = v;
       }
     },
-
   }
 </script>
 
 <style scoped>
-    div.container {
-        padding: 2em;
-    }
+  div.container {
+    padding: 2em;
+  }
 </style>

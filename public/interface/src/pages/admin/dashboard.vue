@@ -1,11 +1,11 @@
 <template>
   <!--顶部导航-->
   <mu-flex>
-    <mu-flex v-if="isAdmin">
+    <mu-flex v-if="isAdmin" style="width:20vw">
       <!--左侧菜单-->
       <com-admin-menu></com-admin-menu>
     </mu-flex>
-    <mu-flex fill direction="column">
+    <mu-flex fill direction="column" style="width:80vw">
       <com-admin-top-nav v-if="isAdmin"></com-admin-top-nav>
       <!--<section id="dashboardMain" class="full-width full-height" style="background:white;">-->
       <router-view class="full-width full-height"></router-view>

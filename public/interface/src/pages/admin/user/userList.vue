@@ -1,7 +1,7 @@
 <template>
   <mu-container>
     <h2>用户列表</h2>
-    <mu-data-table fit selectable select-all :selects.sync="selects" checkbox :loading="loading" :columns="columns"
+    <mu-data-table selectable select-all :selects.sync="selects" checkbox :loading="loading" :columns="columns"
                    :sort.sync="sort" @sort-change="handleSortChange"
                    :data="userList.slice(0, 6)" :no-data-text="'暂无数据'">
       <template slot-scope="scope">
@@ -46,7 +46,7 @@
           {title: '注册时间', name: 'create_time', width: 200, align: 'center', sortable: true},
           {title: '账户可用', name: 'isActive', width: 96, align: 'center', sortable: true},
           {title: '操作', name: 'controller', align: 'center'},
-          {title: '',width: 96, name: '', align: ''},
+          {title: '', width: 96, name: '', align: ''},
         ],
         userList: []
       }
@@ -81,11 +81,7 @@
     components: {
       // 'com-bread-crumbs': () => import('@/pages/admin/components/breadcrumbs'),
     }
-  },
-  components: {
-    // 'com-bread-crumbs': () => import('@/pages/admin/components/breadcrumbs'),
-  }
-};
+  };
 </script>
 <style scoped>
 </style>

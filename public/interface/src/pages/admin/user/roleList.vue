@@ -41,7 +41,7 @@
       return {
         selects: [],
         sort: {
-          name: '',
+          name: 'id',
           order: 'asc'
         },
         columns: [

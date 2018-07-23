@@ -1,7 +1,7 @@
 <template>
   <header>
-    <mu-breadcrumbs divider=">">
-      <mu-breadcrumbs-item v-for="item in urls" :key="item.title" :to="item.path">
+    <mu-breadcrumbs divider=">" class="breadcrumb">
+      <mu-breadcrumbs-item class="breadcrumb-item" v-for="item in urls" :key="item.title" :to="item.path">
         {{item.title}}
       </mu-breadcrumbs-item>
     </mu-breadcrumbs>
@@ -42,6 +42,12 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  .breadcrumb {
+    padding: 1em;
+    background-color: white;
+    &-item {
+      font-size: 12px;
+    }
+  }
 </style>

@@ -47,13 +47,13 @@ export default {
   newRoleSub: function (data) {
     httpAxios.get('do/api_set_new_role', {
       params: {...data}
-    }).then(response => {
-      if (response.code === 1) {
+    }).then(res => {
+      if (res.code === 1) {
         // 成功
-        window.$store.commit('NOTICE_SUCCESS', response.msg);
+        window.$store.commit('NOTICE_SUCCESS', res.msg);
       } else {
         //  失败
-        window.$store.commit('NOTICE_ERROR', response.msg);
+        window.$store.commit('NOTICE_ERROR', res.msg);
       }
     })
   }
