@@ -11,7 +11,6 @@ namespace app\inforward\middleware\base;
 use think\Controller;
 use think\Exception;
 use think\facade\Request;
-use think\facade\Response;
 
 /**
  * Trait mwApi
@@ -44,7 +43,7 @@ trait mwApi
      * @param Controller $c
      * @return \think\response\Json
      */
-    static public function api(Controller $c)
+    static public function api(Controller $c,Array $datas = [])
     {
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
@@ -53,7 +52,7 @@ trait mwApi
 //        var_dump($apiDo);
         try {
             if (is_null($apiDo) === false && method_exists($c, $apiDo)) {
-                $c->$apiDo();
+                $c->$apiDo($datas);
             } else {
                 throw new Exception('不存在该api接口', 0);
             }

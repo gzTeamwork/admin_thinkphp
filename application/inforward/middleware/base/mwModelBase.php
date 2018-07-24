@@ -42,11 +42,11 @@ trait mwModelBase
      * @throws DataNotFoundException
      * @throws ModelNotFoundException
      */
-    public function getResult(&$result)
+    public function getResult(&$result, $errorMsg = '查找结果为空')
     {
 
         if (empty($result->toArray())) {
-            throw new ModelNotFoundException('查找结果为空');
+            throw new ModelNotFoundException($errorMsg);
         }
         return $result->toArray();
 
