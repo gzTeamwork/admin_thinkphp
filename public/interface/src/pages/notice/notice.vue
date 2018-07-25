@@ -1,11 +1,11 @@
 <template>
-  <mu-container>
-    <mu-snackbar :color="color" :open.sync="show">
-      <mu-icon left :value="icon"></mu-icon>
-      {{message}}
-      <mu-button flat slot="action" color="#fff" @click="show = false">Close</mu-button>
-    </mu-snackbar>
-  </mu-container>
+  <mu-snackbar :color="color" :open.sync="show" position="bottom-end">
+    <mu-icon left :value="icon"></mu-icon>
+    {{message}}
+    <mu-button flat slot="action" color="#fff" @click="show = false">
+      <mu-icon value="close"></mu-icon>
+    </mu-button>
+  </mu-snackbar>
 </template>
 
 <script>

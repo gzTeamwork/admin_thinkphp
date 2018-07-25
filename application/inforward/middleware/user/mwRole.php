@@ -23,7 +23,7 @@ trait mwRole
     {
         try {
             $roleModel = new roleModel();
-            $where = $roleModel->needQueryFields(['isActive' => 1], $where);
+            $where = $roleModel->fieldsNeed(['is_active' => 1], $where);
             $res = $roleModel->where($where)->select();
             $res = $roleModel->getResult($res);
             return $res;

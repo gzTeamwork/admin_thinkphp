@@ -1,5 +1,6 @@
 import userRouter from '@/pages/admin/user/userRouter.js';
 import postRouter from '@/pages/admin/post/postRouter.js';
+import cateRouter from '@/pages/admin/category/cateRouter.js';
 //  后台子路由
 let subRouter = [
   {
@@ -9,6 +10,7 @@ let subRouter = [
   },
   userRouter,
   postRouter,
+  cateRouter,
   {
     path: '*',
     component: () => import('@/pages/admin/index'),

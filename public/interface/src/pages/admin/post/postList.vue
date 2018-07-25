@@ -1,29 +1,29 @@
 <template>
   <section class="mu-container">
     <!--文章预览-->
-    <mu-dialog width="860" transition="slide-bottom" scrollable overlay-close :open.sync="postView.show" :title="'文章预览'"
+    <mu-dialog width="860" transition="slide-bottom" scrollable overlay-close :open.sync="newPost.show" :title="'文章预览'"
     >
       <mu-flex justify="center">
-        <img :src="postView.post.thumb" alt="文章封面">
+        <img :src="newPost.post.thumb" alt="文章封面">
       </mu-flex>
-      <h2>{{postView.post.title}}</h2>
+      <h2>{{newPost.post.title}}</h2>
       <small>
-        作者 {{postView.post.author}} | 发表于 {{postView.post.update_time}}
+        作者 {{newPost.post.author}} | 发表于 {{newPost.post.update_time}}
       </small>
-      <p style="text-indent: 2em;" v-html="postView.post.content"></p>
+      <p style="text-indent: 2em;" v-html="newPost.post.content"></p>
     </mu-dialog>
 
     <!--文章修改-->
-    <mu-dialog width="860" transition="slide-bottom" scrollable overlay-close :open.sync="postEdit.show" :title="'文章预览'"
+    <mu-dialog width="860" transition="slide-bottom" scrollable overlay-close :open.sync="postEdit.show" :title="'文章修改'"
     >
       <mu-flex justify="center">
-        <img :src="postEdit.post.thumb" alt="文章封面">
+        <!--<img :src="postEdit.post.thumb" alt="文章封面">-->
       </mu-flex>
       <h2>{{postEdit.post.title}}</h2>
       <small>
         作者 {{postEdit.post.author}} | 发表于 {{postEdit.post.update_time}}
       </small>
-      <com-editor :value="postEdit.post.content"></com-editor>
+      <com-editor :content="postEdit.post.content"></com-editor>
     </mu-dialog>
     <!--<vue-editor editor="quill" :height="900"></vue-editor>-->
     <mu-data-table fill selectable select-all checkbox :loading="false" :columns="columns" :selects.sync="selects"
@@ -33,11 +33,12 @@
       <template slot-scope="scope">
         <td class="is-center">{{scope.row.id}}</td>
         <td>{{scope.row.title}}</td>
+        <td>{{scope.row.kind}}</td>
         <td>{{scope.row.author}}</td>
         <td>{{scope.row.create_time}}</td>
         <td class="is-center">
-          <mu-icon color="green300" v-if="scope.row.isActive" value="check_circle"></mu-icon>
-          <mu-icon color="red300" v-else="scope.row.isActive" value="highlight_off"></mu-icon>
+          <mu-icon color="green300" v-if="scope.row.is_active" value="check_circle"></mu-icon>
+          <mu-icon color="red300" v-else="scope.row.is_active" value="highlight_off"></mu-icon>
         </td>
         <td>
 
@@ -82,7 +83,7 @@
           show: false,
           post: {}
         },
-        postView: {
+        newPost: {
           show: false,
           post: {}
         },
@@ -100,16 +101,22 @@
         columns: [
           {title: '编号', name: 'id', width: 128, align: 'center', sortable: true},
           {title: '文章标题', name: 'title', width: 220, sortable: true},
+          {title: '类型', name: 'kind', width: 120, sortable: true},
           {title: '作者', name: 'author', width: 160, sortable: true},
           {title: '创建时间', name: 'create_time', width: 300, sortable: true},
-          {title: '是否可用', name: 'isActive', align: 'center', width: 100, sortable: true},
+          {title: '是否可用', name: 'is_active', align: 'center', width: 100, sortable: true},
           {title: '快捷操作'}
         ],
       }
     },
     computed: {
+      //  获取postStore.getPosts
       handlerPosts: function () {
         return this.$store.getters.getPosts;
+      },
+      //  获取cateStore.getCateList
+      handlerCateList: function () {
+        return this.$store.getters.getCateList;
       }
     },
     watch: {
@@ -118,7 +125,7 @@
           this.loading = false;
         }
         this.postList = v;
-      }
+      },
     },
     methods: {
       handleSortChange({name, order}) {
@@ -133,10 +140,10 @@
         this.postEdit.post = p;
       },
       handlerPostsView(p) {
-        this.postView.show = true;
+        this.newPost.show = true;
         // console.log(pid);
-        this.postView.post = p;
-      }
+        this.newPost.post = p;
+      },
     },
     mounted() {
       let vm = this;

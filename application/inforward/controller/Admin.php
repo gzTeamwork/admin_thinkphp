@@ -3,6 +3,8 @@
 namespace app\inforward\controller;
 
 use app\inforward\controller\apiHandler\AdminApiHandler;
+use app\inforward\controller\apiHandler\CateApiHandler;
+use app\inforward\controller\apiHandler\PostApiHandler;
 use app\inforward\controller\apiHandler\SystemApiHandler;
 use app\inforward\controller\apiHandler\UserApiHandler;
 use app\inforward\middleware\base\mwApi;
@@ -11,6 +13,7 @@ use app\inforward\unit\userUnit;
 use think\App;
 use think\Controller;
 use think\Exception;
+use think\facade\Request;
 
 class Admin extends Controller
 {
@@ -18,6 +21,8 @@ class Admin extends Controller
     use AdminApiHandler;
     use UserApiHandler;
     use SystemApiHandler;
+    use CateApiHandler;
+    use PostApiHandler;
 
     public function __construct(App $app = null)
     {
@@ -26,7 +31,8 @@ class Admin extends Controller
 
     public function api()
     {
-        return mwApi::api($this);
+        $datas = Request::param();
+        return mwApi::api($this, $datas);
     }
 
     /**

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Administrator
- * Date: 2018-07-24 0024
- * Time: 8:26
+ * User: zico
+ * Date: 2018/7/25
+ * Time: 下午7:10
  */
 
 namespace app\inforward\model\post;
@@ -11,16 +11,12 @@ namespace app\inforward\model\post;
 use app\inforward\middleware\base\mwModelBase;
 use think\Model;
 
-class PostModel extends Model
+class PostTemplateModel extends Model
 {
     use mwModelBase;
     // 设置当前模型对应的完整数据表名称
     protected $connection = 'db_admin_core';
-    protected $table = 'posts';
-    
-    public function postExtras()
-    {
-        return $this->hasMany('PostExtraModel','pid');
-    }
+    protected $table = 'posts_template';
+
 
 }

@@ -43,7 +43,7 @@ trait mwApi
      * @param Controller $c
      * @return \think\response\Json
      */
-    static public function api(Controller $c,Array $datas = [])
+    static public function api(Controller $c, Array $datas = [])
     {
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
@@ -51,7 +51,8 @@ trait mwApi
         $apiDo = Request::route('do');
 //        var_dump($apiDo);
         try {
-            if (is_null($apiDo) === false && method_exists($c, $apiDo)) {
+            if (is_null($apiDo) === false && method_exists($c, $apiDo) && Request::isAjax()) {
+                unset($datas['do']);
                 $c->$apiDo($datas);
             } else {
                 throw new Exception('不存在该api接口', 0);

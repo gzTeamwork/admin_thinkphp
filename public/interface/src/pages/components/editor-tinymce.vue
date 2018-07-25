@@ -1,26 +1,49 @@
 <template>
-  <div>
-    <textarea :id="id" :value="value"></textarea>
-  </div>
+  <!--<textarea :id="id" :value="value"></textarea>-->
+  <editor :id="id" v-model="content" :init="init"></editor>
+  <!--<div v-html='content'></div>-->
 </template>
 <script>
   // Import TinyMCE
-  import tinymce from 'tinymce/tinymce';
-  import '@/../static/tinymce/langs/zh_CN.js';
-  import 'tinymce/themes/modern/theme';
-  import 'tinymce/plugins/paste';
-  import 'tinymce/plugins/link';
+  import tinymce from 'tinymce/tinymce'
+  import 'tinymce/themes/modern/theme'
+  import Editor from '@tinymce/tinymce-vue'
+  import 'tinymce/plugins/image'
+  import 'tinymce/plugins/link'
+  import 'tinymce/plugins/code'
+  import 'tinymce/plugins/table'
+  import 'tinymce/plugins/lists'
+  import 'tinymce/plugins/contextmenu'
+  import 'tinymce/plugins/wordcount'
+  import 'tinymce/plugins/colorpicker'
+  import 'tinymce/plugins/textcolor'
 
   const INIT = 0;
   const CHANGED = 2;
-  var EDITOR = null;
+  // var EDITOR = null;
   export default {
+    name: 'tinymceEditor',
+    data() {
+      return {
+        id: 'editor-' + new Date().getMilliseconds(),
+        init: {
+          language_url: '/static/tinymce/zh_CN.js',
+          language: 'zh_CN',
+          skin_url: '/static/tinymce/skins/lightgray',
+          height: 600,
+          plugins: ['advlist autolink lists link image charmap print preview hr anchor pagebreak', 'searchreplace wordcount visualblocks visualchars code fullscreen', 'insertdatetime media nonbreaking save table contextmenu directionality', 'template paste textcolor colorpicker textpattern imagetools toc help emoticons hr codesample'],
+          toolbar1:
+            'formatselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | removeformat',
+          branding: false
+        }
+      }
+    },
     props: {
-      value: {
-        type: String,
-        required: true
+      content: {
+        type: String, default: function () {
+          return ''
+        }
       },
-      setting: {}
     },
     watch: {
       value: function (val) {
@@ -31,35 +54,15 @@
         this.status = CHANGED
       }
     },
-    data: function () {
-      return {
-        status: INIT,
-        id: 'editor-' + new Date().getMilliseconds(),
-      }
+    mounted() {
+      // this.tinymceHtml = this.content;
+      tinymce.init({})
     },
-    methods: {},
-    mounted: function () {
-      const _this = this;
-      const setting =
-        {
-          selector: '#' + _this.id,
-          language: "zh_CN",
-          init_instance_callback: function (editor) {
-            EDITOR = editor;
-            console.log("Editor: " + editor.id + " is now initialized.");
-            editor.on('input change undo redo', () => {
-              var content = editor.getContent()
-              _this.$emit('input', content);
-            });
-          },
-          plugins: []
-        };
-      Object.assign(setting, _this.setting)
-      tinymce.init(setting);
-    },
+    components: {Editor},
     beforeDestroy: function () {
       tinymce.get(this.id).destroy();
     }
   }
+
 
 </script>

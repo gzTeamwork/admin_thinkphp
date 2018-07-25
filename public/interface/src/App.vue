@@ -16,6 +16,10 @@
 
 <style lang="scss">
   #app {
+    .gutter {
+      padding: 1em;
+      width: 100%;
+    }
     /*font-family: 'Avenir', Helvetica, Arial, sans-serif;*/
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -32,6 +36,19 @@
     .text {
       &-center {
         text-align: center;
+      }
+    }
+    .fixed {
+      position: fixed;
+      z-index: 10;
+    }
+    .abs {
+      &-body {
+        position: relative;
+        overflow: hidden;
+      }
+      &-item {
+        position: absolute;
       }
     }
     .align {

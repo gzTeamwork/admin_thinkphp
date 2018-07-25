@@ -9,13 +9,10 @@
 
 namespace app\inforward\middleware\user;
 
-use app\inforward\controller\User;
 use app\inforward\model\user\userModel;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
 use think\Exception;
-use think\facade\Cache;
-use think\facade\Session;
 
 /**
  * 用户缓存中间件
@@ -29,7 +26,7 @@ trait mwUser
      * 生成用户唯一id
      * @return bool|string
      */
-    static public function buildUnionId(): string
+    static public function buildUnionId()
     {
         /*
          * Use OpenSSL (if available)
@@ -95,7 +92,7 @@ trait mwUser
                 $where['active'] = 1;
             }
 
-            $where = $userModel->filterFields($userModel->getTableFields(), $where);
+            $where = $userModel->fieldsFilter($userModel->getTableFields(), $where);
 //            var_dump($where);
 
             $res = $userModel->where($where)->select();
@@ -145,8 +142,8 @@ trait mwUser
     static public function getUsers(array $where)
     {
         $userModel = new userModel();
-        $where = $userModel->filterFields($userModel->getTableFields(), $where);
-//        $where = $userModel->needQueryFields(['isActive' => 1], $where);
+        $where = $userModel->fieldsFilter($userModel->getTableFields(), $where);
+//        $where = $userModel->fieldsNeed(['isActive' => 1], $where);
         $users = $userModel->where($where)->select();
         $users = $userModel->getResult($users);
         return $users;

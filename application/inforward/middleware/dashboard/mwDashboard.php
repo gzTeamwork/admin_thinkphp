@@ -21,31 +21,29 @@ class mwDashboard
      * 获取管理后台菜单
      * @param array $where
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
-    public static function getMenus(array $where = []): array
+    public static function getMenus(array $where = [])
     {
         try {
-
             $menuModel = new menuModel();
-            $where = $menuModel->needQueryFields(['isActive' => 1, 'isShow' => 1], $where);
-//        var_dump($where);
+            $where = $menuModel->fieldsNeed(['is_active' => 1, 'is_show' => 1], $where);
             $res = $menuModel->where($where)->select();
-            $res = $menuModel->getResult($res);
+            $res = $menuModel->getResult($res, false);
             return $res;
         } catch (Exception $exception) {
-            var_dump($menuModel->getLastSql());
-        }
 
+        }
     }
 
-    public static function getMenusTree(array $where = []): array
+    /**
+     * 排序
+     * @param array $where
+     * @return array
+     */
+    public static function getMenusTree(array $where = [])
     {
         $menus = self::getMenus($where);
         $menus = mwHelper::hTree($menus);
-//        var_dump($menus);
         return $menus;
     }
 }

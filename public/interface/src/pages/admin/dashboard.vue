@@ -6,9 +6,9 @@
       <com-admin-menu></com-admin-menu>
     </mu-flex>
     <mu-flex fill direction="column" style="width:80vw">
-      <com-admin-top-nav v-if="isAdmin"></com-admin-top-nav>
+      <com-admin-top-nav v-if="isAdmin" class="fixed"></com-admin-top-nav>
       <!--<section id="dashboardMain" class="full-width full-height" style="background:white;">-->
-      <router-view class="full-width full-height"></router-view>
+      <router-view class="full-width" style="background: white;min-height:100vh;margin-top: 110px;"></router-view>
       <!--</section>-->
     </mu-flex>
   </mu-flex>

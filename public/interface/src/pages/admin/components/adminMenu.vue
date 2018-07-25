@@ -1,7 +1,7 @@
 <template>
-  <mu-container style="width: 300px;">
+  <mu-container style="width: 300px;position: fixed">
     <mu-paper :z-depth="1">
-      <mu-appbar color="blue400">
+      <mu-appbar color="primary">
         <mu-button icon slot="left">
           <mu-icon value="menu"></mu-icon>
         </mu-button>
@@ -47,7 +47,7 @@
         currentMenu: null,
       }
     },
-    created() {
+    mounted() {
       adminApi.getAdminDashboardMenu();
       this.currentMenu = this.$route.path;
     },
