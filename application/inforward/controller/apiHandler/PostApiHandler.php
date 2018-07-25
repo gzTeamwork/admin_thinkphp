@@ -155,6 +155,8 @@ trait PostApiHandler
         try{
             $postTempModel = new PostTemplateModel();
             $result = $postTempModel->select();
+        }catch(Exception $exception){
+            $this->error('获取文章模板失败','');
         }
     }
 }
