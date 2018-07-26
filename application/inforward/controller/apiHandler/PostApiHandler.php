@@ -13,15 +13,10 @@ use app\inforward\model\post\PostModel;
 use app\inforward\model\post\PostTemplateModel;
 use Symfony\Component\Validator\Constraints\Date;
 use think\Exception;
+use think\facade\Response;
 
 trait PostApiHandler
 {
-//    private function _paramBeforeGet(&$datas)
-//    {
-//        $datas['limit'] = $data['limit'] ?? 20;
-//        $datas['page'] = $data['page'] ?? 1;
-//        return $datas;
-//    }
 
     /**
      * 获取文章
@@ -31,10 +26,7 @@ trait PostApiHandler
     {
         try {
             $postModel = new PostModel();
-            $pid = $datas['pid'] ?? false;
-            if (false === $pid) {
-                throw new Exception("没有获取到正确的参数");
-            }
+            if (isset($datas['id'])) throw new Exception("没有获取到正确的参数");
             $result = $postModel->where($datas)->find();
             $result = $postModel->getResult($result, '该id文章不存在');
             return $result;
@@ -47,14 +39,14 @@ trait PostApiHandler
     {
         try {
             $postModel = new PostModel();
-            $pid = $datas['pid'] ?? false;
+            $pid = $datas['id'] ?? false;
             if (false === $pid) {
                 throw new Exception("没有获取到正确的参数");
             }
-            $postModel->alias('p')->leftJoin('posts_extra pe', 'p.id = pe.pid');
-            $result = $postModel->where($datas)->find();
+            $result = $postModel->with('postExtras')->where($datas)->select();
+//            var_dump($result);
             $result = $postModel->getResult($result, '该id文章不存在');
-            return $result;
+            $this->success('成功获取当前文章', '', $result[0]);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }
@@ -81,9 +73,37 @@ trait PostApiHandler
     {
         try {
             $postModel = new PostModel();
-//            $postModel->alias('p')->join('posts_extra pe','p.id = pe.pid');
             $result = $postModel->with('postExtras')->where($datas)->select();
             $result = $postModel->getResult($result);
+
+            $this->success('获取文章详情数据成功', '', $result);
+        } catch (Exception $exception) {
+            $this->error($exception->getMessage());
+        }
+    }
+
+    public function api_posts_get_detail_list($datas)
+    {
+        try {
+            $postModel = new PostModel();
+            $result = $postModel->with('postExtras')->where($datas)->select();
+            $result = $postModel->getResult($result);
+            foreach ($result as $key => $post) {
+                foreach ($post['post_extras'] as $kkey => $extra) {
+                    switch ($extra['type']) {
+                        case 'datetime':
+                            $value = date('Y年m月d日', strtotime($extra['value']));
+                            break;
+                        case 'array':
+                            $value = json_decode($extra['value']);
+                            break;
+                        default:
+                            $value = $extra['value'];
+                    }
+                    $result[$key][$extra['name']] = $value;
+
+                }
+            }
             $this->success('获取文章详情数据成功', '', $result);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
@@ -91,6 +111,7 @@ trait PostApiHandler
     }
 
     /**
+     * 发布新文章
      * @param $datas
      * @return void
      * @throws \Exception
@@ -99,21 +120,35 @@ trait PostApiHandler
     {
         try {
             $postModel = new PostModel();
-            $datas['create_time'] = date('Y-m-d H:i:s', isset($data['create_time']) ? $datas['create_time'] : time());
-            $datas['update_time'] = $datas['create_time'];
-            $result = $postModel->allowField(true)->data($datas)->save();
-            $npid = $postModel->getLastInsID();
-            var_dump(count($datas['extraList']));
-            if ($result === 1 && count($datas['extraList']) > 1) {
-                //  成功添加了,处理文章附加内容
-                $postExtraModel = new PostExtraModel();
-                foreach ($datas['extraList'] as $key => $ex) {
-                    $datas['extraList'][$key]['pid'] = $npid;
+            if (isset($datas['id']) && PostModel::get($datas['id'])) {
+//                更新文章
+                unset($datas['update_time']);
+                $datas['create_time'] = date('Y-m-d H:i:s', $datas['create_time']);
+                $id = $datas['id'];
+                $result = $postModel->allowField(true)->data($datas)->isUpdate(true, ['id' => $id])->save();
+                if ($result !== false && isset($datas['extraList'])) {
+                    $postExtraModel = new PostExtraModel();
+                    $postExtraModel->saveAll($datas['extraList']);
                 }
-                var_dump($datas['extraList']);
-                $postExtraModel->allowField(true)->saveAll($datas['extraList']);
+                $this->success('成功更新了文章', '', $id);
+
+            } else {
+                $datas['create_time'] = date('Y-m-d H:i:s', isset($data['create_time']) ? $datas['create_time'] : time());
+                $result = $postModel->allowField(true)->data($datas)->save();
+                $npid = $postModel->getLastInsID();
+//            var_dump(count($datas['extraList']));
+                if ($result === 1 && count($datas['extraList']) > 1) {
+                    //  成功添加了,处理文章附加内容
+                    $postExtraModel = new PostExtraModel();
+                    foreach ($datas['extraList'] as $key => $ex) {
+                        $datas['extraList'][$key]['pid'] = $npid;
+                    }
+//                var_dump($datas['extraList']);
+                    $postExtraModel->allowField(true)->saveAll($datas['extraList']);
+                }
+                $this->success('成功发布新的文章', '', $npid);
+
             }
-            $this->success('成功发布新的文章', '', $npid);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }
@@ -152,11 +187,39 @@ trait PostApiHandler
 
     public function api_post_templates_get()
     {
-        try{
+        try {
             $postTempModel = new PostTemplateModel();
             $result = $postTempModel->select();
-        }catch(Exception $exception){
-            $this->error('获取文章模板失败','');
+            $this->success('成功获取文章模板', '', $result);
+        } catch (Exception $exception) {
+            $this->error('获取文章模板失败', '');
+        }
+    }
+
+    public function api_post_template_set($datas)
+    {
+        try {
+            $postTempModel = new PostTemplateModel();
+            $result = $postTempModel->allowField(true);
+            $datas['content'] = json_encode(is_array($datas['content']) ? $datas['content'] : []);
+            if (isset($datas['id']) && PostTemplateModel::get($datas['id'])) {
+                $tid = $datas['id'];
+//                var_dump($datas);
+                unset($datas['id']);
+                unset($datas['create_time']);
+                unset($datas['update_time']);
+                $result = $postTempModel->save($datas, ['id' => $tid]);
+            } else {
+                $datas['create_time'] = strtotime('now');
+                $datas['is_active'] = true;
+                $datas['author'] = 'system';
+                $datas['post_used'] = 0;
+                $result = $postTempModel->save($datas);
+            }
+
+            $this->success('成功设置新的数据模板', '', $result);
+        } catch (Exception $exception) {
+            $this->error('增加新的数据模板失败', '', ['msg' => $exception->getMessage()]);
         }
     }
 }

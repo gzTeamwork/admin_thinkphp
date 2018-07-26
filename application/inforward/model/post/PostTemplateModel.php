@@ -18,5 +18,9 @@ class PostTemplateModel extends Model
     protected $connection = 'db_admin_core';
     protected $table = 'posts_template';
 
+    protected function getContentAttr($v)
+    {
+        return json_decode($v);
+    }
 
 }

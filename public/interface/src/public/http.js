@@ -1,31 +1,31 @@
 /**
- * @file Axios的Vue插件（添加全局请求/响应拦截器）
+ * Axios的Vue插件（添加全局请求/响应拦截器）
+ * https://github.com/mzabriskie/axios
  */
 
-// https://github.com/mzabriskie/axios
+
 import axios from 'axios'
 import config from '@/config';
 
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-// console.log(config);
 let ajaxAxios = new axios.create({
   baseURL: config.isDev ? '' : config.apiServer,
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
   },
 });
-// ajaxAxios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+// ajaxAxios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 
 // 拦截request,设置全局请求为ajax请求
 ajaxAxios.interceptors.request.use(config => {
   return config
 });
-
 // 拦截响应response，并做一些错误处理
 ajaxAxios.interceptors.response.use(
   response => {
     console.log('ajax交互完毕' + new Date());
-    // console.log(response);
+    // console.log(this);
     if (response.status === 200 && response.data !== undefined) {
       if (response.data.code === 0) {
         //  精准的交互失败处理
@@ -98,16 +98,13 @@ ajaxAxios.interceptors.response.use(
     } else {
 
     }
+
     !!err.message ? console.log(err.message) : '';
     return Promise.reject(err)
   }
 );
 
-
 export default ajaxAxios;
 
-// axios.install = Vue => {
-//   Vue.prototype.$axios = axios
-// }
 
 
