@@ -6,7 +6,7 @@ export default {
    * 管理员登陆表单提交
    * @param form
    */
-  adminLoginSub: function (form) {
+  async adminLoginSub(form) {
     httpAxios.get('do/api_user_login', {
       params: {
         account: form.account || '',
@@ -28,7 +28,7 @@ export default {
    * 管理员用户快速登录
    * @param admin
    */
-  adminLoginSubLight: function (admin) {
+  async adminLoginSubLight(admin) {
     httpAxios.get('do/api_user_login_light', {
       params: {
         account: admin.account,
@@ -48,7 +48,7 @@ export default {
    * 用户注册表单提交
    * @param form
    */
-  userRegisterSub: function (form) {
+  async userRegisterSub(form) {
     // console.log(form);
     httpAxios.post('do/api_user_register', form
     ).then(response => {
@@ -63,7 +63,7 @@ export default {
   /**
    * 获取后台菜单
    */
-  getAdminDashboardMenu: function () {
+  async getAdminDashboardMenu() {
     httpAxios.get('do/api_admin_menu', {
       params: {
         uid: window.$store.getters.adminUid || null
@@ -75,7 +75,7 @@ export default {
       }
     })
   },
-  getAdminProfileMenu: function () {
+  async getAdminProfileMenu() {
     httpAxios.get('do/api_admin_profile_menu', {
       params: {
         uid: window.$store.getters.adminUid || null
@@ -90,7 +90,7 @@ export default {
   /**
    * 获取系统配置项
    */
-  getSystemConfiguration: function () {
+  async getSystemConfiguration() {
     httpAxios.get('do/api_system_configuration', {
       params: {}
     }).then(response => {

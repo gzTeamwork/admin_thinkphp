@@ -27,9 +27,11 @@
       </small>
       <com-editor :content="postEdit.post.content"></com-editor>
     </mu-dialog>
-    <!--<vue-editor editor="quill" :height="900"></vue-editor>-->
-    <mu-data-table fill selectable select-all checkbox :loading="false" :columns="columns" :selects.sync="selects"
-                   checkbox
+    <!--文章数据表格-->
+    <mu-data-table fill selectable select-all checkbox
+                   :loading="false"
+                   :columns="columns"
+                   :selects.sync="selects"
                    :sort.sync="sort" @sort-change="handleSortChange"
                    :data="postList.slice((page.current-1)*page.perPageNum,page.current*page.perPageNum)">
       <template slot-scope="scope">

@@ -147,7 +147,6 @@ trait PostApiHandler
                     $postExtraModel->allowField(true)->saveAll($datas['extraList']);
                 }
                 $this->success('成功发布新的文章', '', $npid);
-
             }
         } catch (Exception $exception) {
             $this->error($exception->getMessage());

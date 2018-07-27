@@ -24,12 +24,13 @@ ajaxAxios.interceptors.request.use(config => {
 // 拦截响应response，并做一些错误处理
 ajaxAxios.interceptors.response.use(
   response => {
-    console.log('ajax交互完毕' + new Date());
     // console.log(this);
     if (response.status === 200 && response.data !== undefined) {
       if (response.data.code === 0) {
         //  精准的交互失败处理
         console.log('本次ajax数据交互失败,原因是' + response.data.msg)
+      } else {
+        console.log('ajax交互完毕' + new Date());
       }
       return response.data;
     } else {
@@ -99,7 +100,7 @@ ajaxAxios.interceptors.response.use(
 
     }
 
-    !!err.message ?console.error(err.message) : '';
+    !!err.message ? console.error(err.message) : '';
     return Promise.reject(err)
   }
 );
