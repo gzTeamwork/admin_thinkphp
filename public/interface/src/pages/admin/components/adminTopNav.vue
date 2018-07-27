@@ -1,6 +1,6 @@
 <template>
   <mu-paper class="full-width" :z-depth="1">
-    <mu-appbar style="width: 100%;" title="Title"></mu-appbar>
+    <!--<mu-appbar style="width: 100%;" title="Title"></mu-appbar>-->
     <com-bread-crumbs></com-bread-crumbs>
   </mu-paper>
 </template>

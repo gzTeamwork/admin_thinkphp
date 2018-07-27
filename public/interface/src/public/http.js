@@ -99,7 +99,7 @@ ajaxAxios.interceptors.response.use(
 
     }
 
-    !!err.message ? console.log(err.message) : '';
+    !!err.message ?console.error(err.message) : '';
     return Promise.reject(err)
   }
 );
