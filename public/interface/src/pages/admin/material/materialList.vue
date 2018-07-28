@@ -7,7 +7,7 @@
     </h3>
     <mu-sub-header>{{tableView?'数据表格':'文件视图'}}</mu-sub-header>
     <!--文章数据表格-->
-    <com-data-table v-if="tableView" :datas="handlerGetMaterials" :colums="materialsColumns">
+    <com-data-table v-if="tableView" :datas.sync="materialList" :colums="materialsColumns">
       <!--表单内容-->
       <template slot="table" slot-scope="material">
         <td>

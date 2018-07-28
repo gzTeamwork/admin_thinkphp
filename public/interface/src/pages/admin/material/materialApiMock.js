@@ -11,7 +11,7 @@ Mock.mock(/api_get_materials/, {
   code: 1,
   msg: '成功获取素材数据',
   data: Mock.mock({
-    "array|30": [{
+    "array|60": [{
       id: '@increment',
       title: '@ctitle()' + '.' + '@fileTypes',
       type: '@fileTypes',

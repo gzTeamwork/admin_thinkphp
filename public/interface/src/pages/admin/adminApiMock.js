@@ -47,7 +47,10 @@ Mock.mock(/api_admin_menu/, {
 Mock.mock(/api_admin_profile_menu/, {
     'code': 1,
     'msg': '',
-    'data': [{label: '登出', url: 'api_admin_logout'}]
+    'data': [
+        {label: '个人信息', url: '/admin/user/profile'},
+        {label: '登出', url: 'api_admin_logout'},
+    ]
 })
 
 // }
