@@ -7,18 +7,6 @@ Random.extend({
   }
 });
 
-Mock.mock(/api_get_materials/, {
-  code: 1,
-  msg: '成功获取素材数据',
-  data: Mock.mock({
-    "array|30": [{
-      id: '@increment',
-      title: '@ctitle()' + '.' + '@fileTypes',
-      type: '@fileTypes',
-    }]
-  })
-})
-
 Mock.mock(/api_upload_file/, (ops) => {
   console.info('api接口接受参数', ops);
   return {

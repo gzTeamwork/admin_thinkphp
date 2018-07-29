@@ -11,9 +11,7 @@ namespace app\inforward\controller\apiHandler;
 use app\inforward\model\post\PostExtraModel;
 use app\inforward\model\post\PostModel;
 use app\inforward\model\post\PostTemplateModel;
-use Symfony\Component\Validator\Constraints\Date;
 use think\Exception;
-use think\facade\Response;
 
 trait PostApiHandler
 {
@@ -43,7 +41,7 @@ trait PostApiHandler
             if (false === $pid) {
                 throw new Exception("没有获取到正确的参数");
             }
-            $result = $postModel->with('postExtras')->where($datas)->select();
+            $result = $postModel->with('postExtra')->where($datas)->select();
 //            var_dump($result);
             $result = $postModel->getResult($result, '该id文章不存在');
             $this->success('成功获取当前文章', '', $result[0]);
@@ -73,7 +71,7 @@ trait PostApiHandler
     {
         try {
             $postModel = new PostModel();
-            $result = $postModel->with('postExtras')->where($datas)->select();
+            $result = $postModel->with('postExtra')->where($datas)->select();
             $result = $postModel->getResult($result);
 
             $this->success('获取文章详情数据成功', '', $result);
@@ -86,7 +84,7 @@ trait PostApiHandler
     {
         try {
             $postModel = new PostModel();
-            $result = $postModel->with('postExtras')->where($datas)->select();
+            $result = $postModel->with('postExtra')->where($datas)->select();
             $result = $postModel->getResult($result);
             foreach ($result as $key => $post) {
                 foreach ($post['post_extras'] as $kkey => $extra) {
@@ -157,13 +155,23 @@ trait PostApiHandler
      * @param $datas
      * @return int
      * @throws \Exception
+     * @todo add checkout is safe del
      */
-    public function api_post_delete($datas)
+    public function api_post_del($datas)
     {
         try {
-            $postModel = new PostModel();
-            $result = $postModel->where('pid', '=', $datas['pid'])->delete();
-            return $result;
+            if (isset($datas['id']) && PostModel::get($datas['id'])) {
+                $result = (new PostModel)->where('id', '=', $datas['id'])->delete();
+//                $result = $postModel->allowField(true)->save(['is_active' => 0], ['id' => $datas['id']]);
+                if ($result) {
+                    (new PostExtraModel)->where('pid', '=', $datas['id'])->delete();
+                    return $this->success('成功删除文章', $result);
+                } else {
+                    throw new Exception('文章删除操作失败');
+                }
+            } else {
+                throw new Exception('文章删除缺少必要参数');
+            }
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }

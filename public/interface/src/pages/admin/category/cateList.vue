@@ -1,51 +1,33 @@
 <template>
   <section>
     <h2>栏目列表</h2>
-    <!--弹窗区-->
-    <mu-dialog width="860" transition="slide-bottom" scrollable overlay-close :open.sync="newCate.show" :title="'增加栏目'"
-    >
-      <com-cate-new></com-cate-new>
-    </mu-dialog>
-    <mu-flex align-items="end">
-      <!--新增栏目-->
-      <mu-button @click="eventNewCate">添加</mu-button>
-    </mu-flex>
-    <br>
-    <mu-data-table fill selectable select-all checkbox :loading="false" :columns="columns" :selects.sync="selects"
-                   checkbox
-                   :sort.sync="sort" @sort-change="handleSortChange"
-                   :data="cateList.slice((page.current-1)*page.perPageNum,page.current*page.perPageNum)">
-      <template slot-scope="scope">
-        <td class="is-center">{{scope.row.id}}</td>
-        <td>{{scope.row.title}}</td>
-        <td>{{scope.row.pid}}</td>
-        <td>{{scope.row.create_time}}</td>
+
+    <!--文章数据表格-->
+    <com-data-table ref="cateDatatTable" :datas="handlerCateList" :columns="cateColumns" addBtn>
+      <!--表单内容-->
+      <template slot="table" slot-scope="item">
+        <td class="is-center">{{item.data.id}}</td>
+        <td>{{item.data.title}}</td>
+        <td>{{item.data.pid}}</td>
+        <td>{{item.data.create_time}}</td>
         <td class="is-center">
-          <mu-icon color="green300" v-if="scope.row.is_active" value="check_circle"></mu-icon>
-          <mu-icon color="red300" v-else="scope.row.is_active" value="highlight_off"></mu-icon>
+          <mu-icon color="green300" v-if="item.data.is_active" value="check_circle"></mu-icon>
+          <mu-icon color="red300" v-else="item.data.is_active" value="highlight_off"></mu-icon>
         </td>
         <td>
-
-          <!--编辑文章-->
-          <mu-button icon @click="handlerPostsEdit(scope.row)">
-            <mu-icon value="edit"></mu-icon>
-          </mu-button>
-          <!--删除文章-->
-          <mu-button icon color="red300" @click="handlerPostsEdit(scope.row)">
+          <mu-button icon small color="red400" @click="eventRemoveCate(item.data)">
             <mu-icon value="close"></mu-icon>
           </mu-button>
-
         </td>
       </template>
-    </mu-data-table>
 
-    <mu-flex justify-content="center" style="margin: 32px 0;">
-      <mu-pagination raised :total="cateList.length" :pageSize="page.perPageNum" :current.sync="page.current"
-                     @change="handlerListChange">
-      </mu-pagination>
-    </mu-flex>
+      <!--新增素材-->
+      <template slot="newDialog">
+        <h3>新增栏目</h3>
+        <com-cate-new></com-cate-new>
+      </template>
 
-
+    </com-data-table>
   </section>
 </template>
 
@@ -56,25 +38,8 @@
     name: "cateList",
     data() {
       return {
-        newCate: {
-          show: false,
-        },
-        cateEdit: {
-          show: false,
-          cate: {}
-        },
         cateList: [],
-        selects: [],
-        sort: {
-          name: 'id',
-          order: 'asc'
-        },
-        loading: true,
-        page: {
-          current: 1,
-          perPageNum: 15,
-        },
-        columns: [
+        cateColumns: [
           {title: '编号', name: 'id', width: 128, align: 'center', sortable: true},
           {title: '栏目标题', name: 'title', width: 220, sortable: true},
           {title: '父辈栏目', name: 'pid', width: 160, sortable: true},
@@ -85,14 +50,16 @@
       }
     },
     methods: {
-      eventNewCate() {
-        this.newCate.show = true;
-      },
-      handleSortChange({name, order}) {
-        this.cateList = this.cateList.sort((a, b) => order === 'asc' ? a[name] - b[name] : b[name] - a[name]);
-      },
-      handlerListChange(v) {
-        console.log(v);
+      eventRemoveCate: function (item) {
+        // confirm('是否执行删除' + item.title + '栏目') ? this.$refs.cateDatatTable.eventRemoveData(item) : '';
+        if (confirm('是否执行删除' + item.title + '栏目')) {
+          if (item.id === 0) {
+            alert('根目录是不能删除的');
+            return false;
+          } else {
+            cateApi.setCateDel(item);
+          }
+        }
       },
     },
     mounted() {
@@ -101,6 +68,7 @@
     components: {
       'com-cate-new':
         () => import('./cateNew'),
+      'com-data-table': () => import('@/pages/admin/components/normalDatatable'),
     }
     ,
     computed: {
@@ -114,7 +82,8 @@
 
         this.cateList = v;
       }
-    }
+    },
+
   }
 </script>
 

@@ -26,12 +26,15 @@ ajaxAxios.interceptors.response.use(
   response => {
     // console.log(this);
     if (response.status === 200 && response.data !== undefined) {
+      let status;
       if (response.data.code === 0) {
         //  精准的交互失败处理
-        console.log('本次ajax数据交互失败,原因是' + response.data.msg)
+        status = '失败';
+
       } else {
-        console.log('ajax交互完毕' + new Date());
+        status = '成功';
       }
+      console.info('%cAjax' + status + '-' + new Date().toLocaleString() + response.data.msg, 'background:' + (response.data.code === 1 ? 'green' : 'orange') + ';color:white;border-radius:1em;padding-left:1em;padding-right:1em',response.data);
       return response.data;
     } else {
       // @todo 修复交互链接失败

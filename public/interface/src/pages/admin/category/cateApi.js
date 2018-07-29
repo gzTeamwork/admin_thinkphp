@@ -13,20 +13,25 @@ export default {
     }).then(res => {
       if (res.code === 1) {
         window.$store.dispatch("getCateListSuccess", res.data);
-        window.$store.commit("NOTICE_SUCCESS", res.msg);
       } else {
-        window.$store.commit("NOTICE_ERROR", res.data.msg);
       }
     })
   },
+  //  增加栏目
   setCateNew: function (form) {
     httpAxios.post('do/api_cate_set', {...form}).then(res => {
       if (res.code === 1) {
         console.log(res);
         window.$store.dispatch("setCateNewSuccess", res.data);
-        window.$store.commit("NOTICE_SUCCESS", res.msg);
       } else {
-        window.$store.commit("NOTICE_ERROR", res.data.msg);
+      }
+    })
+  },
+  setCateDel: function (form) {
+    console.log(form);
+    httpAxios.post('do/api_cate_del', {...form}).then(res => {
+      if (res.code === 1) {
+        this.getCateList();
       }
     })
   }

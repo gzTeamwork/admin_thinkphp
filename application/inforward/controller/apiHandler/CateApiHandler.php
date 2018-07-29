@@ -54,16 +54,16 @@ trait CateApiHandler
      * @param $datas
      * @return void
      */
-    public function api_cate_remove(&$datas)
+    public function api_cate_del(&$datas)
     {
         try {
             $cateModel = new CateModel();
-            if (isset($datas['id'])) {
+            if (isset($datas['id']) && CateModel::get($datas['id'])) {
+                $result = $cateModel->allowField(true)->save(['is_active' => 0], ['id' => $datas['id']]);
+                $this->success('删除栏目成功', '', $result);
+            } else {
                 throw new Exception('没有参数');
             }
-            $result = $cateModel->save(['is_active', '=', 0], ['id', '=', $datas['id']]);
-            $result = $cateModel->getResult($result);
-            $this->success('删除栏目成功', '', $result);
         } catch (Exception $exception) {
             $this->error('删除栏目失败', '', ['msg' => $exception->getMessage()]);
         }

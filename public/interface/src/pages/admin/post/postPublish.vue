@@ -26,12 +26,13 @@
                            actions></mu-date-input>
           </mu-form-item>
           <mu-form-item prop="input" icon="thumb" label="封面图">
-            <com-uploader></com-uploader>
+            <com-admin-uploader v-on:getResult="eventPostThumbFinished"></com-admin-uploader>
           </mu-form-item>
           <mu-form-item prop="input" icon="content" label="内容">
+            <com-admin-uploader></com-admin-uploader>
             <!--<com-editor v-model:content="form.content"></com-editor>-->
             <com-vue-mce id="postTinymce" v-model="form.content" :other_options="tinymceInit"
-                         class="full-width"></com-vue-mce>
+                         class="full-width" ref="tinymceEditor"></com-vue-mce>
           </mu-form-item>
           <mu-button v-if="$route.query.id" @click="eventPostPublishSubmit">
             更新文章
@@ -50,15 +51,17 @@
 </template>
 
 <script>
+  import adminUploader from '@/pages/admin/uploader/uploader';
   import cateApi from '@/pages/admin/category/cateApi';
   import postApi from "./postApi";
 
   export default {
     name: "postPublish",
     components: {
-      'com-uploader': () => import('@/pages/components/Uploader'),
+      // 'com-uploader': () => import('@/pages/components/uploader/uploader'),
       'com-post-extra': () => import('./postExtra'),
       'com-vue-mce': () => import('vue-tinymce-editor'),
+      'com-admin-uploader': adminUploader,
     },
     data() {
       return {
@@ -68,7 +71,9 @@
           category: 0,
           create_time: new Date(),
           extraList: [],
+          thumb: null,
         },
+        postThumb: {},
         postKinds: [
           {title: '文章', name: 'post', content: []},
         ],
@@ -79,18 +84,25 @@
         },
         //  搜索框值
         filterable: {
-          cateSearch: '',
-          postKindSearch: '',
+          cateSearch: '根目录',
+          postKindSearch: '文章',
         },
         tinymceInit: {
           language_url: '/static/tinymce/zh_CN.js',
           language: 'zh_CN',
           skin_url: '/static/tinymce/skins/lightgray',
           height: 600,
-          plugins: 'link lists image code table colorpicker textcolor wordcount contextmenu',
+          external_plugins: {
+            'imageSelector': '/static/tinymce/plugins/imageSelector.js',
+          },
+          plugins: 'link lists image code table colorpicker textcolor wordcount contextmenu imageSelector',
           toolbar1:
-            'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat',
-          branding: true
+            'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat | imageSelector',
+          branding: true,
+          imageSelectorCallback: (cb) => {
+            cb('dfas');
+          },  // 点击编辑器上的图片按钮后的回调方法
+
         }
       }
     },
@@ -102,7 +114,19 @@
         // 修改模式
         postApi.getPost({id: id});
       }
-
+      // this.$refs.tinymce.PluginManager.add('imageSelector', function (editor, url) {
+      //   // Add a button that opens a window
+      //   editor.addButton('imageSelector', {
+      //     icon: 'image',
+      //     tooltip: "select image from image lib",
+      //     onclick: function () {
+      //       editor.settings.imageSelectorCallback(function (r) {
+      //         console.log('inserting image to editor: ' + r);
+      //         editor.execCommand('mceInsertContent', false, '<img alt="Smiley face" height="42" width="42" src="' + r + '"/>');
+      //       });
+      //     }
+      //   });
+      // });
     },
     computed: {
       //  获取栏目列表
@@ -122,15 +146,14 @@
       handlerPostTemplateList: function (v) {
         this.postKinds = this.postKinds.slice(0, 1).concat(v);
         if (this.$route.query.id) {
-          this.eventPostKindChange(this.form.kind, [...this.form.post_extras]);
+          this.eventPostKindChange(this.form.kind, [...this.form.post_extra]);
         }
       },
       handlerPostCurrent: function (v) {
         this.form = v;
         this.eventCateChange(this.form.category);
         this.filterable.postKindSearch = this.form.kind;
-        this.eventPostKindChange(this.form.kind, [...this.form.post_extras]);
-        // this.form.post_extras = [];
+        this.eventPostKindChange(this.form.kind, [...this.form.post_extra]);
       }
     },
     methods: {
@@ -149,35 +172,40 @@
             console.log(e);
             this.form.extraList = exlist || e.content;
           }
-        });
-        // switch (v) {
-        //   case 'office':
-        //     exlist = [
-        //       {title: '租金', name: 'price', value: 0, type: 'number'},
-        //       {title: '面积', name: 'area', value: 0, type: 'number'},
-        //       {title: '标签', name: 'tags', value: [], type: 'array'},
-        //       {title: '是否已售', name: 'is_sold', value: false, type: 'boolean'},
-        //       {title: '租售到期', name: 'sold_time', value: new Date(), type: 'datetime'},
-        //       {title: '接盘折扣', name: 'sold_discount', value: 98, type: 'number'},
-        //       {title: '省', name: 'province', value: '', type: 'string'},
-        //       {title: '市', name: 'city', value: '', type: 'string'},
-        //       {title: '区', name: 'area', value: '', type: 'string'},
-        //       {title: '地址', name: 'address', value: '', type: 'string'},
-        //     ]
-        //     break;
-        //   default:
-        //     // exlist = v.content;
-        //
-        // }
+        })
+
+      },
+      // post thumb uploaded
+      eventPostThumbFinished: function (v) {
+        console.info("文章封面上传完毕", v);
+        this.postThumb = v;
+        this.form.thumb = this.postThumb.thumb;
       },
       eventPostPublishSubmit: function () {
         let postForm = {...this.form};
         console.log(postForm.create_time);
         postForm.create_time = parseInt(postForm.create_time.getTime() / 1000);
         postApi.setPost(postForm);
+      },
+      showImageSelector: function (cb) {
+        console.log('被点了');
+        imageSelectedCallback = cb;
+        imageSelector = new ImageSelector('#imageSelectorDiv', {}, function (type, data) {  // 初始化图片选择弹窗
+        });
+        $('#imageSelectorPop').modal({keyboard: true, backdrop: 'static'});
+      },
+
+      insertImage: function () {
+        if (imageSelector.selectedItems.length === 0)
+          return;
+
+        imageSelectedCallback(imageSelector.selectedItems[0].url);   // 调用插件内部回调把图片插入到编辑器中
+        $('#imageSelectorPop').modal('hide');
       }
     }
   }
+
+
 </script>
 
 <style lang="scss" scoped>

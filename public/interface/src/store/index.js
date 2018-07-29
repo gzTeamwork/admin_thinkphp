@@ -8,6 +8,7 @@ import usersModule from '@/pages/admin/user/userVuex';
 import postModule from '@/pages/admin/post/postVuex';
 import cateModule from '@/pages/admin/category/cateVuex';
 import materialModule from '@/pages/admin/material/materialVuex';
+// import uploadModule from '@/pages/admin/uploader/uploaderVuex';
 
 Vue.use(Vuex);
 
@@ -19,7 +20,8 @@ const Store = new Vuex.Store({
     usersModule,
     postModule,
     cateModule,
-    materialModule
+    materialModule,
+    // uploadModule
   }
 })
 

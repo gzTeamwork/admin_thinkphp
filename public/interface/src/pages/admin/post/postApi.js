@@ -57,6 +57,11 @@ export default {
       return res.code === 1;
     })
   },
+  setPostDel: function (form) {
+    httpAxios.post('do/api_post_del', {...form}).then(res => {
+      res.code === 1 ? window.$toast.success(res.msg) : window.$toast.error(res.msg);
+    })
+  },
   getPostTemplates: function (form) {
     httpAxios.get('do/api_post_templates_get', {params: form}).then(res => {
       if (res.code === 1) {
@@ -76,5 +81,6 @@ export default {
         Toast.error(res.msg);
       }
     })
-  }
+  },
+
 }

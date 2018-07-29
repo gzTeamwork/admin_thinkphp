@@ -1,6 +1,6 @@
 <template>
   <section>
-    <mu-button fab @click="eventPopNewDialog">
+    <mu-button v-if="addBtn" icon @click="eventPopNewDialog">
       <mu-icon value="exposure_plus_1"></mu-icon>
     </mu-button>
     <!--通用型表格插件 - museui - datetable-->
@@ -12,22 +12,22 @@
                    :data="dataList.slice((page.current-1)*page.perPageNum,page.current*page.perPageNum)">
       <template slot-scope="scope">
         <slot name="table" :data="scope.row"></slot>
-        <td>
-          <!--预览单项-->
-          <mu-button icon @click="handlerPostsView(scope.row)">
-            <mu-icon value="remove_red_eye"></mu-icon>
-          </mu-button>
-          <!--编辑单项-->
-          <!--<mu-button icon @click="handlerPostsEdit(scope.row)">-->
-          <mu-button icon :to="'/admin/post/publish?id='+scope.row.id">
-            <mu-icon value="edit"></mu-icon>
-          </mu-button>
-          <!--删除单项-->
-          <mu-button icon color="red300" @click="handlerPostsEdit(scope.row)">
-            <mu-icon value="close"></mu-icon>
-          </mu-button>
+        <!--<td>-->
+        <!--&lt;!&ndash;预览单项&ndash;&gt;-->
+        <!--<mu-button icon @click="handlerPostsView(scope.row)">-->
+        <!--<mu-icon value="remove_red_eye"></mu-icon>-->
+        <!--</mu-button>-->
+        <!--&lt;!&ndash;编辑单项&ndash;&gt;-->
+        <!--&lt;!&ndash;<mu-button icon @click="handlerPostsEdit(scope.row)">&ndash;&gt;-->
+        <!--<mu-button icon :to="'/admin/post/publish?id='+scope.row.id">-->
+        <!--<mu-icon value="edit"></mu-icon>-->
+        <!--</mu-button>-->
+        <!--&lt;!&ndash;删除单项&ndash;&gt;-->
+        <!--<mu-button icon color="red300" @click="eventRemoveItem(scope.row.data)">-->
+        <!--<mu-icon value="close"></mu-icon>-->
+        <!--</mu-button>-->
 
-        </td>
+        <!--</td>-->
       </template>
     </mu-data-table>
     <!--页码-->
@@ -36,22 +36,35 @@
                      @change="handlerListChange">
       </mu-pagination>
     </mu-flex>
-    <!--新增单项-->
+
+    <!--新增弹框单项-->
     <mu-dialog :open.sync="popNewData.show" width="860" transition="slide-bottom" scrollable overlay-close>
+      <mu-button style="float: right;" fab @click="popNewData.show=false">
+        <mu-icon value="close"></mu-icon>
+      </mu-button>
       <slot name="newDialog" :data="popNewData.datas">
       </slot>
-      <mu-button @click="popNewData.show=false">
-        提交
-      </mu-button>
     </mu-dialog>
-    <!--新增单项-->
+
+
+    <!--修改弹框单项-->
     <mu-dialog :open.sync="popEditData.show" width="860" transition="slide-bottom" scrollable overlay-close>
+      <mu-button style="float: right;" fab @click="popEditData.show=false">
+        <mu-icon value="close"></mu-icon>
+      </mu-button>
       <slot name="editDialog" :data="popEditData.datas">
       </slot>
-      <mu-button @click="popEditData.show=false">
-        提交
-      </mu-button>
     </mu-dialog>
+
+    <!--预览弹框单项-->
+    <mu-dialog :open.sync="popViewData.show" width="860" transition="slide-bottom" scrollabel overlay-close>
+      <mu-button style="float: right;" fab @click="popViewData.show=false">
+        <mu-icon value="close"></mu-icon>
+      </mu-button>
+      <slot name="viewDialog" :data="popViewData.datas">
+      </slot>
+    </mu-dialog>
+
   </section>
 </template>
 
@@ -64,7 +77,13 @@
         default: () => {
           return [];
         }
-      }
+      },
+      addBtn: {type: Boolean, default: false},
+      columns: {
+        type: Array,
+        default: []
+      },
+      itemTool: {type: Boolean, default: false}
     },
     data() {
       return {
@@ -75,6 +94,10 @@
         popNewData: {
           show: false,
           datas: {}
+        },
+        popViewData: {
+          show: false,
+          data: {}
         },
         dataList: [],
         selects: [],
@@ -87,15 +110,15 @@
           current: 1,
           perPageNum: 15,
         },
-        columns: [
-          {title: '编号', name: 'id', width: 128, align: 'center', sortable: true},
-          {title: '文章标题', name: 'title', width: 220, sortable: true},
-          {title: '类型', name: 'kind', width: 120, sortable: true},
-          {title: '作者', name: 'author', width: 160, sortable: true},
-          {title: '创建时间', name: 'create_time', width: 300, sortable: true},
-          {title: '是否可用', name: 'is_active', align: 'center', width: 100, sortable: true},
-          {title: '快捷操作'}
-        ],
+        // columns: [
+        //   {title: '编号', name: 'id', width: 128, align: 'center', sortable: true},
+        //   {title: '文章标题', name: 'title', width: 220, sortable: true},
+        //   {title: '类型', name: 'kind', width: 120, sortable: true},
+        //   {title: '作者', name: 'author', width: 160, sortable: true},
+        //   {title: '创建时间', name: 'create_time', width: 300, sortable: true},
+        //   {title: '是否可用', name: 'is_active', align: 'center', width: 100, sortable: true},
+        //   {title: '快捷操作'}
+        // ],
       }
     }, methods: {
       handleSortChange({name, order}) {
@@ -104,25 +127,19 @@
       handlerListChange(v) {
         console.log(v);
       },
-      handlerPostsEdit(v) {
-        this.popEditData.show = true;
-        this.popEditData.datas = v;
-      },
-      handlerPostsView(v) {
-        this.popNewData.show = true;
-        this.popNewData.datas = v;
-      },
       eventPopNewDialog() {
         this.popNewData.show = true;
-      }
+      },
+
     }, watch: {
       datas: function (v) {
         this.dataList = [...v];
       }
+    }, mounted() {
+
     }
   }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
 </style>

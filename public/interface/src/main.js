@@ -11,11 +11,11 @@ import store from './store'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css';
 import theme from 'muse-ui/lib/theme';
+import Toast from 'muse-ui-toast';
 
 theme.use('dark');
 
 // 加载上传插件
-import Uploader from 'vue-simple-uploader'
 //  加载cookies插件
 import VueCookies from 'vue-cookies'
 //  加载axios插件
@@ -29,11 +29,12 @@ import DayJs from 'dayjs'
 window.$cookies = VueCookies;
 window.$store = store;
 window.$day = DayJs;
+window.$toast = Toast;
 
 Vue.use(Vuex);
 Vue.use(MuseUI);
 Vue.use(VueCookies);
-Vue.use(Uploader)
+// Vue.use(Uploader)
 Vue.prototype.$http = Axios;
 
 Vue.config.productionTip = false;

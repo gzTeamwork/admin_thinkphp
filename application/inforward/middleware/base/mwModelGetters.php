@@ -18,7 +18,7 @@ trait mwModelGetters
 {
     protected function setIsActiveAttr($value)
     {
-        return $value === true ? true : false;
+        return $value === true || $value === 1;
     }
 
     protected function setCreateTimeAttr($value)

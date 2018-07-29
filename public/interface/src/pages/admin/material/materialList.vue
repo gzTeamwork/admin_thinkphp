@@ -22,10 +22,14 @@
           <mu-icon color="red300" v-else="material.data.is_active" value="highlight_off"></mu-icon>
         </td>
       </template>
+
+      <!--新增素材-->
       <template slot="newDialog">
-        <com-vue-upload></com-vue-upload>
+        <com-uploader ></com-uploader>
       </template>
+
     </com-data-table>
+
     <mu-row v-else :cols="12" :padding="20" :cell-height="120" gutter>
       <mu-col :span="2" v-for="(e,i) in handlerGetMaterials" :key="i">
         <mu-button fab>
@@ -40,16 +44,17 @@
 
 <script>
   import materialApi from './materialApi'
-  import VueUpload from 'vue-upload-component'
 
   export default {
     name: "materialList",
     components: {
-      'com-vue-upload': VueUpload,
       'com-data-table': () => import('@/pages/admin/components/normalDatatable'),
+      // 'com-uploader': () => import('@/pages/components/Uploader'),
+      'com-uploader': () => import('@/pages/admin/uploader/uploader'),
     },
     data() {
       return {
+        uploadFiles: [],
         tableView: true,
         materialList: [],
         materialsColumns: [
@@ -62,21 +67,25 @@
           {title: '快捷操作'}
         ]
       }
-    },
+    }
+    ,
     mounted() {
       let vm = this;
       materialApi.getMaterial();
-    },
+    }
+    ,
     computed: {
       handlerGetMaterials: function () {
         return this.$store.getters.getMaterials;
       }
-    },
+    }
+    ,
     watch: {
       handlerGetMaterials: function (v) {
         this.materialList = v;
       }
     }
+    ,
   }
 </script>
 

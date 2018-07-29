@@ -17,10 +17,13 @@ class PostModel extends Model
     // 设置当前模型对应的完整数据表名称
     protected $connection = 'db_admin_core';
     protected $table = 'posts';
-    
-    public function postExtras()
+
+    public function postExtra()
     {
-        return $this->hasMany('PostExtraModel','pid');
+        return $this->hasMany('PostExtraModel', 'pid');
     }
+
+
+
 
 }

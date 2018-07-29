@@ -33,8 +33,8 @@ Mock.mock(/api_admin_menu/, {
         ],
     }, {
         label: '栏目', name: 'cate', path: 'cate', sub: [
-            {label: '栏目列表', path: '/admin/cate/list'},
-            {label: '聚合标签', path: '/admin/cate/tags'},
+            {label: '栏目列表', path: '/admin/category/list'},
+            {label: '聚合标签', path: '/admin/category/tags'},
         ]
     }, {
         label: '素材', name: 'material', path: 'material', sub: [
