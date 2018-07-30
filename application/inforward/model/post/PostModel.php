@@ -18,12 +18,21 @@ class PostModel extends Model
     protected $connection = 'db_admin_core';
     protected $table = 'posts';
 
+    //  其他附加内容
     public function postExtra()
     {
         return $this->hasMany('PostExtraModel', 'pid');
     }
 
+    public function postExtras(){
+        return $this->morphMany('PostExtraModel','postExtraTable');
+    }
 
+    //  单元楼层
+    public function floor()
+    {
+        return $this->hasOne('PostExtraModel', 'pid');
+    }
 
 
 }

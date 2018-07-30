@@ -43,8 +43,6 @@ const actions = {
     state.total = datas.length;
   },
   getPostCurrentSuccess: (context, datas) => {
-    datas.create_time = new Date(datas.create_time);
-    datas.update_time = new Date(datas.update_time);
     state.postCurrent = {...datas}
   }
 

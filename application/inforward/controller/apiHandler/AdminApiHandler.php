@@ -11,6 +11,7 @@ namespace app\inforward\controller\apiHandler;
 use app\inforward\middleware\dashboard\mwDashboard;
 use think\Exception;
 use think\facade\Cache;
+use Zend\Filter\Boolean;
 
 trait AdminApiHandler
 {
@@ -32,8 +33,11 @@ trait AdminApiHandler
     /**
      * 后台菜单初始化
      * @todo 追加不同用户的菜单缓存
+     * @param array $where
+     * @param bool $isCache
+     * @return array
      */
-    protected function _getAdminMenu(array $where = [], bool $isCache = false): array
+    protected function _getAdminMenu(array $where = [], $isCache = false)
     {
         $adminMenu = ($isCache && Cache::has('admin_menu')) ? Cache::get('admin_menu') : mwDashboard::getMenusTree($where);
         $isCache ? Cache::set('admin_menu', $adminMenu, 7200) : null;

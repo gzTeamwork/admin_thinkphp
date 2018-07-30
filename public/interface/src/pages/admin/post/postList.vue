@@ -1,6 +1,11 @@
 <template>
   <section class="mu-container">
-    <mu-sub-header>文章列表</mu-sub-header>
+    <mu-flex>
+      <mu-sub-header>文章列表</mu-sub-header>
+      <mu-button :to="'/admin/post/publish'">发布新文章</mu-button>
+      <mu-button>栏目筛选</mu-button>
+    </mu-flex>
+
     <!--文章数据表格-->
     <com-data-table ref="postDatatTable" :datas="handlerPosts" :columns="postColumns">
       <!--表单内容-->
@@ -8,7 +13,6 @@
         <td class="is-center">{{item.data.id}}</td>
         <td>{{item.data.title}}</td>
         <td>{{item.data.kind}}</td>
-        <td>{{item.data.author}}</td>
         <td>{{item.data.create_time}}</td>
         <td class="is-center">
           <mu-icon color="green300" v-if="item.data.is_active" value="check_circle"></mu-icon>
@@ -69,7 +73,6 @@
     components: {
       'com-editor': () => import('vue-tinymce-editor'),
       'com-data-table': () => import('@/pages/admin/components/normalDatatable'),
-
     },
     data() {
       return {
@@ -81,8 +84,7 @@
         postColumns: [
           {title: '编号', name: 'id', width: 128, align: 'center', sortable: true},
           {title: '文章标题', name: 'title', width: 220, sortable: true},
-          {title: '类型', name: 'kind', width: 120, sortable: true},
-          {title: '作者', name: 'author', width: 160, sortable: true},
+          {title: '类型', name: 'kind', sortable: true},
           {title: '创建时间', name: 'create_time', width: 300, sortable: true},
           {title: '是否可用', name: 'is_active', align: 'center', width: 100, sortable: true},
           {title: '快捷操作'}

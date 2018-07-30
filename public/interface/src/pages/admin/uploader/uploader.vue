@@ -16,19 +16,19 @@
 </template>
 
 <script>
-  import Vue from 'vue';
-  import Vuex from 'vuex';
+  // import Vue from 'vue';
+  // import Vuex from 'vuex';
   import uploaderApi from './uploaderApi';
   import uploadVuex from './uploaderVuex';
 
-  let uploadSelfStore = new Vuex.Store({
-    modules: {
-      uploadVuex
-    }
-  })
+  // let uploadSelfStore = new Vuex.Store({
+  //   modules: {
+  //     uploadVuex
+  //   }
+  // })
 
   export default {
-    store: uploadSelfStore,
+    // store: uploadSelfStore,
     // export default {
     name: "uploader-simple-museui",
     props:
@@ -47,7 +47,6 @@
           {'success': '上传成功',},
           {'error': '上传失败',},
         ],
-        store: uploadSelfStore
       }
     }
     ,
@@ -60,27 +59,30 @@
     ,
     computed: {
       handlerUploadFile: function () {
-        return uploadSelfStore.getters.getUploadFile;
+        return this.$store.getters.getUploadFile;
       }
       ,
       handlerUploadStatus: function () {
-        return uploadSelfStore.getters.getUploadStatus;
+        return this.$store.getters.getUploadStatus;
       }
     }
     ,
     methods: {
       eventSelectFile: function () {
         this.$refs.uploadFile.click();
-        uploadSelfStore.commit('INIT');
-      }
-      ,
+        this.$store.commit('INIT');
+      },
       eventUploadFileChange: function (event) {
+        let vm = this;
         console.info('触发file变改事件', event);
-        uploaderApi.uploadFile(event.target.files, '', uploadSelfStore);
-        console.info(uploadSelfStore);
-        this.$emit('getResult', {...this.handlerUploadFile})
-      }
-      ,
+        new Promise((resolve, reject) => {
+          uploaderApi.uploadFile(event.target.files, '', this.$store);
+          resolve(event.target.files);
+        }).then((file) => {
+          // console.info(vm.handlerUploadFile);
+          vm.$emit('getResult', file);
+        })
+      },
     }
   }
 </script>

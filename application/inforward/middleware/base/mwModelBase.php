@@ -18,6 +18,7 @@ use think\Exception;
 trait mwModelBase
 {
     use mwModelGetters;
+
     /**
      * 字段空检查
      * @param $datas

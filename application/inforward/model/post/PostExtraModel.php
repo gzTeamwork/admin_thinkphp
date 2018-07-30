@@ -18,4 +18,9 @@ class PostExtraModel extends Model
     protected $connection = 'db_admin_core';
     protected $table = 'posts_extra';
 
+    public function postExtraTable()
+    {
+        return $this->morphTo();
+    }
+
 }

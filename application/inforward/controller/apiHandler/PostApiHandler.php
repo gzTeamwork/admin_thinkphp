@@ -8,6 +8,9 @@
 
 namespace app\inforward\controller\apiHandler;
 
+use app\inforward\facade\TranslateFacade;
+use app\inforward\middleware\mwQueryPage;
+use app\inforward\middleware\mwTranslate;
 use app\inforward\model\post\PostExtraModel;
 use app\inforward\model\post\PostModel;
 use app\inforward\model\post\PostTemplateModel;
@@ -33,6 +36,9 @@ trait PostApiHandler
         }
     }
 
+    /**
+     * @param $datas
+     */
     public function api_post_get_detail($datas)
     {
         try {
@@ -44,6 +50,13 @@ trait PostApiHandler
             $result = $postModel->with('postExtra')->where($datas)->select();
 //            var_dump($result);
             $result = $postModel->getResult($result, '该id文章不存在');
+            $postTemplate = PostTemplateModel::get(['name' => $result[0]['kind']]);
+            $postTemplateData = array_combine(array_column($result[0]['post_extra'], 'name'), $result[0]['post_extra']);
+            $postTemplateFormat = array_combine(array_column($postTemplate->content, 'name'), $postTemplate->content);
+            $result[0]['post_extra_format'] = $postTemplateFormat;
+
+            $postTemplateData = array_values(array_merge($postTemplateFormat, $postTemplateData));
+            $result[0]['post_extra'] = $postTemplateData;
             $this->success('成功获取当前文章', '', $result[0]);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
@@ -80,14 +93,29 @@ trait PostApiHandler
         }
     }
 
+    /**
+     * @param $datas
+     */
     public function api_posts_get_detail_list($datas)
     {
         try {
-            $postModel = new PostModel();
-            $result = $postModel->with('postExtra')->where($datas)->select();
-            $result = $postModel->getResult($result);
+
+            $postModel = (new PostModel())->with('postExtra');
+
+            $postQueryDatas = array_intersect_key($datas, array_flip($postModel->getTableFields()));
+            $postExtraQueryDatas = array_diff_key($datas, array_flip($postModel->getTableFields()));
+            $pageQueryDatas = mwQueryPage::getQueryPage($datas);
+//            var_dump($pageQueryDatas);
+            $result = $postModel->where($postQueryDatas)->page($pageQueryDatas['page'], $pageQueryDatas['perPage'])->select();
             foreach ($result as $key => $post) {
-                foreach ($post['post_extras'] as $kkey => $extra) {
+                $result[$key]['title']=\app\inforward\facade\TranslateFacade::c2t($post['title']);
+                $result[$key]['content']=\app\inforward\facade\TranslateFacade::c2t($post['content']);
+                foreach ($post['post_extra'] as $kkey => $extra) {
+                    //  数据输出过滤
+                    if (array_key_exists($extra['name'], $postExtraQueryDatas) && $extra['value'] != $postExtraQueryDatas[$extra['name']]) {
+                        unset($result[$key]);
+                        break;
+                    }
                     switch ($extra['type']) {
                         case 'datetime':
                             $value = date('Y年m月d日', strtotime($extra['value']));
@@ -98,8 +126,8 @@ trait PostApiHandler
                         default:
                             $value = $extra['value'];
                     }
-                    $result[$key][$extra['name']] = $value;
-
+                    $result[$key][$extra['name']] = \app\inforward\facade\TranslateFacade::c2t($extra['value']);
+//                    $result[$key][$extra['name']] = $value;
                 }
             }
             $this->success('获取文章详情数据成功', '', $result);
@@ -107,6 +135,24 @@ trait PostApiHandler
             $this->error($exception->getMessage());
         }
     }
+
+//    个体化api
+
+    /**
+     * @param $datas
+     */
+    public function api_posts_get_office($datas)
+    {
+        $datas['kind'] = 'office_unit';
+        return $this->api_posts_get_detail_list($datas);
+    }
+
+    public function api_posts_get_department($datas)
+    {
+        $datas['kind'] = 'yu_department';
+        return $this->api_posts_get_detail_list($datas);
+    }
+
 
     /**
      * 发布新文章
@@ -121,11 +167,16 @@ trait PostApiHandler
             if (isset($datas['id']) && PostModel::get($datas['id'])) {
 //                更新文章
                 unset($datas['update_time']);
-                $datas['create_time'] = date('Y-m-d H:i:s', $datas['create_time']);
+//                var_dump($datas);
+
+                $datas['create_time'] = date('Y-m-d H:i:s', strtotime($datas['create_time']));
                 $id = $datas['id'];
                 $result = $postModel->allowField(true)->data($datas)->isUpdate(true, ['id' => $id])->save();
                 if ($result !== false && isset($datas['extraList'])) {
                     $postExtraModel = new PostExtraModel();
+                    foreach ($datas['extraList'] as $key => $ex) {
+                        $datas['extraList'][$key]['pid'] = $id;
+                    }
                     $postExtraModel->saveAll($datas['extraList']);
                 }
                 $this->success('成功更新了文章', '', $id);

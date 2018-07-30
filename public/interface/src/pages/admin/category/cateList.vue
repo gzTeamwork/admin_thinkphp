@@ -60,14 +60,13 @@
             cateApi.setCateDel(item);
           }
         }
-      },
+      }
     },
     mounted() {
       cateApi.getCateList();
     },
     components: {
-      'com-cate-new':
-        () => import('./cateNew'),
+      'com-cate-new': () => import('./cateNew'),
       'com-data-table': () => import('@/pages/admin/components/normalDatatable'),
     }
     ,

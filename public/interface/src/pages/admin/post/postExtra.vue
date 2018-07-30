@@ -4,7 +4,7 @@
     <template v-if="extraList.length>1">
       <mu-flex v-for="(e,i) in extraList" :key="i">
         <!--数字或文本-->
-        <mu-text-field v-if="e.type=='string' || e.type=='number' || e.type=='addr'" :label="e.title"
+        <mu-text-field v-if="e.type=='string' || e.type=='number' || e.type=='address'" :label="e.title"
                        v-model="e.value"></mu-text-field>
         <!--时间-->
         <mu-date-input v-if="e.type=='datetime'" v-model="e.value"
