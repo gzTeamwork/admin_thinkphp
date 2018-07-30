@@ -7,7 +7,7 @@
     </h3>
     <mu-sub-header>{{tableView?'数据表格':'文件视图'}}</mu-sub-header>
     <!--文章数据表格-->
-    <com-data-table v-if="tableView" :datas.sync="materialList" :colums="materialsColumns">
+    <com-data-table :datas.sync="materialList" :columns="materialsColumns" addBtn>
       <!--表单内容-->
       <template slot="table" slot-scope="material">
         <td>
@@ -25,20 +25,20 @@
 
       <!--新增素材-->
       <template slot="newDialog">
-        <com-uploader ></com-uploader>
+        <com-uploader></com-uploader>
       </template>
 
     </com-data-table>
 
-    <mu-row v-else :cols="12" :padding="20" :cell-height="120" gutter>
-      <mu-col :span="2" v-for="(e,i) in handlerGetMaterials" :key="i">
-        <mu-button fab>
-          {{e.type}}
-        </mu-button>
-        <br>
-        <small>{{e.title}}</small>
-      </mu-col>
-    </mu-row>
+    <!--<mu-row  :cols="12" :padding="20" :cell-height="120" gutter>-->
+    <!--<mu-col :span="2" v-for="(e,i) in handlerGetMaterials" :key="i">-->
+    <!--<mu-button fab>-->
+    <!--{{e.type}}-->
+    <!--</mu-button>-->
+    <!--<br>-->
+    <!--<small>{{e.title}}</small>-->
+    <!--</mu-col>-->
+    <!--</mu-row>-->
   </section>
 </template>
 

@@ -16,7 +16,7 @@ Mock.mock(/api_upload_file/, (ops) => {
       id: '@increment',
       thumb: Random.dataImage('400x200'),
       type: '@fileTypes',
-      url: '',
+      url: 'https://www.baidu.com/img/bd_logo1.png',
     })
   }
 })

@@ -1,6 +1,11 @@
 <template>
   <section class="mu-container">
-    <mu-sub-header>文章列表</mu-sub-header>
+    <mu-flex>
+      <mu-sub-header>文章列表</mu-sub-header>
+      <mu-button :to="'/admin/post/publish'">发布新文章</mu-button>
+      <mu-button>栏目筛选</mu-button>
+    </mu-flex>
+
     <!--文章数据表格-->
     <com-data-table ref="postDatatTable" :datas="handlerPosts" :columns="postColumns">
       <!--表单内容-->

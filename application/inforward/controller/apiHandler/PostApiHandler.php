@@ -33,6 +33,9 @@ trait PostApiHandler
         }
     }
 
+    /**
+     * @param $datas
+     */
     public function api_post_get_detail($datas)
     {
         try {
@@ -44,6 +47,13 @@ trait PostApiHandler
             $result = $postModel->with('postExtra')->where($datas)->select();
 //            var_dump($result);
             $result = $postModel->getResult($result, '该id文章不存在');
+            $postTemplate = PostTemplateModel::get(['name' => $result[0]['kind']]);
+            $postTemplateData = array_combine(array_column($result[0]['post_extra'], 'name'), $result[0]['post_extra']);
+            $postTemplateFormat = array_combine(array_column($postTemplate->content, 'name'), $postTemplate->content);
+            $result[0]['post_extra_format'] = $postTemplateFormat;
+
+            $postTemplateData = array_values(array_merge($postTemplateFormat, $postTemplateData));
+            $result[0]['post_extra'] = $postTemplateData;
             $this->success('成功获取当前文章', '', $result[0]);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
@@ -87,7 +97,7 @@ trait PostApiHandler
             $result = $postModel->with('postExtra')->where($datas)->select();
             $result = $postModel->getResult($result);
             foreach ($result as $key => $post) {
-                foreach ($post['post_extras'] as $kkey => $extra) {
+                foreach ($post['post_extra'] as $kkey => $extra) {
                     switch ($extra['type']) {
                         case 'datetime':
                             $value = date('Y年m月d日', strtotime($extra['value']));
@@ -121,11 +131,16 @@ trait PostApiHandler
             if (isset($datas['id']) && PostModel::get($datas['id'])) {
 //                更新文章
                 unset($datas['update_time']);
-                $datas['create_time'] = date('Y-m-d H:i:s', $datas['create_time']);
+//                var_dump($datas);
+
+                $datas['create_time'] = date('Y-m-d H:i:s', strtotime($datas['create_time']));
                 $id = $datas['id'];
                 $result = $postModel->allowField(true)->data($datas)->isUpdate(true, ['id' => $id])->save();
                 if ($result !== false && isset($datas['extraList'])) {
                     $postExtraModel = new PostExtraModel();
+                    foreach ($datas['extraList'] as $key => $ex) {
+                        $datas['extraList'][$key]['pid'] = $id;
+                    }
                     $postExtraModel->saveAll($datas['extraList']);
                 }
                 $this->success('成功更新了文章', '', $id);

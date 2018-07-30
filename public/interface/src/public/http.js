@@ -34,7 +34,7 @@ ajaxAxios.interceptors.response.use(
       } else {
         status = '成功';
       }
-      console.info('%cAjax' + status + '-' + new Date().toLocaleString() + response.data.msg, 'background:' + (response.data.code === 1 ? 'green' : 'orange') + ';color:white;border-radius:1em;padding-left:1em;padding-right:1em',response.data);
+      console.info('%cAjax' + status + '-' + new Date().toLocaleString() + response.data.msg + '%c', 'background:' + (response.data.code === 1 ? 'green' : 'orange') + ';color:white;border-radius:1em;padding-left:1em;padding-right:1em', response.data);
       return response.data;
     } else {
       // @todo 修复交互链接失败
