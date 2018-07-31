@@ -11,7 +11,6 @@ namespace app\inforward\controller\apiHandler;
 use app\inforward\middleware\dashboard\mwDashboard;
 use think\Exception;
 use think\facade\Cache;
-use Zend\Filter\Boolean;
 
 trait AdminApiHandler
 {

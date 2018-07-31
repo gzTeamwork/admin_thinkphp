@@ -10,7 +10,6 @@ namespace app\inforward\controller\apiHandler;
 
 use app\inforward\facade\TranslateFacade;
 use app\inforward\middleware\mwQueryPage;
-use app\inforward\middleware\mwTranslate;
 use app\inforward\model\post\PostExtraModel;
 use app\inforward\model\post\PostModel;
 use app\inforward\model\post\PostTemplateModel;
@@ -27,7 +26,10 @@ trait PostApiHandler
     {
         try {
             $postModel = new PostModel();
-            if (isset($datas['id'])) throw new Exception("没有获取到正确的参数");
+            if (isset($datas['id'])) {
+                throw new Exception("没有获取到正确的参数");
+            }
+
             $result = $postModel->where($datas)->find();
             $result = $postModel->getResult($result, '该id文章不存在');
             return $result;
@@ -108,8 +110,8 @@ trait PostApiHandler
 //            var_dump($pageQueryDatas);
             $result = $postModel->where($postQueryDatas)->page($pageQueryDatas['page'], $pageQueryDatas['perPage'])->select();
             foreach ($result as $key => $post) {
-                $result[$key]['title']=\app\inforward\facade\TranslateFacade::c2t($post['title']);
-                $result[$key]['content']=\app\inforward\facade\TranslateFacade::c2t($post['content']);
+                $result[$key]['title'] = \app\inforward\facade\TranslateFacade::c2t($post['title']);
+                $result[$key]['content'] = \app\inforward\facade\TranslateFacade::c2t($post['content']);
                 foreach ($post['post_extra'] as $kkey => $extra) {
                     //  数据输出过滤
                     if (array_key_exists($extra['name'], $postExtraQueryDatas) && $extra['value'] != $postExtraQueryDatas[$extra['name']]) {
@@ -152,7 +154,6 @@ trait PostApiHandler
         $datas['kind'] = 'yu_department';
         return $this->api_posts_get_detail_list($datas);
     }
-
 
     /**
      * 发布新文章
