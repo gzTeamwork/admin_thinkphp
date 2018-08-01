@@ -12,7 +12,7 @@ let ajaxAxios = new axios.create({
   baseURL: config.isDev ? '' : config.apiServer,
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
-  },
+  }
 });
 
 // ajaxAxios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
@@ -34,7 +34,8 @@ ajaxAxios.interceptors.response.use(
       } else {
         status = '成功';
       }
-      console.info('%cAjax' + status + '-' + new Date().toLocaleString() + response.data.msg + '%c', 'background:' + (response.data.code === 1 ? 'green' : 'orange') + ';color:white;border-radius:1em;padding-left:1em;padding-right:1em', response.data);
+      //  ajax反馈输出
+      console.info('%cAjax' + status + '%cMsg ' + response.data.msg + '%cAt ' + new Date().toLocaleString() + ' %c', 'background:' + (response.data.code === 1 ? '#5dbe3b' : 'orange') + ';color:white;border-radius:.5em 0 0 .5em;padding-left:1em;padding-right:1em', 'background:' + (response.data.code === 1 ? '#4e89ea' : 'orange') + ';color:white;padding-left:1em;padding-right:1em', 'background:' + (response.data.code === 1 ? '#c7c7ff' : 'orange') + ';color:white;border-radius:0 .5em .5em 0;padding-left:1em;padding-right:1em', response.data.data);
       return response.data;
     } else {
       // @todo 修复交互链接失败

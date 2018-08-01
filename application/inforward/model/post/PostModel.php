@@ -24,8 +24,9 @@ class PostModel extends Model
         return $this->hasMany('PostExtraModel', 'pid');
     }
 
-    public function postExtras(){
-        return $this->morphMany('PostExtraModel','postExtraTable');
+    public function postExtras()
+    {
+        return $this->morphMany('PostExtraModel', 'postExtraTable');
     }
 
     //  单元楼层
@@ -33,6 +34,5 @@ class PostModel extends Model
     {
         return $this->hasOne('PostExtraModel', 'pid');
     }
-
 
 }

@@ -6,7 +6,7 @@
  * Time: 下午7:00
  */
 
-namespace app\inforward\facade;
+namespace app\admin\facade;
 
 use think\Facade;
 
@@ -14,6 +14,6 @@ class TranslateFacade extends Facade
 {
     protected static function getFacadeClass()
     {
-        return 'app\inforward\middleware\mwTranslate';
+        return 'app\admin\middleware\mwTranslate';
     }
 }

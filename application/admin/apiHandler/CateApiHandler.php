@@ -6,7 +6,7 @@
  * Time: 下午4:11
  */
 
-namespace app\inforward\controller\apiHandler;
+namespace app\admin\apiHandler;
 
 use app\inforward\model\cate\CateModel;
 use Symfony\Component\Validator\Constraints\Date;

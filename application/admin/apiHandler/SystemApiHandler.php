@@ -6,7 +6,7 @@
  * Time: 下午5:46
  */
 
-namespace app\inforward\controller\apiHandler;
+namespace app\admin\apiHandler;
 
 use app\inforward\model\admin\configurationModel;
 use think\Exception;

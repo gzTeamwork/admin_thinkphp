@@ -1,5 +1,5 @@
 import httpAxios from '@/public/http.js';
-import './postApiMock.js';
+// import './postApiMock.js';
 import Toast from 'muse-ui-toast';
 
 export default {
@@ -7,8 +7,8 @@ export default {
    * 获取多个文章
    * @param form
    */
-  getPost: function (form) {
-    httpAxios.get('do/api_post_get_detail', {
+  getPost: async function (form) {
+    await httpAxios.get('do/api_post_get_detail', {
       params: {...form}
     }).then(res => {
       console.log(res);
@@ -18,8 +18,8 @@ export default {
       return res.code === 1;
     })
   },
-  getPosts: function (form) {
-    httpAxios.get('do/api_posts_get_detail', {
+  getPosts: async function (form) {
+    await httpAxios.get('do/api_posts_get', {
       params: {...form}
     }).then(res => {
       console.log(res);
@@ -32,8 +32,8 @@ export default {
       return res.code === 1;
     })
   },
-  getPostsList: function (form) {
-    httpAxios.get('do/api_posts_get_detail', {
+  getPostsList: async function (form) {
+    await httpAxios.get('do/api_posts_get_detail', {
       params: {...form}
     }).then(res => {
       console.log(res);
@@ -46,8 +46,8 @@ export default {
       return res.code === 1;
     })
   },
-  setPost: function (form) {
-    httpAxios.post('do/api_post_set', {...form}).then(res => {
+  setPost: async function (form) {
+    await httpAxios.post('do/api_post_set', {...form}).then(res => {
       console.log(res)
       if (res.code === 1) {
         window.$store.commit("NOTICE_SUCCESS", res.msg);
@@ -57,8 +57,8 @@ export default {
       return res.code === 1;
     })
   },
-  setPostDel: function (form) {
-    httpAxios.post('do/api_post_del', {...form}).then(res => {
+  setPostDel: async function (form) {
+    await httpAxios.post('do/api_post_del', {...form}).then(res => {
       res.code === 1 ? window.$toast.success(res.msg) : window.$toast.error(res.msg);
     })
   },

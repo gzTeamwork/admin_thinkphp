@@ -6,7 +6,7 @@
  * Time: 下午2:28
  */
 
-namespace app\inforward\controller\apiHandler;
+namespace app\admin\apiHandler;
 
 use app\inforward\middleware\user\mwRole;
 use app\inforward\middleware\user\mwUser;

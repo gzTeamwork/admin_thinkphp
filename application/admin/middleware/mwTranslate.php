@@ -5,7 +5,7 @@
  * Date: 2018/7/31
  * Time: 下午6:54
  */
-namespace app\inforward\middleware;
+namespace app\admin\middleware;
 
 class mwTranslate
 {

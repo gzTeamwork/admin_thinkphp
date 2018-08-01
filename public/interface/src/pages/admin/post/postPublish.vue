@@ -60,7 +60,6 @@
   export default vm = {
     name: "postPublish",
     components: {
-      // 'com-uploader': () => import('@/pages/components/uploader/uploader'),
       'com-post-extra': () => import('./postExtra'),
       'com-vue-mce': () => import('vue-tinymce-editor'),
       'com-admin-uploader': adminUploader,

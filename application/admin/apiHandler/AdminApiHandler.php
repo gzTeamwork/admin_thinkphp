@@ -6,7 +6,7 @@
  * Time: 下午1:38
  */
 
-namespace app\inforward\controller\apiHandler;
+namespace app\admin\apiHandler;
 
 use app\inforward\middleware\dashboard\mwDashboard;
 use think\Exception;

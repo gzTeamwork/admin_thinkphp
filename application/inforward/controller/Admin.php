@@ -2,17 +2,16 @@
 
 namespace app\inforward\controller;
 
-use app\inforward\controller\apiHandler\AdminApiHandler;
-use app\inforward\controller\apiHandler\CateApiHandler;
-use app\inforward\controller\apiHandler\PostApiHandler;
-use app\inforward\controller\apiHandler\SystemApiHandler;
-use app\inforward\controller\apiHandler\UserApiHandler;
+use app\admin\apiHandler\AdminApiHandler;
+use app\admin\apiHandler\CateApiHandler;
+use app\admin\apiHandler\PostApiHandler;
+use app\admin\apiHandler\SystemApiHandler;
+use app\admin\apiHandler\UserApiHandler;
 use app\inforward\middleware\base\mwApi;
 use app\inforward\middleware\base\mwControllerBase;
 use app\inforward\unit\userUnit;
 use think\App;
 use think\Controller;
-use think\Exception;
 use think\facade\Request;
 
 class Admin extends Controller

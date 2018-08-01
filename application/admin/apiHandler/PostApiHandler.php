@@ -6,10 +6,11 @@
  * Time: 7:56
  */
 
-namespace app\inforward\controller\apiHandler;
+namespace app\admin\apiHandler;
 
-use app\inforward\facade\TranslateFacade;
-use app\inforward\middleware\mwQueryPage;
+use app\admin\facade\QueryPageFacade;
+use app\admin\facade\TranslateFacade;
+use app\admin\middleware\mwQueryPage;
 use app\inforward\model\post\PostExtraModel;
 use app\inforward\model\post\PostModel;
 use app\inforward\model\post\PostTemplateModel;
@@ -73,10 +74,12 @@ trait PostApiHandler
     public function api_posts_get($datas)
     {
         try {
-            $postModel = new PostModel();
-            $result = $postModel->where($datas)->select();
+            $postModel = (new PostModel());
+            $postQueryDatas = $postModel->fieldsFilter($postModel->getTableFields(), $datas);
+            $pageDatas = QueryPageFacade::getQueryPage($datas);
+            $result = $postModel->where($postQueryDatas)->page($pageDatas['page'], $pageDatas['perPage'])->select();
             $result = $postModel->getResult($result);
-            return $result;
+            $this->success('成功获取文章列表', '', $result);
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }
@@ -97,40 +100,57 @@ trait PostApiHandler
 
     /**
      * @param $datas
+     * @todo 重构写字楼单元内容数据结构,增加对应的建筑物和建筑物楼层设置
      */
     public function api_posts_get_detail_list($datas)
     {
         try {
 
-            $postModel = (new PostModel())->with('postExtra');
+            $postFields = (new PostModel())->getTableFields();
+            //  获取表单字段以内的查询参数
+            $postQueryDatas = array_intersect_key($datas, array_flip($postFields));
+            //  获取表单字段以外的查询参数
+            $postExtraQueryDatas = array_diff_key($datas, array_flip($postFields));
+            //  整合查询分页参数
+            $pageDatas = QueryPageFacade::getQueryPage($datas);
+            if (isset($postExtraQueryDatas['floor'])) { 
+                $postModel = PostModel::hasWhere('postExtra', ['name' => 'floor', 'value' => $datas['floor']]);
+            } else {
+                $postModel = (new PostModel())->with('postExtra');
+            }
+            //  执行查询
+            $result = $postModel->where($postQueryDatas)->page($pageDatas['page'], $pageDatas['perPage'])->select();
 
-            $postQueryDatas = array_intersect_key($datas, array_flip($postModel->getTableFields()));
-            $postExtraQueryDatas = array_diff_key($datas, array_flip($postModel->getTableFields()));
-            $pageQueryDatas = mwQueryPage::getQueryPage($datas);
-//            var_dump($pageQueryDatas);
-            $result = $postModel->where($postQueryDatas)->page($pageQueryDatas['page'], $pageQueryDatas['perPage'])->select();
+            $unitsFloors = [];
             foreach ($result as $key => $post) {
-                $result[$key]['title'] = \app\inforward\facade\TranslateFacade::c2t($post['title']);
-                $result[$key]['content'] = \app\inforward\facade\TranslateFacade::c2t($post['content']);
+                //  简繁切换
+                $result[$key]['title'] = TranslateFacade::c2t($post['title']);
+                $result[$key]['content'] = TranslateFacade::c2t($post['content']);
+                //  文章附加数据处理
                 foreach ($post['post_extra'] as $kkey => $extra) {
                     //  数据输出过滤
                     if (array_key_exists($extra['name'], $postExtraQueryDatas) && $extra['value'] != $postExtraQueryDatas[$extra['name']]) {
                         unset($result[$key]);
                         break;
                     }
+                    //  数据类型转换
+                    $value = TranslateFacade::c2t($extra['value']);
                     switch ($extra['type']) {
+                        case 'boolean':
+                            $value = $value ? true : false;
+                            break;
                         case 'datetime':
-                            $value = date('Y年m月d日', strtotime($extra['value']));
+                            $value = date('Y年m月d日', strtotime($value));
                             break;
                         case 'array':
-                            $value = json_decode($extra['value']);
+                            $value = explode(',', $value);
                             break;
                         default:
-                            $value = $extra['value'];
                     }
-                    $result[$key][$extra['name']] = \app\inforward\facade\TranslateFacade::c2t($extra['value']);
-//                    $result[$key][$extra['name']] = $value;
+                    //  赋值数据
+                    $result[$key][$extra['name']] = $value;
                 }
+                unset($post['post_extra']);
             }
             $this->success('获取文章详情数据成功', '', $result);
         } catch (Exception $exception) {
@@ -138,9 +158,8 @@ trait PostApiHandler
         }
     }
 
-//    个体化api
-
     /**
+     * 查询办公室
      * @param $datas
      */
     public function api_posts_get_office($datas)
@@ -149,9 +168,23 @@ trait PostApiHandler
         return $this->api_posts_get_detail_list($datas);
     }
 
+    /**
+     * 查询公寓
+     * @param $datas
+     */
     public function api_posts_get_department($datas)
     {
         $datas['kind'] = 'yu_department';
+        return $this->api_posts_get_detail_list($datas);
+    }
+
+    /**
+     * 查询文章
+     * @param $datas
+     */
+    public function api_posts_get_recruit($datas)
+    {
+        $data['kind'] = 'recruit';
         return $this->api_posts_get_detail_list($datas);
     }
 

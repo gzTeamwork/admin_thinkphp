@@ -4,9 +4,10 @@
       <mu-icon value="exposure_plus_1"></mu-icon>
     </mu-button>
     <!--通用型表格插件 - museui - datetable-->
-    <mu-data-table fill selectable select-all checkbox
+    <mu-data-table fill selectable select-all checkbox fit
                    :loading="false"
                    :columns="columns"
+                   :rowKey="'rowKey'"
                    :selects.sync="selects"
                    :sort.sync="sort" @sort-change="handleSortChange"
                    :data="dataList.slice((page.current-1)*page.perPageNum,page.current*page.perPageNum)">

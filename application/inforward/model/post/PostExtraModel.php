@@ -23,4 +23,24 @@ class PostExtraModel extends Model
         return $this->morphTo();
     }
 
+    public function setValueAttr($v)
+    {
+        if (is_bool($v)) {
+            return $v ? 1 : 0;
+        } else {
+            return $v;
+        }
+    }
+
+    public function getValueAttr($v)
+    {
+        if ($v == '1') {
+            return true;
+        } elseif ($v == '0') {
+            return false;
+        } else {
+            return $v;
+        }
+    }
+
 }

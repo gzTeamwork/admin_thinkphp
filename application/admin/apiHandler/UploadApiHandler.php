@@ -6,7 +6,7 @@
  * Time: 下午6:37
  */
 
-namespace app\inforward\controller\apiHandler;
+namespace app\inforward\apiHandler;
 
 trait UploadApiHandler
 {

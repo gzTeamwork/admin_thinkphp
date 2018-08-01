@@ -13,5 +13,6 @@ use think\Controller;
 
 class Index extends Admin
 {
+
 }
-;
+
