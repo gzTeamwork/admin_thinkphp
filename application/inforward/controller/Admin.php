@@ -4,12 +4,13 @@ namespace app\inforward\controller;
 
 use app\admin\apiHandler\AdminApiHandler;
 use app\admin\apiHandler\CateApiHandler;
-use app\admin\apiHandler\PostApiHandler;
 use app\admin\apiHandler\SystemApiHandler;
 use app\admin\apiHandler\UserApiHandler;
 use app\inforward\middleware\base\mwApi;
 use app\inforward\middleware\base\mwControllerBase;
 use app\inforward\unit\userUnit;
+use app\inforward\apiHandler\PostApiHandler;
+
 use think\App;
 use think\Controller;
 use think\facade\Request;
@@ -39,7 +40,8 @@ class Admin extends Controller
      */
     public function index()
     {
-        return $this->dashboard();
+//        return $this->dashboard();
+        return "welcome to inforward admin api dashboard ";
     }
 
     /**

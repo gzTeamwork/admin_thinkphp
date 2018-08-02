@@ -113,19 +113,27 @@ trait PostApiHandler
             $postExtraQueryDatas = array_diff_key($datas, array_flip($postFields));
             //  整合查询分页参数
             $pageDatas = QueryPageFacade::getQueryPage($datas);
-            if (isset($postExtraQueryDatas['floor'])) { 
+
+            //  是否使用复合查询模型
+            if (isset($postExtraQueryDatas['floor'])) {
                 $postModel = PostModel::hasWhere('postExtra', ['name' => 'floor', 'value' => $datas['floor']]);
             } else {
                 $postModel = (new PostModel())->with('postExtra');
             }
+
             //  执行查询
             $result = $postModel->where($postQueryDatas)->page($pageDatas['page'], $pageDatas['perPage'])->select();
 
-            $unitsFloors = [];
+            //  简繁处理
+            $needTrans = isset($postExtraQueryDatas['needTrans']) && $postExtraQueryDatas['needTrans'] == true;
             foreach ($result as $key => $post) {
+
                 //  简繁切换
-                $result[$key]['title'] = TranslateFacade::c2t($post['title']);
-                $result[$key]['content'] = TranslateFacade::c2t($post['content']);
+                if ($needTrans) {
+                    $result[$key]['title'] = TranslateFacade::c2t($post['title']);
+                    $result[$key]['content'] = TranslateFacade::c2t($post['content']);
+                }
+
                 //  文章附加数据处理
                 foreach ($post['post_extra'] as $kkey => $extra) {
                     //  数据输出过滤
@@ -134,22 +142,24 @@ trait PostApiHandler
                         break;
                     }
                     //  数据类型转换
-                    $value = TranslateFacade::c2t($extra['value']);
+                    $value = '';
                     switch ($extra['type']) {
                         case 'boolean':
-                            $value = $value ? true : false;
+                            $value = $extra['value'] ? true : false;
                             break;
                         case 'datetime':
-                            $value = date('Y年m月d日', strtotime($value));
+                            $value = date('Y年m月d日', strtotime($extra['value']));
                             break;
                         case 'array':
-                            $value = explode(',', $value);
+                            $value = explode(',', $extra['value']);
                             break;
                         default:
                     }
                     //  赋值数据
-                    $result[$key][$extra['name']] = $value;
+                    $result[$key][$extra['name']] = $needTrans ? TranslateFacade::c2t($extra['value']) : $extra['value'];
                 }
+
+                //  去掉附加源数据
                 unset($post['post_extra']);
             }
             $this->success('获取文章详情数据成功', '', $result);
@@ -158,35 +168,7 @@ trait PostApiHandler
         }
     }
 
-    /**
-     * 查询办公室
-     * @param $datas
-     */
-    public function api_posts_get_office($datas)
-    {
-        $datas['kind'] = 'office_unit';
-        return $this->api_posts_get_detail_list($datas);
-    }
 
-    /**
-     * 查询公寓
-     * @param $datas
-     */
-    public function api_posts_get_department($datas)
-    {
-        $datas['kind'] = 'yu_department';
-        return $this->api_posts_get_detail_list($datas);
-    }
-
-    /**
-     * 查询文章
-     * @param $datas
-     */
-    public function api_posts_get_recruit($datas)
-    {
-        $data['kind'] = 'recruit';
-        return $this->api_posts_get_detail_list($datas);
-    }
 
     /**
      * 发布新文章

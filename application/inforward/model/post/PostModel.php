@@ -24,6 +24,7 @@ class PostModel extends Model
         return $this->hasMany('PostExtraModel', 'pid');
     }
 
+    //  其他附加内容啊
     public function postExtras()
     {
         return $this->morphMany('PostExtraModel', 'postExtraTable');

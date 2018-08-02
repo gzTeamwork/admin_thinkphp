@@ -3,8 +3,15 @@
     <mu-sub-header>文章列表</mu-sub-header>
 
     <mu-row style="margin: 1em;" gutter fill>
-      <mu-col :span="2">
-        <mu-button :to="'/admin/post/publish'">发布新文章</mu-button>
+      <mu-col :span="4">
+        <mu-button :to="'/admin/post/publish'">
+          <mu-icon value="plus_one"></mu-icon>
+          发布新文章
+        </mu-button>
+        <mu-button @click="eventClearFilter" :to="'#'">
+          <mu-icon value="layers_clear"></mu-icon>
+          清除筛选
+        </mu-button>
       </mu-col>
       <mu-col :span="4">
         <small>标题搜索</small>
@@ -20,12 +27,6 @@
           <mu-option v-for="option,index in postKinds" :key="option.name" :label="option.title"
                      :value="option.name"></mu-option>
         </mu-select>
-      </mu-col>
-      <mu-col :span="2">
-        <mu-button v-if="tableFiltered" flat @click="eventClearFilter">
-          <mu-icon right value="layers_clear"></mu-icon>
-          清除筛选
-        </mu-button>
       </mu-col>
     </mu-row>
 
@@ -197,8 +198,10 @@
       }
     },
     mounted() {
-      postApi.getPosts({perPage: 1000});
-      postApi.getPostTemplates();
+      postApi.getPosts({perPage: 1000}).then(function () {
+        this.loading
+        postApi.getPostTemplates()
+      })
     }
   }
 </script>
