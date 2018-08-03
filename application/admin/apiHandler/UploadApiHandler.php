@@ -11,6 +11,6 @@ namespace app\inforward\apiHandler;
 trait UploadApiHandler
 {
 
-    public function
+//    public function
 
 }

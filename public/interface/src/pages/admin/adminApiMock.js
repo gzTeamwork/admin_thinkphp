@@ -40,7 +40,20 @@ Mock.mock(/api_admin_menu/, {
         label: '素材', name: 'material', path: 'material', sub: [
             {label: '素材管理', path: '/admin/material/list'}
         ]
-    }]
+    }, {
+        label: '用户', name: 'user', path: 'user', sub: [
+            {label: '用户管理', path: '/admin/user/list'},
+            {label: '角色管理', path: '/admin/role/list'},
+            {label: '权限管理', path: '/admin/authority/list'}
+        ]
+    }, {
+        label: '设置', name: 'settings', path: 'settings', sub: [
+            {label: '系统设置', path: '/admin/system/list'},
+            {label: '网站设置', path: '/admin/website/list'},
+            {label: '前段设置', path: '/admin/frontend/list'},
+        ]
+    }
+    ]
 })
 
 //  请求用户操作菜单
