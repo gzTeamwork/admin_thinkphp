@@ -6,6 +6,7 @@ use app\admin\apiHandler\AdminApiHandler;
 use app\admin\apiHandler\CateApiHandler;
 use app\admin\apiHandler\SystemApiHandler;
 use app\admin\apiHandler\UserApiHandler;
+use app\inforward\apiHandler\BookingApiHandler;
 use app\inforward\middleware\base\mwApi;
 use app\inforward\middleware\base\mwControllerBase;
 use app\inforward\unit\userUnit;
@@ -23,6 +24,8 @@ class Admin extends Controller
     use SystemApiHandler;
     use CateApiHandler;
     use PostApiHandler;
+
+    use BookingApiHandler;
 
     public function __construct(App $app = null)
     {

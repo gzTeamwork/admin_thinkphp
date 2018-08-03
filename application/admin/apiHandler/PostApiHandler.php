@@ -142,21 +142,20 @@ trait PostApiHandler
                         break;
                     }
                     //  数据类型转换
-                    $value = '';
+                    $value = $needTrans ? TranslateFacade::c2t($extra['value']) : $extra['value'];
                     switch ($extra['type']) {
                         case 'boolean':
-                            $value = $extra['value'] ? true : false;
+                            $value = $value ? true : false;
                             break;
                         case 'datetime':
-                            $value = date('Y年m月d日', strtotime($extra['value']));
+                            $value = date('Y年m月d日', strtotime($value));
                             break;
-                        case 'array':
-                            $value = explode(',', $extra['value']);
-                            break;
-                        default:
+//                        case 'array':
+//                            $value = explode(',', $value);
                     }
+
                     //  赋值数据
-                    $result[$key][$extra['name']] = $needTrans ? TranslateFacade::c2t($extra['value']) : $extra['value'];
+                    $result[$key][$extra['name']] = $value;
                 }
 
                 //  去掉附加源数据
@@ -167,7 +166,6 @@ trait PostApiHandler
             $this->error($exception->getMessage());
         }
     }
-
 
 
     /**
