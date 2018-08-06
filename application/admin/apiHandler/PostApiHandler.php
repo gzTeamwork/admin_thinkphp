@@ -102,7 +102,7 @@ trait PostApiHandler
      * @param $datas
      * @todo 重构写字楼单元内容数据结构,增加对应的建筑物和建筑物楼层设置
      */
-    public function api_posts_get_detail_list($datas)
+    public function api_posts_get_detail_list($datas, $needReturn = false)
     {
         try {
 
@@ -118,11 +118,11 @@ trait PostApiHandler
             if (isset($postExtraQueryDatas['floor'])) {
                 $postModel = PostModel::hasWhere('postExtra', ['name' => 'floor', 'value' => $datas['floor']]);
             } else {
-                $postModel = (new PostModel())->with('postExtra');
+                $postModel = (new PostModel())->with('postExtra')->where($postQueryDatas);
             }
 
             //  执行查询
-            $result = $postModel->where($postQueryDatas)->page($pageDatas['page'], $pageDatas['perPage'])->select();
+            $result = $postModel->page($pageDatas['page'], $pageDatas['perPage'])->select();
 
             //  简繁处理
             $needTrans = isset($postExtraQueryDatas['needTrans']) && $postExtraQueryDatas['needTrans'] == true;
@@ -161,7 +161,11 @@ trait PostApiHandler
                 //  去掉附加源数据
                 unset($post['post_extra']);
             }
-            $this->success('获取文章详情数据成功', '', $result);
+            if ($needReturn) {
+                return $result;
+            } else {
+                $this->success('获取文章详情数据成功', '', $result);
+            }
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }
@@ -196,6 +200,7 @@ trait PostApiHandler
                 $this->success('成功更新了文章', '', $id);
 
             } else {
+                $datas['is_active'] = 1;
                 $datas['create_time'] = date('Y-m-d H:i:s', isset($data['create_time']) ? $datas['create_time'] : time());
                 $result = $postModel->allowField(true)->data($datas)->save();
                 $npid = $postModel->getLastInsID();

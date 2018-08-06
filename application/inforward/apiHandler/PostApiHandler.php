@@ -9,6 +9,7 @@
 namespace app\inforward\apiHandler;
 
 use app\admin\apiHandler\PostApiHandler as AdminPostAPi;
+use think\Collection;
 
 trait PostApiHandler
 {
@@ -17,6 +18,7 @@ trait PostApiHandler
     /**
      * 查询办公室
      * @param $datas
+     * @return array|\PDOStatement|string|Collection
      */
     public function api_posts_get_office($datas)
     {
@@ -25,22 +27,67 @@ trait PostApiHandler
     }
 
     /**
-     * 查询公寓
+     * 查询公寓 - 已经租了的
      * @param $datas
      */
-    public function api_posts_get_department($datas)
+    public function api_posts_get_apartment($datas)
     {
-        $datas['kind'] = 'yu_department';
+        $datas['kind'] = 'yu_apartment';
+        $datas['is_sold'] = false;
+        $result = $this->api_posts_get_detail_list($datas, true);
+        $posts = $result->toArray();
+
+        foreach ($posts as $key => $item) {
+            if (isset($item['is_sold']) && false === $item['is_sold']) {
+            } else {
+                unset($posts[$key]);
+            }
+        }
+
+        $this->success('获取出租了的公寓详情数据成功', '', $posts);
+    }
+
+    /**
+     * 查询公寓 - 还没有租的
+     * @param $datas
+     */
+    public function api_posts_get_apartment_leased($datas)
+    {
+        $datas['kind'] = 'yu_apartment';
+        $datas['is_sold'] = true;
+        $result = $this->api_posts_get_detail_list($datas, true);
+        $posts = $result->toArray();
+
+        foreach ($posts as $key => $item) {
+            if (isset($item['is_sold']) && true === $item['is_sold']) {
+            } else {
+                unset($posts[$key]);
+            }
+        }
+
+        $this->success('获取没有出租的公寓详情数据成功', '', $posts);
+    }
+
+    /**
+     * 查询自家招聘
+     * @param $datas
+     * @return array|\PDOStatement|string|Collection
+     */
+    public function api_posts_get_recruit($datas)
+    {
+        $datas['kind'] = 'recruit';
         return $this->api_posts_get_detail_list($datas);
     }
 
     /**
-     * 查询文章
+     * 查询代理招聘
      * @param $datas
+     * @return array|\PDOStatement|string|Collection
      */
-    public function api_posts_get_recruit($datas)
+
+    public function api_posts_get_recruit_agency($datas)
     {
-        $data['kind'] = 'recruit';
+        $datas['kind'] = 'recruit_agency';
         return $this->api_posts_get_detail_list($datas);
     }
 

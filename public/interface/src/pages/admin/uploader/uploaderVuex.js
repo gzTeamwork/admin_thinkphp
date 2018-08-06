@@ -19,7 +19,7 @@ const state = {
 //  获取器 - 获取数据的时候用于处理
 const getters = {
   getUploadFile: state => {
-    return state.uploadFile;
+    return state.uploadImg;
   },
   getUploadFiles: state => {
     return state.uploadFiles;

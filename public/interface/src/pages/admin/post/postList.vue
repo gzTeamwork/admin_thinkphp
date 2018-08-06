@@ -58,7 +58,7 @@
         </td>
       </template>
 
-      <!--新增素材-->
+      <!--新增栏目-->
       <template slot="newDialog">
         <h3>新增栏目</h3>
         <com-editor :content="postNew.post.content"></com-editor>

@@ -47,7 +47,7 @@ trait mwApi
     {
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
-        header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE');
+        header('Access-Control-Allow-Methods: GET, POST, PUT , DELETE');
         $apiDo = Request::route('do');
 //        var_dump($apiDo);
         try {
@@ -55,7 +55,7 @@ trait mwApi
                 unset($datas['do']);
                 $c->$apiDo($datas);
             } else {
-                throw new Exception('不存在该api接口', 0);
+                throw new Exception('您本次的访问方式不被允许', 0);
             }
         } catch (Exception $exception) {
             // @todo 以后需要添加错误页面

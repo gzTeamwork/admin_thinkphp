@@ -25,6 +25,7 @@
                            landscape
                            actions></mu-date-input>
           </mu-form-item>
+          <!--封面-->
           <mu-form-item prop="input" icon="thumb" label="封面图">
             <com-admin-uploader
               v-on:getResult="eventPostThumbFinished($event)">
@@ -108,7 +109,7 @@
           //上传图片回调
           images_upload_handler: async (blobInfo, success, failure) => {
             // let fd = new FormData()
-            let res = await uploaderApi.uploadFile(blobInfo.blob());
+            let res = await uploaderApi.uploadImg(blobInfo.blob());
             console.info('调试', res);
             success(res.url)
           },

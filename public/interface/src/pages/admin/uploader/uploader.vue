@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input style="display: none;" ref="uploadFile" v-on:change="eventUploadFileChange($event)" type="file"/>
+    <input style="display: none;" ref="uploadImg" accept="image/png,image/gif,image/jpeg" v-on:change="eventUploadFileChange($event)" type="file"/>
     <mu-button @click="eventSelectFile">选择文件</mu-button>
     上传状态:{{handlerUploadStatus}}
     <mu-paper v-if="thumb">
@@ -69,14 +69,14 @@
     ,
     methods: {
       eventSelectFile: function () {
-        this.$refs.uploadFile.click();
+        this.$refs.uploadImg.click();
         this.$store.commit('INIT');
       },
       eventUploadFileChange: function (event) {
         let vm = this;
         console.info('触发file变改事件', event);
         new Promise((resolve, reject) => {
-          uploaderApi.uploadFile(event.target.files, '', this.$store);
+          uploaderApi.uploadImg(event.target.files[0], '', this.$store);
           resolve(event.target.files);
         }).then((file) => {
           // console.info(vm.handlerUploadFile);
