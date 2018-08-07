@@ -12,6 +12,8 @@ import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css';
 import theme from 'muse-ui/lib/theme';
 import Toast from 'muse-ui-toast';
+import 'muse-ui-loading/dist/muse-ui-loading.css'; // load css
+import Loading from 'muse-ui-loading';
 
 theme.use('dark');
 
@@ -34,6 +36,8 @@ window.$toast = Toast;
 Vue.use(Vuex);
 Vue.use(MuseUI);
 Vue.use(VueCookies);
+Vue.use(Loading);
+
 // Vue.use(Uploader)
 Vue.prototype.$http = Axios;
 
