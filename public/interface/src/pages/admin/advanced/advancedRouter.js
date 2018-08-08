@@ -6,8 +6,8 @@ export default {
   },
   children: [
     {
-      path: 'list',
-      name: '设置',
+      path: '*',
+      name: '参数',
       component: () => import('./advancedList'),
     },
   ]

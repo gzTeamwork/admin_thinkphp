@@ -18,5 +18,10 @@ class OrderModel extends Model
     protected $connection = 'db_admin_core';
     protected $table = 'orders';
 
+    public function setCreateTimeAttr($value)
+    {
+        return date('Y-m-d H:i:s', strtotime($value));
+    }
+
 
 }

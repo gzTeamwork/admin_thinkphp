@@ -46,14 +46,9 @@ export default {
       return res.code === 1;
     })
   },
-  setPost: async function (form) {
-    await httpAxios.post('do/api_post_set', {...form}).then(res => {
-      console.log(res)
-      if (res.code === 1) {
-        window.$store.commit("NOTICE_SUCCESS", res.msg);
-      } else {
-        window.$store.commit("NOTICE_ERROR", res.msg);
-      }
+   setPost: async function (form) {
+     return await httpAxios.post('do/api_post_set', {...form}).then(res => {
+       console.info(res.msg);
       return res.code === 1;
     })
   },

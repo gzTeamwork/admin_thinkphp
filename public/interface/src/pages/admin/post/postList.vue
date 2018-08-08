@@ -1,8 +1,8 @@
 <template>
   <section class="mu-container">
     <mu-sub-header>文章列表</mu-sub-header>
-
     <mu-row style="margin: 1em;" gutter fill>
+
       <mu-col :span="4">
         <mu-button :to="'/admin/post/publish'">
           <mu-icon value="plus_one"></mu-icon>
@@ -13,6 +13,7 @@
           清除筛选
         </mu-button>
       </mu-col>
+
       <mu-col :span="4">
         <small>标题搜索</small>
         <mu-text-field position="left" v-model="filterable.postTitle">
@@ -21,6 +22,7 @@
           <mu-icon value="search"></mu-icon>
         </mu-button>
       </mu-col>
+
       <mu-col :span="4">
         <small>文章类型</small>
         <mu-select v-model="filterable.postKindSearch" @change="eventPostKindChange">
@@ -45,21 +47,6 @@
         </com-data-table>
 
 
-
-    <!--文章预览-->
-    <!--<mu-dialog width="860" transition="slide-bottom" scrollable overlay-close :open.sync="newPost.show"-->
-    <!--:title="'文章预览'"-->
-    <!--&gt;-->
-    <!--<mu-flex justify="center">-->
-    <!--<img :src="newPost.post.thumb" alt="文章封面">-->
-    <!--</mu-flex>-->
-    <!--<h2>{{newPost.post.title}}</h2>-->
-    <!--<small>-->
-    <!--作者 {{newPost.post.author}} | 发表于 {{newPost.post.update_time}}-->
-    <!--</small>-->
-    <!--<p style="text-indent: 2em;" v-html="newPost.post.content"></p>-->
-    <!--</mu-dialog>-->
-
   </section>
 </template>
 
@@ -69,33 +56,41 @@
   export default {
     name: "postList",
     components: {
-      'com-editor': () => import('vue-tinymce-editor'),
-      'com-data-table': () => import('@/pages/admin/components/normalDatatable'),
+      comEditor: () => import('vue-tinymce-editor'),
+      comDataTable: () => import('@/pages/admin/components/normalDatatable'),
+      comProgressBar: () => import('@/pages/components/progressBar'),
     },
     data() {
       return {
         postNew: {
           show: false,
-          post: {}
+          post:
+            {}
         },
         postList: [],
-        postKinds: [
-          {title: '文章', name: 'post', content: []},
-        ],
-        postColumns: [
-          {title: '编号', name: 'id', width: 128, align: 'center', sortable: true},
-          {title: '文章标题', name: 'title', width: 220, sortable: true},
-          {title: '类型', name: 'kind', sortable: true},
-          {title: '创建时间', name: 'create_time', width: 300, sortable: true},
-          {title: '是否可用', name: 'is_active', align: 'center', width: 100, sortable: true},
-          {title: '快捷操作'}
-        ],
+        postKinds:
+          [
+            {title: '文章', name: 'post', content: []},
+          ],
+        postColumns:
+          [
+            {title: '编号', name: 'id', width: 128, align: 'center', sortable: true},
+            {title: '文章标题', name: 'title', width: 220, sortable: true},
+            {title: '类型', name: 'kind', sortable: true},
+            {title: '创建时间', name: 'create_time', width: 300, sortable: true},
+            {title: '是否可用', name: 'is_active', align: 'center', width: 100, sortable: true},
+            {title: '快捷操作'}
+          ],
         //  搜索框值
-        filterable: {
-          cateSearch: '根目录',
-          postKindSearch: '文章',
-          postTitle: '',
-        },
+        filterable:
+          {
+            cateSearch: '根目录',
+            postKindSearch:
+              '文章',
+            postTitle:
+              '',
+          }
+        ,
         //  搜索状态
         tableFiltered: false,
       }
@@ -199,7 +194,7 @@
         let filterPostList = [];
         this.handlerPosts.map((e, i) => {
           e.title.match(new RegExp(searchWord, 'i')) ? filterPostList.push(e) : '';
-        })
+        });
         this.postList = [...filterPostList];
         this.tableFiltered = true;
       },
@@ -210,9 +205,9 @@
       }
     },
     mounted() {
+      let vm = this;
       postApi.getPosts({perPage: 1000}).then(function () {
-        this.loading
-        postApi.getPostTemplates()
+        postApi.getPostTemplates();
       })
     }
 </script>

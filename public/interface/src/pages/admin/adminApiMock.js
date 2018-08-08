@@ -36,8 +36,13 @@ Mock.mock(/api_admin_menu/, {
       {label: '素材管理', path: '/admin/material/list'}
     ]
   }, {
-    label: '设置', name: 'setting', path: 'setting', sub: [
-      {label: '网站设置', path: '/admin/setting'},
+    label: '订单', name: 'order', path: 'order', sub: [
+      {label: '预约看盘', name: 'booking', path: '/admin/order/booking'},
+      {label: '公益留言', name: 'benefit_dynamic', path: '/admin/order/benefit_dynamic'},
+    ]
+  }, {
+    label: '设置', name: 'advanced', path: 'advanced', sub: [
+      {label: '网站设置', path: '/admin/advanced/list'},
     ]
   }
   ]
