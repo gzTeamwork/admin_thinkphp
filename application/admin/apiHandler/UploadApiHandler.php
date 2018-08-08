@@ -74,4 +74,40 @@ trait UploadApiHandler
             return $exception->getMessage();
         }
     }
+
+    public function api_get_uploads($datas, $needReturn = false)
+    {
+        try {
+            $uploadModel = new UploadModel();
+            $whereDatas = $uploadModel->fieldsFilterByDataTable($datas);
+            $result = $uploadModel->where($whereDatas)->limit(40)->select();
+
+            if ($needReturn) {
+                return $result;
+            }
+
+            $successMsg = '成功获取上传文件';
+            $this->success($successMsg, '', $result);
+        } catch (Exception $exception) {
+            $errorMsg = '获取上传文件失败';
+            $this->error($errorMsg ?? $exception->getMessage(), '', ['msg' => $exception->getMessage()]);
+        }
+    }
+
+    /**
+     * 获取多个素材
+     * @param $datas
+     */
+    public function api_get_materials($datas)
+    {
+        try {
+            $datas['group'] = 'material';
+            $result = $this->api_get_uploads($datas, true);
+            $successMsg = '成功获取素材';
+            $this->success($successMsg, '', $result);
+        } catch (Exception $exception) {
+            $errorMsg = '获取素材失败';
+            $this->error($errorMsg ?? $exception->getMessage(), '', ['msg' => $exception->getMessage()]);
+        }
+    }
 }

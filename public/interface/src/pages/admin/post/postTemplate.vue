@@ -21,31 +21,35 @@
       <mu-text-field full-width class="gutter" v-model="popData.form.title" label="数据模板标题"></mu-text-field>
       <mu-text-field full-width class="gutter" v-model="popData.form.name" label="数据模板标题"></mu-text-field>
       <!--<com-post-extra :extraList="popData.form.content"></com-post-extra>-->
-      <mu-paper :z-depth="1" v-for="(e,i) in popData.form.content" :key="i">
-        <p class="full-width gutter">
-          {{e.title}}
-          <small>{{e.name}}</small>
-        </p>
-        <mu-row gutter>
-          <mu-col span="4">
-            <mu-text-field full-width class="gutter" v-model="e.title" label="数据标题"></mu-text-field>
-          </mu-col>
-          <mu-col span="4">
-            <mu-text-field full-width class="gutter" v-model="e.name" label="数据名字"></mu-text-field>
-          </mu-col>
-          <mu-col span="4">
-            <mu-select full-width class="gutter" label="数据类型" v-model="e.type" full-width>
-              <mu-option v-for="(ee,ii) in kinds" :key="ii" :label="ee.title" :value="ee.value">
-              </mu-option>
-            </mu-select>
-          </mu-col>
-        </mu-row>
-      </mu-paper>
-      <mu-button full @click="eventPostTempEditInsetTag">
-        <mu-icon value="plus_one"></mu-icon>
-        增加一个数据
-      </mu-button>
+      <com-draggable v-model="popData.form.content" @end="eventMouseUp">
+        <transition-group>
+          <mu-paper :z-depth="1" v-for="(e,i) in popData.form.content" :key="i">
+            <p class="full-width gutter">
+              {{e.title}}
+              <small>{{e.name}}</small>
+            </p>
+            <mu-row gutter>
+              <mu-col span="4">
+                <mu-text-field full-width class="gutter" v-model="e.title" label="数据标题"></mu-text-field>
+              </mu-col>
+              <mu-col span="4">
+                <mu-text-field full-width class="gutter" v-model="e.name" label="数据名字"></mu-text-field>
+              </mu-col>
+              <mu-col span="4">
+                <mu-select full-width class="gutter" label="数据类型" v-model="e.type" full-width>
+                  <mu-option v-for="(ee,ii) in kinds" :key="ii" :label="ee.title" :value="ee.value">
+                  </mu-option>
+                </mu-select>
+              </mu-col>
+            </mu-row>
+          </mu-paper>
+        </transition-group>
+      </com-draggable>
       <template slot="actions">
+        <mu-button full @click="eventPostTempEditInsetTag">
+          <mu-icon value="plus_one"></mu-icon>
+          增加一个数据
+        </mu-button>
         <mu-button v-if="popData.mode == 'new'" @click="eventPostTemplateSubmit">新增数据模板</mu-button>
         <mu-button v-if="popData.mode == 'edit'" @click="eventPostTemplateSubmit">修改数据模板</mu-button>
       </template>
@@ -55,11 +59,13 @@
 
 <script>
   import postApi from './postApi';
+  import draggable from 'vuedraggable';
 
   export default {
     name: "postTemplate",
     components: {
-      'com-post-extra': () => import('./postExtra.vue'),
+      comPostExtra: () => import('./postExtra.vue'),
+      comDraggable: draggable,
     },
     data() {
       return {
@@ -116,6 +122,14 @@
       },
       eventPostTempEditInsetTag: function () {
         this.popData.form.content.push({...this.new_extra})
+      },
+      eventMouseUp: function (e) {
+        if (e && e.stopPropagation)
+        //因此它支持W3C的stopPropagation()方法
+          e.stopPropagation();
+        else
+        //否则，我们需要使用IE的方式来取消事件冒泡
+          window.event.cancelBubble = true;
       }
     }
   }

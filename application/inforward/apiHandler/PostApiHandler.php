@@ -76,7 +76,19 @@ trait PostApiHandler
     public function api_posts_get_recruit($datas)
     {
         $datas['kind'] = 'recruit';
-        return $this->api_posts_get_detail_list($datas);
+        $result = $this->api_posts_get_detail_list($datas, true);
+        $posts = $result->toArray();
+
+        if (isset($datas['company'])) {
+            foreach ($posts as $key => $post) {
+                if (isset($post['company']) && $post['company'] == $datas['company']) {
+                } else {
+                    unset($posts[$key]);
+                }
+            }
+        }
+
+        $this->success('成功获取盈富永泰招聘岗位信息', '', $posts);
     }
 
     /**

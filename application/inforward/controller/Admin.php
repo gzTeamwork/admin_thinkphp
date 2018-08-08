@@ -3,12 +3,15 @@
 namespace app\inforward\controller;
 
 use app\admin\apiHandler\AdminApiHandler;
+use app\admin\apiHandler\AdvancedApiHandler;
 use app\admin\apiHandler\CateApiHandler;
 use app\admin\apiHandler\SystemApiHandler;
 use app\admin\apiHandler\UserApiHandler;
 use app\admin\apiHandler\UploadApiHandler;
 
+use app\inforward\apiHandler\DynamicApiHandler;
 use app\inforward\apiHandler\OrderApiHandler;
+use app\inforward\apiHandler\TokenApiHandler;
 use app\inforward\middleware\base\mwApi;
 use app\inforward\middleware\base\mwControllerBase;
 use app\inforward\unit\userUnit;
@@ -16,7 +19,6 @@ use app\inforward\apiHandler\PostApiHandler;
 
 use think\App;
 use think\Controller;
-use think\facade\Request;
 
 class Admin extends Controller
 {
@@ -28,8 +30,9 @@ class Admin extends Controller
     use CateApiHandler;
     use PostApiHandler;
     use UploadApiHandler;
+    use AdvancedApiHandler;
 
-    use OrderApiHandler;
+    use OrderApiHandler, DynamicApiHandler, TokenApiHandler;
 
     public function __construct(App $app = null)
     {
