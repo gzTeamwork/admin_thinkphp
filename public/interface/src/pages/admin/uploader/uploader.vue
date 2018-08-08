@@ -21,7 +21,6 @@
       <mu-flex v-else>
         暂无上传内容
       </mu-flex>
-
     </mu-paper>
   </div>
 </template>
@@ -86,7 +85,6 @@
           console.info(file);
           vm.file = file;
           vm.$emit('getResult', file);
-          vm.$emit('finished', file);
         })
       },
       clear() {

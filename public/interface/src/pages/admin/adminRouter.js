@@ -1,9 +1,8 @@
-import userRouter from '@/pages/admin/user/userRouter';
-import postRouter from '@/pages/admin/post/postRouter';
-import cateRouter from '@/pages/admin/category/cateRouter';
-import advancedRouter from '@/pages/admin/advanced/advancedRouter';
-import materialRouter from '@/pages/admin/material/materialRouter';
-import orderRouter from '@/pages/admin/order/orderRouter';
+import userRouter from '@/pages/admin/user/userRouter.js';
+import postRouter from '@/pages/admin/post/postRouter.js';
+import cateRouter from '@/pages/admin/category/cateRouter.js';
+import advancedRouter from '@/pages/admin/advanced/advancedRouter.js';
+import materialRouter from "@/pages/admin/material/materialRouter";
 //  后台子路由
 let subRouter = [
   {
@@ -16,7 +15,6 @@ let subRouter = [
   cateRouter,
   materialRouter,
   advancedRouter,
-  orderRouter,
   {
     path: '*',
     component: () => import('@/pages/admin/index'),

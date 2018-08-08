@@ -25,27 +25,7 @@
 
       <!--新增素材-->
       <template slot="newDialog">
-        <mu-row>
-          <mu-col>
-            <com-uploader thumb @finished="eventUploaded"></com-uploader>
-          </mu-col>
-          <mu-col>
-            <mu-form :model.sync="newForm">
-              <mu-form-item>
-                <mu-form-item prop="input" icon="title" label="素材标题">
-                  <mu-text-field v-model="newForm.title"></mu-text-field>
-                </mu-form-item>
-                <mu-form-item prop="input" icon="thumb" label="素材链接">
-                  <mu-text-field v-model="newForm.thumb"></mu-text-field>
-                </mu-form-item>
-                <mu-form-item prop="input" icon="title" label="分组">
-                  <mu-text-field v-model="newForm.group"></mu-text-field>
-                </mu-form-item>
-              </mu-form-item>
-              <mu-button @click="eventMaterialSubmit">提交</mu-button>
-            </mu-form>
-          </mu-col>
-        </mu-row>
+        <com-uploader></com-uploader>
       </template>
 
     </com-data-table>
@@ -68,14 +48,12 @@
   export default {
     name: "materialList",
     components: {
-      comDataTable: () => import('@/pages/admin/components/normalDatatable'),
-      comUploader: () => import('@/pages/admin/uploader/uploader'),
+      'com-data-table': () => import('@/pages/admin/components/normalDatatable'),
+      // 'com-uploader': () => import('@/pages/components/Uploader'),
+      'com-uploader': () => import('@/pages/admin/uploader/uploader'),
     },
     data() {
       return {
-        newForm: {
-          title: '',
-        },
         uploadFiles: [],
         tableView: true,
         materialList: [],
@@ -93,12 +71,7 @@
     ,
     mounted() {
       let vm = this;
-      new Promise(resolve => {
-        let res = materialApi.getMaterial();
-        resolve(res);
-      }).then(res => {
-        vm.materialList = res;
-      })
+      materialApi.getMaterial();
     }
     ,
     computed: {
@@ -112,20 +85,7 @@
         this.materialList = v;
       }
     }
-    , methods: {
-      eventUploaded(v) {
-        this.newForm = v;
-        this.newForm.title = v.file_name;
-      },
-      eventMaterialSubmit() {
-        new Promise(resolve => {
-          let res = materialApi.setMaterial(this.newForm);
-          resolve(res);
-        }).then(res => {
-
-        })
-      }
-    }
+    ,
   }
 </script>
 

@@ -13,22 +13,22 @@
                    :data="dataList.slice((page.current-1)*page.perPageNum,page.current*page.perPageNum)">
       <template slot-scope="scope">
         <slot name="table" :data="scope.row"></slot>
-        <!--<td>-->
-        <!--&lt;!&ndash;预览单项&ndash;&gt;-->
-        <!--<mu-button icon @click="handlerPostsView(scope.row)">-->
-        <!--<mu-icon value="remove_red_eye"></mu-icon>-->
-        <!--</mu-button>-->
-        <!--&lt;!&ndash;编辑单项&ndash;&gt;-->
-        <!--&lt;!&ndash;<mu-button icon @click="handlerPostsEdit(scope.row)">&ndash;&gt;-->
-        <!--<mu-button icon :to="'/admin/post/publish?id='+scope.row.id">-->
-        <!--<mu-icon value="edit"></mu-icon>-->
-        <!--</mu-button>-->
-        <!--&lt;!&ndash;删除单项&ndash;&gt;-->
-        <!--<mu-button icon color="red300" @click="eventRemoveItem(scope.row.data)">-->
-        <!--<mu-icon value="close"></mu-icon>-->
-        <!--</mu-button>-->
+          <!--<td>-->
+          <!--&lt;!&ndash;预览单项&ndash;&gt;-->
+          <!--<mu-button icon @click="handlerPostsView(scope.row)">-->
+          <!--<mu-icon value="remove_red_eye"></mu-icon>-->
+          <!--</mu-button>-->
+          <!--&lt;!&ndash;编辑单项&ndash;&gt;-->
+          <!--&lt;!&ndash;<mu-button icon @click="handlerPostsEdit(scope.row)">&ndash;&gt;-->
+          <!--<mu-button icon :to="'/admin/post/publish?id='+scope.row.id">-->
+          <!--<mu-icon value="edit"></mu-icon>-->
+          <!--</mu-button>-->
+          <!--&lt;!&ndash;删除单项&ndash;&gt;-->
+          <!--<mu-button icon color="red300" @click="eventRemoveItem(scope.row.data)">-->
+          <!--<mu-icon value="close"></mu-icon>-->
+          <!--</mu-button>-->
 
-        <!--</td>-->
+          <!--</td>-->
       </template>
     </mu-data-table>
     <!--页码-->
@@ -40,7 +40,7 @@
 
     <!--新增弹框单项-->
     <mu-dialog :open.sync="popNewData.show" width="860" transition="slide-bottom" scrollable overlay-close>
-      <mu-button style="float: right;" icon @click="popNewData.show=false">
+      <mu-button style="float: right;" fab @click="popNewData.show=false">
         <mu-icon value="close"></mu-icon>
       </mu-button>
       <slot name="newDialog" :data="popNewData.datas">
@@ -50,7 +50,7 @@
 
     <!--修改弹框单项-->
     <mu-dialog :open.sync="popEditData.show" width="860" transition="slide-bottom" scrollable overlay-close>
-      <mu-button style="float: right;" icon @click="popEditData.show=false">
+      <mu-button style="float: right;" fab @click="popEditData.show=false">
         <mu-icon value="close"></mu-icon>
       </mu-button>
       <slot name="editDialog" :data="popEditData.datas">
@@ -86,12 +86,7 @@
           return [];
         }
       },
-      itemTool: {type: Boolean, default: false},
-      order: {
-        type: String, default: () => {
-          return 'id';
-        }
-      }
+      itemTool: {type: Boolean, default: false}
     },
     data() {
       return {
@@ -110,7 +105,7 @@
         dataList: [],
         selects: [],
         sort: {
-          name: this.order,
+          name: 'id',
           order: 'asc'
         },
         loading: true,

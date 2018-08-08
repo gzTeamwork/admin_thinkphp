@@ -27,16 +27,12 @@
           </mu-form-item>
           <!--封面-->
           <mu-form-item prop="input" icon="thumb" label="封面图">
-            <img v-if="form.thumb" :src="form.thumb" alt="封面图" width="400"/>
-            <br>
-            <com-admin-uploader
-              v-on:getResult="eventPostThumbFinished($event)">
+            <com-admin-uploader thumb
+                                v-on:getResult="eventPostThumbFinished($event)">
             </com-admin-uploader>
           </mu-form-item>
-
-          <!--内容-->
           <mu-form-item prop="input" icon="content" label="内容">
-            <com-vue-mce v-if="loaded" id="postTinymce" v-model.sync="form.content" :other_options="tinymceInit"
+            <com-vue-mce v-if="loaded" id="postTinymce" v-model="form.content" :other_options="tinymceInit"
                          class="full-width" ref="tinymceEditor"></com-vue-mce>
           </mu-form-item>
           <mu-button v-if="$route.query.id" @click="eventPostPublishSubmit">
@@ -195,21 +191,15 @@
         console.info("文章封面上传完毕", v);
         this.postThumb = v;
         this.form.thumb = this.postThumb.thumb;
-      },
-      //  提交发布文章
+      }
+      ,
       eventPostPublishSubmit: function () {
-        let vm = this;
         let postForm = {...this.form};
-        // console.log(postForm.create_time);
+        console.log(postForm.create_time);
         postForm.create_time = postForm.create_time.hasOwnProperty('getTime') ? parseInt(postForm.create_time.getTime() / 1000) : postForm.create_time;
-        new Promise(resolve => {
-          let res = postApi.setPost(postForm);
-          resolve(res)
-        }).then(res => {
-          window.$toast.info(res.msg);
-          vm.$router.push('/admin/post/list');
-        })
-      },
+        postApi.setPost(postForm);
+      }
+      ,
       eventEditorUpload: function (e) {
         let vm = this;
         console.log(e());

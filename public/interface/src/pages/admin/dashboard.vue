@@ -1,25 +1,17 @@
 <template>
   <!--顶部导航-->
-  <section>
-    <com-progress-bar loading.sync="loading"></com-progress-bar>
-    <mu-flex>
-      <mu-flex v-if="isAdmin" style="width:20vw">
-        <!--左侧菜单-->
-        <com-admin-menu></com-admin-menu>
-      </mu-flex>
-      <mu-flex fill direction="column" style="width:80vw">
-        <com-admin-top-nav v-if="isAdmin" class="fixed">
-        </com-admin-top-nav>
-        <!--<section id="dashboardMain" class="full-width full-height" style="background:white;">-->
-        <transition appear name="fade">
-          <router-view class="full-width" style="background: white;min-height:100vh;margin-top: 110px;"
-                       v-on:loaded="()=>{loading = false}">
-          </router-view>
-        </transition>
-        <!--</section>-->
-      </mu-flex>
+  <mu-flex>
+    <mu-flex v-if="isAdmin" style="width:20vw">
+      <!--左侧菜单-->
+      <com-admin-menu></com-admin-menu>
     </mu-flex>
-  </section>
+    <mu-flex fill direction="column" style="width:80vw">
+      <com-admin-top-nav v-if="isAdmin" class="fixed"></com-admin-top-nav>
+      <!--<section id="dashboardMain" class="full-width full-height" style="background:white;">-->
+      <router-view class="full-width" style="background: white;min-height:100vh;margin-top: 110px;"></router-view>
+      <!--</section>-->
+    </mu-flex>
+  </mu-flex>
 
 </template>
 
@@ -29,7 +21,6 @@
     data() {
       return {
         isAdmin: false,
-        loading: true,
       }
     },
     methods: {},
@@ -47,9 +38,8 @@
       }
     },
     components: {
-      'com-admin-menu': () => import('./components/adminMenu'),
-      'com-admin-top-nav': () => import('./components/adminTopNav'),
-      comProgressBar: () => import('@/pages/components/progressBar'),
+      'com-admin-menu': () => import('./components/adminMenu.vue'),
+      'com-admin-top-nav': () => import('./components/adminTopNav.vue'),
     }
   }
 </script>

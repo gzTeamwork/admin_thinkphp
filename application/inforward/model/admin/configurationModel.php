@@ -6,7 +6,7 @@
  * Time: 下午4:43
  */
 
-namespace app\admin\model;
+namespace app\inforward\model\admin;
 
 use app\inforward\middleware\base\mwModelBase;
 use think\Model;
@@ -21,13 +21,8 @@ class configurationModel extends Model
 
     /**
      * 获取系统配置项 - 通过群组
-     * @param string $group
-     * @return null
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @param $group
      */
-
     public function getSystemConfigs($group = 'all')
     {
         $result = $this->select();
