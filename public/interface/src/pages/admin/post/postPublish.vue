@@ -25,13 +25,18 @@
                            landscape
                            actions></mu-date-input>
           </mu-form-item>
+          <!--封面-->
           <mu-form-item prop="input" icon="thumb" label="封面图">
+            <img v-if="form.thumb" :src="form.thumb" alt="封面图" width="400"/>
+            <br>
             <com-admin-uploader
               v-on:getResult="eventPostThumbFinished($event)">
             </com-admin-uploader>
           </mu-form-item>
+
+          <!--内容-->
           <mu-form-item prop="input" icon="content" label="内容">
-            <com-vue-mce v-if="loaded" id="postTinymce" v-model="form.content" :other_options="tinymceInit"
+            <com-vue-mce v-if="loaded" id="postTinymce" v-model.sync="form.content" :other_options="tinymceInit"
                          class="full-width" ref="tinymceEditor"></com-vue-mce>
           </mu-form-item>
           <mu-button v-if="$route.query.id" @click="eventPostPublishSubmit">
@@ -43,7 +48,8 @@
         </mu-form>
       </mu-flex>
       <mu-flex style="padding:2em">
-        <com-post-extra v-if="form.extraList.length > 1" :extraList.sync="form.extraList"></com-post-extra>
+        <com-post-extra v-if="form.extraList.length > 1" :extraList.sync="form.extraList">
+        </com-post-extra>
       </mu-flex>
     </mu-flex>
 
@@ -106,12 +112,10 @@
           branding: true,
           // imageSelectorCallback: this.eventEditorUpload,
           //上传图片回调
-          images_upload_handler: async (blobInfo, success, failure) => {
-            // let fd = new FormData()
-            let res = await uploaderApi.uploadFile(blobInfo.blob());
-            console.info('调试', res);
-            success(res.url)
-          },
+          images_upload_handler: async function (blobInfo, success, failure) {
+            let file = await uploaderApi.uploadImg(blobInfo.blob());
+            success(file.thumb);
+          }
         }
       }
     },
@@ -129,43 +133,51 @@
       }).then(() => {
         vm.loaded = true;
       })
-    },
+    }
+    ,
     computed: {
       //  获取栏目列表
       handlerCateList: function () {
         return this.$store.getters.getCateList;
-      },
+      }
+      ,
       //  获取数据模板
       handlerPostTemplateList: function () {
         return this.$store.getters.getPostTemplates;
-      },
+      }
+      ,
       //  获取当前文章 - 有id的话
       handlerPostCurrent: function () {
         return this.$store.getters.getPostCurrent;
       }
-    },
+    }
+    ,
     watch: {
       handlerPostTemplateList: function (v) {
         this.postKinds = this.postKinds.slice(0, 1).concat(v);
         // if (this.$route.query.id) {
         //   this.eventPostKindChange(this.form.kind, [...this.form.post_extra]);
         // }
-      },
+      }
+      ,
       handlerPostCurrent: function (v) {
         this.form = v;
         this.eventCateChange(this.form.category);
         this.filterable.postKindSearch = this.form.kind;
         this.eventPostKindChange(this.form.kind, [...this.form.post_extra]);
       }
-    },
+    }
+    ,
     methods: {
       eventCateGet: function (v) {
         console.log(v)
-      },
+      }
+      ,
       eventCateChange: function (v) {
         this.form.category = v;
         this.filterable.cateSearch = v;
-      },
+      }
+      ,
       //  切换文章类别 - 切换附加数据的模板
       eventPostKindChange: function (v, exlist) {
         this.form.kind = v
@@ -176,18 +188,27 @@
           }
         })
 
-      },
+      }
+      ,
       // post thumb uploaded
       eventPostThumbFinished: function (v) {
         console.info("文章封面上传完毕", v);
         this.postThumb = v;
         this.form.thumb = this.postThumb.thumb;
       },
+      //  提交发布文章
       eventPostPublishSubmit: function () {
+        let vm = this;
         let postForm = {...this.form};
-        console.log(postForm.create_time);
+        // console.log(postForm.create_time);
         postForm.create_time = postForm.create_time.hasOwnProperty('getTime') ? parseInt(postForm.create_time.getTime() / 1000) : postForm.create_time;
-        postApi.setPost(postForm);
+        new Promise(resolve => {
+          let res = postApi.setPost(postForm);
+          resolve(res)
+        }).then(res => {
+          window.$toast.info(res.msg);
+          vm.$router.push('/admin/post/list');
+        })
       },
       eventEditorUpload: function (e) {
         let vm = this;
@@ -202,8 +223,10 @@
           }
         )
         ;
-      },
-    },
+      }
+      ,
+    }
+    ,
     beforeDestory() {
       this.loaded = false;
     }

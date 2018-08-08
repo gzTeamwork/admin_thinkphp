@@ -13,6 +13,7 @@
     "axios": "^0.18.0",
     "dayjs": "^1.7.4",
     "muse-ui": "^3.0.0-rc.6",
+    "muse-ui-loading": "^0.2.0",
     "muse-ui-toast": "^0.3.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.3",
@@ -24,6 +25,7 @@
     "vue-simple-uploader": "^0.4.6",
     "vue-tinymce-editor": "^1.6.2",
     "vue-upload-component": "^2.8.11",
+    "vuedraggable": "^2.16.0",
     "vuex": "^3.0.1",
     "wangeditor": "^3.1.1"
   },

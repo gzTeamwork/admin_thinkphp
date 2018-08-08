@@ -2,19 +2,16 @@
 //  状态 - 存储数据
 
 const state = {
-  uploadFile: null,
-  uploadFiles:
-    [],
-  status:
-    'init',
-  statusText:
-    {
-      'init':
-        '待上传', 'uploading':
-        '上传中', 'success':
-        '上传成功', 'error':
-        '上传失败',
-    }
+  uploadFile: {},
+  uploadFiles: [],
+  status: 'init',
+  statusText: {
+    'init':
+      '待上传', 'uploading':
+      '上传中', 'success':
+      '上传成功', 'error':
+      '上传失败',
+  }
 };
 //  获取器 - 获取数据的时候用于处理
 const getters = {
@@ -31,11 +28,13 @@ const getters = {
 //  行动 - 使用 dispatch("event",datas) 触发,用于异步执行
 const actions = {
   uploadFileSuccess: (context, datas) => {
-    datas = datas.hasOwnProperty('array') ? datas.array : datas;
-    state.uploadFile = datas;
+    console.info('uploadVuex接收到上传文件的内容', datas);
+    // datas = datas.hasOwnProperty('array') ? datas.array : datas;
+    state.uploadFile = {...datas};
     state.status = 'success';
   },
   uploadFilesSuccess: (context, datas) => {
+    console.log(datas.hasOwnProperty('array'));
     datas = datas.hasOwnProperty('array') ? datas.array : datas;
     state.uploadFiles = datas;
   },
@@ -54,7 +53,5 @@ const mutations = {
 };
 
 export default {
-  state() {
-    return {...state}
-  }, getters: getters, actions: actions, mutations: mutations
+  state: state, getters: getters, actions: actions, mutations: mutations
 }

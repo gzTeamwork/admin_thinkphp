@@ -55,4 +55,5 @@ trait AdminApiHandler
             $this->error('获取管理员菜单失败', '', ['msg' => $exception->getMessage()]);
         }
     }
+
 }
