@@ -127,11 +127,11 @@
         let id = vm.$route.query.id || false;
         if (id !== false) {
           // 修改模式
-          postApi.getPost({id: id});
+          let post = postApi.getPost({id: id});
+          next(post);
         }
-        next();
-      }).then(() => {
-        vm.loaded = true;
+      }).then(post => {
+
       })
     }
     ,
@@ -217,9 +217,9 @@
           vm.$refs.editorUploader.eventSelectFile();
           resolve(vm.$store.getters.getUploadFile);
         }).then((file) => {
-            console.info(vm);
+            // console.info(vm);
             // editor.execCommand('mceInsertContent', false, '<img alt="Smiley face" height="42" width="42" src="' + r + '"/>');
-            console.info(file);
+            // console.info(file);
           }
         )
         ;

@@ -1,5 +1,6 @@
 <template>
   <section class="mu-container">
+    <mu-linear-progress v-if="loading"></mu-linear-progress>
     <mu-sub-header>文章列表</mu-sub-header>
     <mu-row style="margin: 1em;" gutter fill>
 
@@ -33,7 +34,7 @@
     </mu-row>
 
     <!--文章数据表格-->
-    <com-data-table ref="postDatatTable" :datas="postList" :columns="postColumns">
+    <com-data-table ref="postDataTable" :datas.sync="postList" :columns="postColumns">
       <!--表单内容-->
       <template slot="table" slot-scope="item">
         <td class="is-center">{{item.data.id}}</td>
@@ -119,6 +120,7 @@
         ,
         //  搜索状态
         tableFiltered: false,
+        loading: true,
       }
     },
     computed: {
@@ -155,10 +157,15 @@
       eventRemove: function (item) {
         let vm = this;
         if (confirm('是否执行删除[' + item.title + ']文章')) {
-          postApi.setPostDel(item);
-          setTimeout(() => {
-            postApi.getPosts()
-          }, 1000);
+          new Promise(resolve => {
+            let res = postApi.setPostDel(item);
+            resolve(res)
+          }).then(res => {
+            if (res === 1) {
+              //  去掉对应文章
+              vm.postList.splice(vm.postList.indexOf(item), 1);
+            }
+          })
         }
       },
       //  筛选文章分类
@@ -194,7 +201,8 @@
     },
     mounted() {
       let vm = this;
-      postApi.getPosts({perPage: 1000}).then(function () {
+      postApi.getPosts({perPage: 200}).then(function () {
+        vm.loading = false;
         postApi.getPostTemplates();
       })
     }

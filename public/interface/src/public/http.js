@@ -9,7 +9,7 @@ import config from '@/config';
 
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 let ajaxAxios = new axios.create({
-  baseURL: config.isDev ? '' : config.apiServer,
+  baseURL: config.apiServer,
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
   }

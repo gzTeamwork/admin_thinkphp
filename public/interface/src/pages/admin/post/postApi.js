@@ -8,14 +8,17 @@ export default {
    * @param form
    */
   getPost: async function (form) {
-    await httpAxios.get('do/api_post_get_detail', {
+    return await httpAxios.get('do/api_post_get_detail', {
       params: {...form}
     }).then(res => {
       console.log(res);
       if (res.code === 1) {
-        window.$store.dispatch('getPostCurrentSuccess', res.data);
+        // window.$store.dispatch('getPostCurrentSuccess', res.data);
+        return res.data;
+      } else {
+        return false;
       }
-      return res.code === 1;
+      // return res.code === 1;
     })
   },
   getPosts: async function (form) {
@@ -46,15 +49,16 @@ export default {
       return res.code === 1;
     })
   },
-   setPost: async function (form) {
-     return await httpAxios.post('do/api_post_set', {...form}).then(res => {
-       console.info(res.msg);
+  setPost: async function (form) {
+    return await httpAxios.post('do/api_post_set', {...form}).then(res => {
+      console.info(res.msg);
       return res.code === 1;
     })
   },
   setPostDel: async function (form) {
-    await httpAxios.post('do/api_post_del', {...form}).then(res => {
+    return await httpAxios.post('do/api_post_del', {...form}).then(res => {
       res.code === 1 ? window.$toast.success(res.msg) : window.$toast.error(res.msg);
+      return res.code;
     })
   },
   getPostTemplates: function (form) {

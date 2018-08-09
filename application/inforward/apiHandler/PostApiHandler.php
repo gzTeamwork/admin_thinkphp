@@ -42,7 +42,7 @@ trait PostApiHandler
     public function api_posts_get_apartment($datas)
     {
         $datas['kind'] = 'yu_apartment';
-        $datas['is_sold'] = false;
+        $datas['is_sold'] = true;
 
         //  筛选公寓户型
         if (isset($datas['unit_house_type'])) {
@@ -57,7 +57,7 @@ trait PostApiHandler
         $posts = $result->toArray();
 
         foreach ($posts as $key => $item) {
-            if (isset($item['is_sold']) && false === $item['is_sold']) {
+            if (isset($item['is_sold']) && true === $item['is_sold']) {
             } else {
                 unset($posts[$key]);
             }
@@ -81,7 +81,7 @@ trait PostApiHandler
     public function api_posts_get_apartment_leased($datas)
     {
         $datas['kind'] = 'yu_apartment';
-        $datas['is_sold'] = true;
+        $datas['is_sold'] = false;
 
         //  筛选公寓户型
         if (isset($datas['unit_house_type'])) {
@@ -97,7 +97,7 @@ trait PostApiHandler
 
         foreach ($posts as $key => $item) {
 
-            if (isset($item['is_sold']) && true === $item['is_sold']) {
+            if (isset($item['is_sold']) && false === $item['is_sold']) {
             } else {
                 unset($posts[$key]);
             }

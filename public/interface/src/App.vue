@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <com-tips></com-tips>
     <router-view/>
   </div>
 </template>
@@ -8,8 +7,8 @@
 <script>
   export default {
     name: 'App',
-    components: {
-      'com-tips': () => import('@/pages/notice/notice.vue'),
+    components: {}, methods: {
+    }, mounted() {
     }
   }
 </script>
