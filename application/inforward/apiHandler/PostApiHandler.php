@@ -15,6 +15,15 @@ trait PostApiHandler
 {
     use AdminPostAPi;
 
+    public $units_house_types = [
+        0 => null,
+        1 => '三房两厅',
+        2 => '两房两厅',
+        3 => '一房一厅',
+        4 => '整租',
+        5 => '合租',
+    ];
+
     /**
      * 查询办公室
      * @param $datas
@@ -34,6 +43,16 @@ trait PostApiHandler
     {
         $datas['kind'] = 'yu_apartment';
         $datas['is_sold'] = false;
+
+        //  筛选公寓户型
+        if (isset($datas['unit_house_type'])) {
+            if (isset($this->units_house_types[$datas['unit_house_type']])) {
+                $datas['unit_house_type'] = $this->units_house_types[$datas['unit_house_type']];
+            } else {
+                unset($datas['unit_house_type']);
+            }
+        }
+
         $result = $this->api_posts_get_detail_list($datas, true);
         $posts = $result->toArray();
 
@@ -41,6 +60,14 @@ trait PostApiHandler
             if (isset($item['is_sold']) && false === $item['is_sold']) {
             } else {
                 unset($posts[$key]);
+            }
+
+            //  过滤对应户型
+            if (isset($datas['unit_house_type']) && isset($item['unit_house_type'])) {
+                if ($item['unit_house_type'] != $datas['unit_house_type']
+                ) {
+                    unset($posts[$key]);
+                }
             }
         }
 
@@ -55,13 +82,31 @@ trait PostApiHandler
     {
         $datas['kind'] = 'yu_apartment';
         $datas['is_sold'] = true;
+
+        //  筛选公寓户型
+        if (isset($datas['unit_house_type'])) {
+            if (isset($this->units_house_types[$datas['unit_house_type']])) {
+                $datas['unit_house_type'] = $this->units_house_types[$datas['unit_house_type']];
+            } else {
+                unset($datas['unit_house_type']);
+            }
+        }
+
         $result = $this->api_posts_get_detail_list($datas, true);
         $posts = $result->toArray();
 
         foreach ($posts as $key => $item) {
+
             if (isset($item['is_sold']) && true === $item['is_sold']) {
             } else {
                 unset($posts[$key]);
+            }
+            //  过滤对应户型
+            if (isset($datas['unit_house_type']) && isset($item['unit_house_type'])) {
+                if ($item['unit_house_type'] != $datas['unit_house_type']
+                ) {
+                    unset($posts[$key]);
+                }
             }
         }
 
@@ -73,7 +118,8 @@ trait PostApiHandler
      * @param $datas
      * @return array|\PDOStatement|string|Collection
      */
-    public function api_posts_get_recruit($datas)
+    public
+    function api_posts_get_recruit($datas)
     {
         $datas['kind'] = 'recruit';
         $result = $this->api_posts_get_detail_list($datas, true);
@@ -97,7 +143,8 @@ trait PostApiHandler
      * @return array|\PDOStatement|string|Collection
      */
 
-    public function api_posts_get_recruit_agency($datas)
+    public
+    function api_posts_get_recruit_agency($datas)
     {
         $datas['kind'] = 'recruit_agency';
         return $this->api_posts_get_detail_list($datas);

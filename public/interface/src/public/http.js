@@ -15,8 +15,6 @@ let ajaxAxios = new axios.create({
   }
 });
 
-// ajaxAxios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-
 // 拦截request,设置全局请求为ajax请求
 ajaxAxios.interceptors.request.use(config => {
   return config
