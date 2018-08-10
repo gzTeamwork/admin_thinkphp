@@ -79,7 +79,6 @@
 
 <script>
   import postApi from './postApi';
-
   export default {
     name: "postList",
     components: {
@@ -142,6 +141,10 @@
         if (v !== ov) {
           this.loading = false;
         }
+        v.map(e => {
+          let res = this.$_.findIndex(this.postKinds, {name: e.kind});
+          console.log(res,);
+        });
         this.postList = [...v];
       },
       handlerPostTemplateList: function (v) {
@@ -181,6 +184,7 @@
         }
         this.tableFiltered = true;
       },
+      //  筛选文章标题
       eventPostTitleSearch: function () {
         let searchWord = this.filterable.postTitle;
         if (searchWord === null && searchWord === '') {
@@ -188,11 +192,13 @@
         }
         let filterPostList = [];
         this.handlerPosts.map((e, i) => {
+          //  不分大小写筛选
           e.title.match(new RegExp(searchWord, 'i')) ? filterPostList.push(e) : '';
         });
         this.postList = [...filterPostList];
         this.tableFiltered = true;
       },
+      //  清除文章筛选
       eventClearFilter: function () {
         this.filterable.postTitle = '';
         this.filterable.postKindSearch = '文章';

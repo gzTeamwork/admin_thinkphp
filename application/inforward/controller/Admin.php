@@ -24,14 +24,10 @@ class Admin extends Controller
 {
     use mwControllerBase;
 
-    use AdminApiHandler;
-    use UserApiHandler;
-    use SystemApiHandler;
-    use CateApiHandler;
-    use PostApiHandler;
-    use UploadApiHandler;
-    use AdvancedApiHandler;
+    //  载入系统Api
+    use AdminApiHandler, UserApiHandler, SystemApiHandler, CateApiHandler, PostApiHandler, UploadApiHandler, AdvancedApiHandler;
 
+    //  载入inforward Api
     use OrderApiHandler, DynamicApiHandler, TokenApiHandler;
 
     public function __construct(App $app = null)
@@ -39,6 +35,10 @@ class Admin extends Controller
         parent::__construct($app);
     }
 
+    /**
+     * Api调用方法
+     * @return \think\response\Json
+     */
     public function api()
     {
         $datas = $this->request->param(true);

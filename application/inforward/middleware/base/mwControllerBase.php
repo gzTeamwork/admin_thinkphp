@@ -15,20 +15,19 @@ trait mwControllerBase
 {
     public $apiList = [];
 
+    /**
+     * @param null $method
+     * @return bool
+     * @throws Exception
+     */
     public function validApi($method = null)
     {
-//        echo $method;
-//        try {
         if (in_array($method, $this->apiList) && $method !== null) {
             return true;
         } else {
             throw new Exception('非法访问api接口');
             return false;
         }
-//        } catch (Exception $exception) {
-//            return json($exception->getMessage(), $exception->getCode());
-//        }
-
     }
 
     /**
@@ -63,9 +62,4 @@ trait mwControllerBase
     }
 
 
-
-//    public function getParams($keys = null, $filiter = [])
-//    {
-//
-//    }
 }

@@ -4,7 +4,7 @@
       <small>{{title}}</small>
       <span style="float: right;">{{chipList.length||0}}个</span>
     </mu-flex>
-    <div v-if="value" class="full-width" style="display: block;min-height: 300px;">
+    <div v-if="value" class="full-width" style="display: block;max-width:256px;min-height: 130px;word-break: break-all">
       <mu-chip v-for="(e,i) in getValueArray" :key="title + i" @delete="handleClose" delete>
         {{e}}
       </mu-chip>
@@ -51,6 +51,10 @@
     },
     methods: {
       eventAddChip: function () {
+        if (this.newChip === '') {
+          alert('请输入内容');
+          return false;
+        }
         if (this.newChip.match('/,/')) {
         } else {
           // this.value += this.value.length < 1 ? '' + this.newChip.trim() : ',' + this.newChip.trim();

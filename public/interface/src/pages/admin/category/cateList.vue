@@ -1,9 +1,8 @@
 <template>
-  <section>
-    <h2>栏目列表</h2>
-
+  <section v-loading="loading">
+    <mu-sub-header>栏目列表</mu-sub-header>
     <!--文章数据表格-->
-    <com-data-table ref="cateDatatTable" :datas="handlerCateList" :columns="cateColumns" addBtn>
+    <com-data-table ref="cateDatatTable" :datas="cateList" :columns="cateColumns" addBtn>
       <!--表单内容-->
       <template slot="table" slot-scope="item">
         <td class="is-center">{{item.data.id}}</td>
@@ -38,6 +37,7 @@
     name: "cateList",
     data() {
       return {
+        loading: true,
         cateList: [],
         cateColumns: [
           {title: '编号', name: 'id', width: 128, align: 'center', sortable: true},
@@ -63,7 +63,14 @@
       }
     },
     mounted() {
-      cateApi.getCateList();
+      let vm = this;
+      new Promise(resolve => {
+        let res = cateApi.getCateList();
+        resolve(res)
+      }).then(res => {
+        vm.cateList = res;
+        vm.loading = false
+      })
     },
     components: {
       'com-cate-new': () => import('./cateNew'),
@@ -71,16 +78,16 @@
     }
     ,
     computed: {
-      handlerCateList: function () {
-        return this.$store.getters.getCateList;
-      }
+      // handlerCateList: function () {
+      //   return this.$store.getters.getCateList;
+      // }
     }
     ,
     watch: {
-      handlerCateList: function (v, ov) {
-
-        this.cateList = v;
-      }
+      // handlerCateList: function (v, ov) {
+      //
+      //   this.cateList = v;
+      // }
     },
 
   }

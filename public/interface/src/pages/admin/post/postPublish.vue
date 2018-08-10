@@ -1,5 +1,5 @@
 <template>
-  <section class="mu-container" style="background: white;">
+  <section class="mu-container" style="background: white;" v-loading="loading">
     <mu-flex>
       <mu-flex grow="2" style="padding:2em">
         <mu-form :model="form" class="mu-demo-form" :label-position="'top'" @submit="'false'">
@@ -36,7 +36,7 @@
 
           <!--内容-->
           <mu-form-item prop="input" icon="content" label="内容">
-            <com-vue-mce v-if="loaded" id="postTinymce" v-model.sync="form.content" :other_options="tinymceInit"
+            <com-vue-mce v-if="loading" id="postTinymce" v-model.sync="form.content" :other_options="tinymceInit"
                          class="full-width" ref="tinymceEditor"></com-vue-mce>
           </mu-form-item>
           <mu-button v-if="$route.query.id" @click="eventPostPublishSubmit">
@@ -62,8 +62,7 @@
   import postApi from "./postApi";
   import uploaderApi from "../uploader/uploaderApi";
 
-  let vm;
-  export default vm = {
+  export default {
     name: "postPublish",
     components: {
       'com-post-extra': () => import('./postExtra'),
@@ -72,7 +71,7 @@
     },
     data() {
       return {
-        loaded: false,
+        loading: true,
         form: {
           kind: 'post',
           content: '',
@@ -131,7 +130,7 @@
           next(post);
         }
       }).then(post => {
-
+        vm.loading = false
       })
     }
     ,
@@ -190,7 +189,7 @@
 
       }
       ,
-      // post thumb uploaded
+      // post thumb uploading
       eventPostThumbFinished: function (v) {
         console.info("文章封面上传完毕", v);
         this.postThumb = v;
@@ -207,9 +206,10 @@
           resolve(res)
         }).then(res => {
           window.$toast.info(res.msg);
-          vm.$router.push('/admin/post/list');
+          // vm.$router.push('/admin/post/list');
         })
       },
+      //  提交修改上传图片
       eventEditorUpload: function (e) {
         let vm = this;
         console.log(e());
@@ -217,6 +217,7 @@
           vm.$refs.editorUploader.eventSelectFile();
           resolve(vm.$store.getters.getUploadFile);
         }).then((file) => {
+
             // console.info(vm);
             // editor.execCommand('mceInsertContent', false, '<img alt="Smiley face" height="42" width="42" src="' + r + '"/>');
             // console.info(file);
@@ -225,10 +226,6 @@
         ;
       }
       ,
-    }
-    ,
-    beforeDestory() {
-      this.loaded = false;
     }
   }
 

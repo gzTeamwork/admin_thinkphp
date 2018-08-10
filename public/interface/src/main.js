@@ -7,13 +7,18 @@ import App from './App'
 import router from './router'
 import store from './store'
 
+//  加载工具库
+import _ from 'underscore';
+
 //  加载muse ui
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css';
 import theme from 'muse-ui/lib/theme';
-import Toast from 'muse-ui-toast';
 import 'muse-ui-loading/dist/muse-ui-loading.css'; // load css
+import 'muse-ui-progress/dist/muse-ui-progress.css';
 import Loading from 'muse-ui-loading';
+import NProgress from 'muse-ui-progress';
+import Toast from 'muse-ui-toast';
 
 theme.use('dark');
 
@@ -36,11 +41,12 @@ window.$toast = Toast;
 Vue.use(Vuex);
 Vue.use(MuseUI);
 Vue.use(VueCookies);
+Vue.use(NProgress);
 Vue.use(Loading);
 
 // Vue.use(Uploader)
 Vue.prototype.$http = Axios;
-
+Vue.prototype.$_ = _;
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */

@@ -6,15 +6,16 @@ export default {
   /**
    * 获取栏目列表
    */
-  getCateList: function () {
+  getCateList: async function () {
     //  第一参数
-    httpAxios.get('do/api_cates_get', {
+    return await httpAxios.get('do/api_cates_get', {
       params: {}
     }).then(res => {
       if (res.code === 1) {
         window.$store.dispatch("getCateListSuccess", res.data);
       } else {
       }
+      return res.code === 1 ? res.data : [];
     })
   },
   //  增加栏目

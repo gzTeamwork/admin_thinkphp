@@ -12,8 +12,7 @@
         </com-admin-top-nav>
         <!--<section id="dashboardMain" class="full-width full-height" style="background:white;">-->
         <transition appear name="fade">
-          <router-view class="full-width" style="background: white;min-height:100vh;margin-top: 110px;"
-                       v-on:loaded="()=>{loading = false}">
+          <router-view class="full-width" style="background: white;min-height:100vh;margin-top: 110px;">
           </router-view>
         </transition>
         <!--</section>-->

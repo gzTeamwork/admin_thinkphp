@@ -48,8 +48,9 @@ trait mwApi
         header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
         header('Access-Control-Allow-Methods: GET, POST, PUT , DELETE');
+
         $apiDo = Request::route('do');
-//        var_dump($apiDo);
+
         try {
             if (is_null($apiDo) === false && method_exists($c, $apiDo) && Request::isAjax()) {
                 unset($datas['do']);
@@ -60,7 +61,6 @@ trait mwApi
         } catch (Exception $exception) {
             // @todo 以后需要添加错误页面
             return json(['msg' => $exception->getMessage(), 'code' => $exception->getCode()]);
-//            $c->error($exception->getMessage(), '', ['code' => $exception->getCode(), 'msg' => $exception->getMessage()]);
         }
     }
 

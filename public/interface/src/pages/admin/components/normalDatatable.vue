@@ -133,7 +133,7 @@
         this.dataList = this.dataList.sort((a, b) => order === 'asc' ? a[name] - b[name] : b[name] - a[name]);
       },
       handlerListChange(v) {
-        console.log(v);
+        // console.log(v);
       },
       eventPopNewDialog() {
         this.popNewData.show = true;

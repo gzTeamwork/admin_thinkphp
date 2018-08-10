@@ -13,7 +13,7 @@ export default {
     }).then(res => {
       console.log(res);
       if (res.code === 1) {
-        // window.$store.dispatch('getPostCurrentSuccess', res.data);
+        window.$store.dispatch('getPostCurrentSuccess', res.data);
         return res.data;
       } else {
         return false;
@@ -51,8 +51,7 @@ export default {
   },
   setPost: async function (form) {
     return await httpAxios.post('do/api_post_set', {...form}).then(res => {
-      console.info(res.msg);
-      return res.code === 1;
+      return res;
     })
   },
   setPostDel: async function (form) {
@@ -61,14 +60,15 @@ export default {
       return res.code;
     })
   },
-  getPostTemplates: function (form) {
-    httpAxios.get('do/api_post_templates_get', {params: form}).then(res => {
+  getPostTemplates: async function (form) {
+    return await httpAxios.get('do/api_post_templates_get', {params: form}).then(res => {
       if (res.code === 1) {
         Toast.success(res.msg)
         window.$store.dispatch('getPostTemplateListSuccess', res.data);
       } else {
         Toast.error(res.msg);
       }
+      return res.code === 1 ? res.data : [];
     })
   },
   setPostTemplate: function (form) {
