@@ -36,4 +36,10 @@ class PostModel extends Model
         return $this->hasOne('PostExtraModel', 'pid');
     }
 
+    //  文章模板
+    public function template()
+    {
+        return $this->belongsTo('PostTemplateModel', 'name', 'kind');
+    }
+
 }

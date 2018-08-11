@@ -34,7 +34,7 @@ const actions = {
    * @param payload
    */
   adminMenuInit: (context, payload) => {
-    console.log(payload);
+    // console.log(payload);
     state.adminMenu = payload;
   },
   /**

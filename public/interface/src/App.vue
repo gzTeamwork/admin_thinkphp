@@ -7,14 +7,37 @@
 <script>
   export default {
     name: 'App',
-    components: {}, methods: {
-    }, mounted() {
+    components: {}, methods: {}, mounted() {
     }
   }
 </script>
 
 <style lang="scss">
+  $orientations: ('bottom', 'top', 'left', 'right');
+  $colors: ('black':#2c3e50, 'white':#ffffff);
   #app {
+    @each $e in $colors {
+      $i: index($colors, $e);
+      .#{$i} {
+        background: #{$e};
+      }
+    }
+    .cms {
+      &-stick {
+        height: 64px;
+        & > .bar {
+          position: fixed;
+          height: 64px;
+          @extend .full-width;
+          @for $i from 1 through length($orientations) {
+            $item: nth($orientations, $i);
+            &.#{$item} {
+              #{$item}: 0;
+            }
+          }
+        }
+      }
+    }
     .gutter {
       padding: 1em;
       width: 100%;

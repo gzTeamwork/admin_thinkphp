@@ -36,21 +36,26 @@
 
           <!--内容-->
           <mu-form-item prop="input" icon="content" label="内容">
-            <com-vue-mce v-if="loading" id="postTinymce" v-model.sync="form.content" :other_options="tinymceInit"
+            <com-vue-mce v-if="!loading" id="postTinymce" v-model.sync="form.content" :other_options="tinymceInit"
                          class="full-width" ref="tinymceEditor"></com-vue-mce>
           </mu-form-item>
-          <mu-button v-if="$route.query.id" @click="eventPostPublishSubmit">
-            更新文章
-          </mu-button>
-          <mu-button v-else primary @click="eventPostPublishSubmit">
-            提交发布
-          </mu-button>
+
         </mu-form>
       </mu-flex>
       <mu-flex style="padding:2em">
         <com-post-extra v-if="form.extraList.length > 1" :extraList.sync="form.extraList">
         </com-post-extra>
       </mu-flex>
+    </mu-flex>
+    <mu-flex class="cms-stick">
+      <div class="bar bottom black">
+        <mu-button v-if="$route.query.id" @click="eventPostPublishSubmit">
+          更新文章
+        </mu-button>
+        <mu-button v-else primary @click="eventPostPublishSubmit">
+          提交发布
+        </mu-button>
+      </div>
     </mu-flex>
 
   </section>
@@ -127,8 +132,9 @@
         if (id !== false) {
           // 修改模式
           let post = postApi.getPost({id: id});
-          next(post);
         }
+        next();
+
       }).then(post => {
         vm.loading = false
       })
@@ -217,7 +223,6 @@
           vm.$refs.editorUploader.eventSelectFile();
           resolve(vm.$store.getters.getUploadFile);
         }).then((file) => {
-
             // console.info(vm);
             // editor.execCommand('mceInsertContent', false, '<img alt="Smiley face" height="42" width="42" src="' + r + '"/>');
             // console.info(file);
@@ -225,7 +230,6 @@
         )
         ;
       }
-      ,
     }
   }
 

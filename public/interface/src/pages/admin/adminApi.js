@@ -64,12 +64,12 @@ export default {
    * 获取后台菜单
    */
   async getAdminDashboardMenu() {
-    httpAxios.get('do/api_admin_menu', {
+    return await httpAxios.get('do/api_admin_menu', {
       params: {
         uid: window.$store.getters.adminUid || null
       }
     }).then(response => {
-      console.log(response);
+      // console.log(response);
       if (response.code === 1) {
         window.$store.dispatch('adminMenuInit', response.data);
       }

@@ -71,17 +71,45 @@ trait PostApiHandler
      * @param $datas
      * @return array|\PDOStatement|string|\think\Collection
      */
-    public function api_posts_get($datas)
+    public function api_posts_get($datas, $needReturn = false)
     {
         try {
             $postModel = (new PostModel());
+
+            $postQueryDatas = $postModel->fieldsFilter($postModel->getTableFields(), $datas);
+            $pageDatas = QueryPageFacade::getQueryPage($datas);
+
+            $result = $postModel->where($postQueryDatas)->page($pageDatas['page'], $pageDatas['perPage'])->select();
+
+            $result = $postModel->getResult($result);
+            if ($needReturn) {
+                return $result;
+            } else {
+                $this->success('成功获取文章列表', '', $result);
+            }
+        } catch (Exception $exception) {
+            $this->error($exception->getMessage());
+        }
+    }
+
+    /**
+     * 简单列表
+     * @param $datas
+     */
+    public function api_posts_get_no_detail($datas)
+    {
+        try {
+            $postModel = (new PostModel());
+
             $postQueryDatas = $postModel->fieldsFilter($postModel->getTableFields(), $datas);
             $pageDatas = QueryPageFacade::getQueryPage($datas);
             $result = $postModel->where($postQueryDatas)->page($pageDatas['page'], $pageDatas['perPage'])->select();
-            $result = $postModel->getResult($result);
-            $this->success('成功获取文章列表', '', $result);
+
+            $successMsg = '成功获取文章列表';
+            $this->success($successMsg, '', $result);
         } catch (Exception $exception) {
-            $this->error($exception->getMessage());
+            $errorMsg = '';
+            $this->error($errorMsg ?? $exception->getMessage(), '', ['msg' => $exception->getMessage()]);
         }
     }
 
@@ -259,9 +287,9 @@ trait PostApiHandler
     }
 
     /**
-     * post template - 文章模板api
+     * 文章模板api
+     * post template
      */
-
     public function api_post_templates_get()
     {
         try {
@@ -273,6 +301,10 @@ trait PostApiHandler
         }
     }
 
+    /**
+     * 保存文章模板
+     * @param $datas
+     */
     public function api_post_template_set($datas)
     {
         try {
