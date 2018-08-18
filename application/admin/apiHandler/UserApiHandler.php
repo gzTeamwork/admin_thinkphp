@@ -19,7 +19,7 @@ trait UserApiHandler
     public function testUser()
     {
         $user = mwUser::createVisitor();
-        var_dump($user);
+//        var_dump($user);
     }
 
     /**

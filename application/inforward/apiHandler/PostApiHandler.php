@@ -10,6 +10,7 @@ namespace app\inforward\apiHandler;
 
 use app\admin\apiHandler\PostApiHandler as AdminPostAPi;
 use think\Collection;
+use think\Exception;
 
 trait PostApiHandler
 {
@@ -31,8 +32,16 @@ trait PostApiHandler
      */
     public function api_posts_get_office($datas)
     {
-        $datas['kind'] = 'office_unit';
-        return $this->api_posts_get_detail_list($datas);
+
+        try {
+            $datas['kind'] = 'office_unit';
+            $result = $this->api_posts_get_detail_list($datas, true);
+            $successMsg = '';
+            $this->success($successMsg, '', $result);
+        } catch (Exception $exception) {
+            $errorMsg = '';
+            $this->error($errorMsg ?? $exception->getMessage(), '', ['msg' => $exception->getMessage()]);
+        }
     }
 
     /**

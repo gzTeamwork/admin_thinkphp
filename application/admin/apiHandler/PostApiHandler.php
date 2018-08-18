@@ -61,6 +61,7 @@ trait PostApiHandler
             $postTemplateData = array_values(array_merge($postTemplateFormat, $postTemplateData));
             $result[0]['post_extra'] = $postTemplateData;
             $this->success('成功获取当前文章', '', $result[0]);
+
         } catch (Exception $exception) {
             $this->error($exception->getMessage());
         }
@@ -129,6 +130,7 @@ trait PostApiHandler
     /**
      * @param $datas
      * @todo 重构写字楼单元内容数据结构,增加对应的建筑物和建筑物楼层设置
+     * @return array|\PDOStatement|string|\think\Collection
      */
     public function api_posts_get_detail_list($datas, $needReturn = false)
     {
@@ -144,7 +146,7 @@ trait PostApiHandler
 
             //  是否使用复合查询模型
             if (isset($postExtraQueryDatas['floor'])) {
-                $postModel = PostModel::hasWhere('postExtra', ['name' => 'floor', 'value' => $datas['floor']]);
+                $postModel = PostModel::hasWhere('postExtra', ['name' => 'floor', 'value' => $datas['floor']])->where($postQueryDatas);
             } else {
                 $postModel = (new PostModel())->with('postExtra')->where($postQueryDatas);
             }
@@ -164,6 +166,7 @@ trait PostApiHandler
 
                 //  文章附加数据处理
                 foreach ($post['post_extra'] as $kkey => $extra) {
+
                     //  数据输出过滤
                     if (array_key_exists($extra['name'], $postExtraQueryDatas) && $extra['value'] != $postExtraQueryDatas[$extra['name']]) {
                         unset($result[$key]);

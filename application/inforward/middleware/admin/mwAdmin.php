@@ -8,8 +8,6 @@
  */
 trait mwAdmin
 {
-
-
     public function isAdmin()
     {
 

@@ -11,7 +11,7 @@
  Target Server Version : 80011
  File Encoding         : 65001
 
- Date: 09/08/2018 09:23:12
+ Date: 23/08/2018 16:54:20
 */
 
 SET NAMES utf8mb4;
@@ -55,7 +55,7 @@ CREATE TABLE `categorys` (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `pid` int(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT NULL,
   `sort` int(11) DEFAULT NULL,
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `is_active` tinyblob,
@@ -179,7 +179,7 @@ CREATE TABLE `orders` (
   `user_token` text COLLATE utf8mb4_unicode_ci,
   `order_kind` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of orders
@@ -191,6 +191,7 @@ INSERT INTO `orders` VALUES (3, 'visit', '2018-08-08 15:46:24', 'b b', '12', 'cc
 INSERT INTO `orders` VALUES (4, 'teamwork', '2018-08-08 16:10:31', 'nn', 'tf', 'cc', '{\"id\":58,\"bookmode\":\"teamwork\",\"name\":\"nn\",\"tel\":\"tf\",\"companyname\":\"cc\"}', 0, '2018-08-08 16:10:31', NULL, 'unit_booking');
 INSERT INTO `orders` VALUES (5, 'visit', '2018-08-08 21:37:49', '23', '123', '123', '{\"bookmode\":\"visit\",\"name\":\"23\",\"tel\":\"123\",\"companyname\":\"123\"}', 0, '2018-08-08 21:37:49', NULL, 'unit_booking');
 INSERT INTO `orders` VALUES (6, 'visit', '2018-08-08 21:54:13', '', '', '', '{\"id\":27,\"bookmode\":\"visit\",\"name\":\"\",\"tel\":\"\",\"companyname\":\"\"}', 0, '2018-08-08 21:54:13', NULL, 'unit_booking');
+INSERT INTO `orders` VALUES (7, 'visit', '2018-08-09 09:26:05', '123', '213', '4', '{\"id\":27,\"bookmode\":\"visit\",\"name\":\"123\",\"tel\":\"213\",\"companyname\":\"4\"}', 0, '2018-08-09 09:26:05', NULL, 'unit_booking');
 COMMIT;
 
 -- ----------------------------
@@ -303,7 +304,6 @@ INSERT INTO `posts` VALUES (82, '9楼测试单元', '', NULL, 43, '2018-08-01 18
 INSERT INTO `posts` VALUES (83, '9楼测试单元', '', NULL, 43, '2018-08-01 18:13:22', '2018-08-01 18:13:22', NULL, 'office_unit', NULL);
 INSERT INTO `posts` VALUES (84, '9楼测试单元', '', NULL, 43, '2018-08-01 18:13:22', '2018-08-01 18:13:22', NULL, 'office_unit', NULL);
 INSERT INTO `posts` VALUES (85, '9楼测试单元', '', NULL, 43, '2018-08-01 18:13:23', '2018-08-01 18:13:23', NULL, 'office_unit', NULL);
-INSERT INTO `posts` VALUES (86, '9楼测试单元', '', NULL, 43, '2018-08-01 18:13:24', '2018-08-01 18:13:24', NULL, 'office_unit', NULL);
 INSERT INTO `posts` VALUES (87, '9楼测试单元', '', NULL, 43, '2018-08-01 18:13:25', '2018-08-01 18:13:25', NULL, 'office_unit', NULL);
 INSERT INTO `posts` VALUES (88, '9楼测试单元', '', NULL, 43, '2018-08-01 18:13:25', '2018-08-01 18:13:25', NULL, 'office_unit', NULL);
 INSERT INTO `posts` VALUES (89, '9楼测试单元', '', NULL, 43, '2018-08-01 18:13:26', '2018-08-01 18:13:26', NULL, 'office_unit', NULL);
@@ -1421,21 +1421,6 @@ INSERT INTO `posts_extra` VALUES (1101, 85, 'floor', '9', NULL, NULL, '楼层', 
 INSERT INTO `posts_extra` VALUES (1102, 85, 'unit_number', '', NULL, NULL, '单元号', 'string');
 INSERT INTO `posts_extra` VALUES (1103, 85, 'unit_order_price', '', NULL, NULL, '接盘租金', 'string');
 INSERT INTO `posts_extra` VALUES (1104, 85, 'unit_house_type', '', NULL, NULL, '户型', 'string');
-INSERT INTO `posts_extra` VALUES (1105, 86, 'price', '', NULL, NULL, '单元租金', 'number');
-INSERT INTO `posts_extra` VALUES (1106, 86, 'area', '', NULL, NULL, '面积', 'number');
-INSERT INTO `posts_extra` VALUES (1107, 86, 'is_sold', '', NULL, NULL, '是否已售', 'boolean');
-INSERT INTO `posts_extra` VALUES (1108, 86, 'sold_time', '', NULL, NULL, '接盘时间', 'datetime');
-INSERT INTO `posts_extra` VALUES (1109, 86, 'tags', '', NULL, NULL, '标签', 'array');
-INSERT INTO `posts_extra` VALUES (1110, 86, 'province', '', NULL, NULL, '省份', 'address');
-INSERT INTO `posts_extra` VALUES (1111, 86, 'city', '', NULL, NULL, '城市', 'address');
-INSERT INTO `posts_extra` VALUES (1112, 86, 'region', '', NULL, NULL, '镇区', 'address');
-INSERT INTO `posts_extra` VALUES (1113, 86, 'address', '', NULL, NULL, '详细地址', 'address');
-INSERT INTO `posts_extra` VALUES (1114, 86, 'discount', '', NULL, NULL, '接盘折扣', 'number');
-INSERT INTO `posts_extra` VALUES (1115, 86, 'titleEn', '', NULL, NULL, '标题英文', 'string');
-INSERT INTO `posts_extra` VALUES (1116, 86, 'floor', '9', NULL, NULL, '楼层', 'string');
-INSERT INTO `posts_extra` VALUES (1117, 86, 'unit_number', '', NULL, NULL, '单元号', 'string');
-INSERT INTO `posts_extra` VALUES (1118, 86, 'unit_order_price', '', NULL, NULL, '接盘租金', 'string');
-INSERT INTO `posts_extra` VALUES (1119, 86, 'unit_house_type', '', NULL, NULL, '户型', 'string');
 INSERT INTO `posts_extra` VALUES (1120, 87, 'price', '', NULL, NULL, '单元租金', 'number');
 INSERT INTO `posts_extra` VALUES (1121, 87, 'area', '', NULL, NULL, '面积', 'number');
 INSERT INTO `posts_extra` VALUES (1122, 87, 'is_sold', '', NULL, NULL, '是否已售', 'boolean');
@@ -1991,7 +1976,7 @@ CREATE TABLE `posts_template` (
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `describe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT NULL,
   `is_active` tinyblob,
   `thumb` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `author` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -2006,7 +1991,7 @@ CREATE TABLE `posts_template` (
 BEGIN;
 INSERT INTO `posts_template` VALUES (10, '新的啦', 'ojbk', NULL, '2018-07-26 12:42:14', '2018-07-26 12:46:48', '', NULL, 'system', 0, '[{\"title\":\"12312\",\"name\":\"444\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u57ce\\u5e02\",\"name\":\"area\",\"value\":\"\",\"type\":\"number\"}]');
 INSERT INTO `posts_template` VALUES (11, '写字楼单元', 'office_unit', NULL, '2018-07-26 14:06:24', '2018-07-31 14:58:42', '', NULL, 'system', 0, '[{\"title\":\"\\u5355\\u5143\\u79df\\u91d1\",\"name\":\"price\",\"value\":\"\",\"type\":\"number\"},{\"title\":\"\\u9762\\u79ef\",\"name\":\"area\",\"value\":\"\",\"type\":\"number\"},{\"title\":\"\\u662f\\u5426\\u5df2\\u552e\",\"name\":\"is_sold\",\"value\":\"\",\"type\":\"boolean\"},{\"title\":\"\\u63a5\\u76d8\\u65f6\\u95f4\",\"name\":\"sold_time\",\"value\":\"\",\"type\":\"datetime\"},{\"title\":\"\\u6807\\u7b7e\",\"name\":\"tags\",\"value\":\"\",\"type\":\"array\"},{\"title\":\"\\u7701\\u4efd\",\"name\":\"province\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u57ce\\u5e02\",\"name\":\"city\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u9547\\u533a\",\"name\":\"region\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u8be6\\u7ec6\\u5730\\u5740\",\"name\":\"address\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u63a5\\u76d8\\u6298\\u6263\",\"name\":\"discount\",\"value\":\"\",\"type\":\"number\"},{\"title\":\"\\u6807\\u9898\\u82f1\\u6587\",\"name\":\"titleEn\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u697c\\u5c42\",\"name\":\"floor\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u5355\\u5143\\u53f7\",\"name\":\"unit_number\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u63a5\\u76d8\\u79df\\u91d1\",\"name\":\"unit_order_price\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u6237\\u578b\",\"name\":\"unit_house_type\",\"value\":\"\",\"type\":\"string\"}]');
-INSERT INTO `posts_template` VALUES (12, '寓+公寓', 'yu_apartment', NULL, '2018-07-31 09:49:31', '2018-08-08 21:38:12', '', NULL, 'system', 0, '[{\"title\":\"\\u7269\\u4e1a\\u4f4d\\u7f6e\",\"name\":\"unit_position\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u5355\\u5143\\u53f7\",\"name\":\"unit_number\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u6237\\u578b\",\"name\":\"unit_house_type\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u79df\\u8d41\\u9762\\u79ef\",\"name\":\"unit_house_area\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u6708\\u79df\\u91d1\\u989d\",\"name\":\"unit_rent_price\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u4f4f\\u5b85\\u7ba1\\u7406\\u8d39\",\"name\":\"unit_mr_fee\",\"value\":\"\",\"type\":\"number\"},{\"title\":\"\\u4f4f\\u5b85\\u7535\\u8d39\",\"name\":\"unit_ele_fee\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u4f4f\\u5b85\\u6c34\\u8d39\",\"name\":\"unit_water_fee\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u79df\\u8d41\\u65b9\\u5f0f\",\"name\":\"unit_rent_type\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u63a5\\u76d8\\u79df\\u91d1\",\"name\":\"unit_order_price\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u63a5\\u76d8\\u9884\\u7ea6\\u65f6\\u95f4\",\"name\":\"unit_order_date\",\"value\":\"\",\"type\":\"datetime\"},{\"title\":\"\\u63a5\\u76d8\\u6298\\u6263\",\"name\":\"unit_order_discount\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u7701\\u4efd\",\"name\":\"province\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u57ce\\u5e02\",\"name\":\"city\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u9547\\u533a\",\"name\":\"region\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u5546\\u5708\",\"name\":\"zone\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u5730\\u5740\",\"name\":\"address\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u4ea4\\u901a\",\"name\":\"unit_traffic\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u6807\\u7b7e\",\"name\":\"tags\",\"value\":\"\",\"type\":\"array\"},{\"title\":\"\\u697c\\u5c42\",\"name\":\"floor\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u5df2\\u79df\",\"name\":\"is_sold\",\"value\":\"\",\"type\":\"boolean\"}]');
+INSERT INTO `posts_template` VALUES (12, '寓+公寓', 'yu_apartment', NULL, '2018-07-31 09:49:31', '2018-08-09 09:32:21', '', NULL, 'system', 0, '[{\"title\":\"\\u6237\\u578b(\\u4e09\\u623f\\u4e24\\u5385,\\u4e24\\u623f\\u4e24\\u5385,\\u4e00\\u623f\\u4e00\\u5385,\\u6574\\u79df,\\u5408\\u79df)\",\"name\":\"unit_house_type\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u7269\\u4e1a\\u4f4d\\u7f6e\",\"name\":\"unit_position\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u5355\\u5143\\u53f7\",\"name\":\"unit_number\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u79df\\u8d41\\u9762\\u79ef\",\"name\":\"unit_house_area\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u6708\\u79df\\u91d1\\u989d\",\"name\":\"unit_rent_price\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u4f4f\\u5b85\\u7ba1\\u7406\\u8d39\",\"name\":\"unit_mr_fee\",\"value\":\"\",\"type\":\"number\"},{\"title\":\"\\u4f4f\\u5b85\\u7535\\u8d39\",\"name\":\"unit_ele_fee\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u4f4f\\u5b85\\u6c34\\u8d39\",\"name\":\"unit_water_fee\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u79df\\u8d41\\u65b9\\u5f0f\",\"name\":\"unit_rent_type\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u63a5\\u76d8\\u79df\\u91d1\",\"name\":\"unit_order_price\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u63a5\\u76d8\\u9884\\u7ea6\\u65f6\\u95f4\",\"name\":\"unit_order_date\",\"value\":\"\",\"type\":\"datetime\"},{\"title\":\"\\u63a5\\u76d8\\u6298\\u6263\",\"name\":\"unit_order_discount\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u7701\\u4efd\",\"name\":\"province\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u57ce\\u5e02\",\"name\":\"city\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u9547\\u533a\",\"name\":\"region\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u5546\\u5708\",\"name\":\"zone\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u5730\\u5740\",\"name\":\"address\",\"value\":\"\",\"type\":\"address\"},{\"title\":\"\\u4ea4\\u901a\",\"name\":\"unit_traffic\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u6807\\u7b7e\",\"name\":\"tags\",\"value\":\"\",\"type\":\"array\"},{\"title\":\"\\u697c\\u5c42\",\"name\":\"floor\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u5df2\\u79df\",\"name\":\"is_sold\",\"value\":\"\",\"type\":\"boolean\"}]');
 INSERT INTO `posts_template` VALUES (13, '招聘模板', 'recruit', NULL, '2018-08-06 10:24:26', '2018-08-08 16:50:23', '', NULL, 'system', 0, '[{\"title\":\"\\u804c\\u4f4d\",\"name\":\"position\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u804c\\u7ea7\",\"name\":\"rank\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u90e8\\u95e8\",\"name\":\"department\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u57ce\\u5e02\",\"name\":\"city\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u7ecf\\u9a8c\",\"name\":\"experience\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u5b66\\u5386\",\"name\":\"education\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u85aa\\u916c\",\"name\":\"compensation\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u62db\\u8058\\u516c\\u53f8\",\"name\":\"company\",\"value\":\"\",\"type\":\"string\"}]');
 INSERT INTO `posts_template` VALUES (14, '代理招聘模板', 'recruit_agency', NULL, '2018-08-08 18:15:51', '2018-08-08 18:16:06', NULL, NULL, 'system', NULL, '[{\"title\":\"\\u804c\\u4f4d\",\"name\":\"position\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u804c\\u7ea7\",\"name\":\"rank\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u90e8\\u95e8\",\"name\":\"department\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u57ce\\u5e02\",\"name\":\"city\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u7ecf\\u9a8c\",\"name\":\"experience\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u5b66\\u5386\",\"name\":\"education\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u85aa\\u916c\",\"name\":\"compensation\",\"value\":\"\",\"type\":\"string\"},{\"title\":\"\\u62db\\u8058\\u516c\\u53f8\",\"name\":\"company\",\"value\":\"\",\"type\":\"string\"}]');
 COMMIT;
@@ -2194,7 +2179,7 @@ CREATE TABLE `user_session` (
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of user_session
@@ -2202,6 +2187,7 @@ CREATE TABLE `user_session` (
 BEGIN;
 INSERT INTO `user_session` VALUES (1, '7423aba0cf47126a225ac984c8aecfa3', 'NzQyM2FiYTBjZjQ3MTI2YTIyNWFjOTg0YzhhZWNmYTM=', '387c95b1bfd48aa69ffd0ef7d43b0b95', '2018-08-08 16:42:13', '2018-08-08 16:42:13');
 INSERT INTO `user_session` VALUES (2, '4ef240dcc09e17f18226f339507533d7', 'NGVmMjQwZGNjMDllMTdmMTgyMjZmMzM5NTA3NTMzZDc=', 'c5e6a5fe544398b57347b0abc01a27c4', '2018-08-09 09:18:28', '2018-08-09 09:18:28');
+INSERT INTO `user_session` VALUES (3, 'db7cd83ea712e534fc13098341ccd791', 'ZGI3Y2Q4M2VhNzEyZTUzNGZjMTMwOTgzNDFjY2Q3OTE=', '36b9ec74627710ba8d85cb448f7407a4', '2018-08-23 11:10:02', '2018-08-23 11:10:02');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
