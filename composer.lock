@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7c11db4bbb7c3a6fc7dfb1a3c0a56694",
+    "content-hash": "cb8dfa6d223a3f87bbae3687ae16aba3",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -16,7 +16,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/Bacon/BaconQrCode/eaac909da3ccc32b748a65b127acd8918f58d9b0.zip",
+                "url": "https://api.github.com/repos/Bacon/BaconQrCode/zipball/eaac909da3ccc32b748a65b127acd8918f58d9b0",
                 "reference": "eaac909da3ccc32b748a65b127acd8918f58d9b0",
                 "shasum": ""
             },
@@ -65,7 +65,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/DASPRiD/Enum/631ef6e638e9494b0310837fa531bedd908fc22b.zip",
+                "url": "https://api.github.com/repos/DASPRiD/Enum/zipball/631ef6e638e9494b0310837fa531bedd908fc22b",
                 "reference": "631ef6e638e9494b0310837fa531bedd908fc22b",
                 "shasum": ""
             },
@@ -107,7 +107,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/doctrine/annotations/c7f2050c68a9ab0bdb0f98567ec08d80ea7d24d5.zip",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/c7f2050c68a9ab0bdb0f98567ec08d80ea7d24d5",
                 "reference": "c7f2050c68a9ab0bdb0f98567ec08d80ea7d24d5",
                 "shasum": ""
             },
@@ -175,7 +175,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/doctrine/lexer/83893c552fd2045dd78aef794c31e694c37c0b8c.zip",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/83893c552fd2045dd78aef794c31e694c37c0b8c",
                 "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c",
                 "shasum": ""
             },
@@ -229,7 +229,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/symfony/finder/84714b8417d19e4ba02ea78a41a975b3efaafddb.zip",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/84714b8417d19e4ba02ea78a41a975b3efaafddb",
                 "reference": "84714b8417d19e4ba02ea78a41a975b3efaafddb",
                 "shasum": ""
             },
@@ -274,12 +274,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/framework.git",
-                "reference": "97d15c09a1a06d399246de01334436e68691c6ea"
+                "reference": "833fcaf0f29f23bdceaae655f64d10c18b9bf562"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/framework/97d15c09a1a06d399246de01334436e68691c6ea.zip",
-                "reference": "97d15c09a1a06d399246de01334436e68691c6ea",
+                "url": "https://api.github.com/repos/top-think/framework/zipball/833fcaf0f29f23bdceaae655f64d10c18b9bf562",
+                "reference": "833fcaf0f29f23bdceaae655f64d10c18b9bf562",
                 "shasum": ""
             },
             "require": {
@@ -317,7 +317,7 @@
                 "orm",
                 "thinkphp"
             ],
-            "time": "2018-06-29T14:48:15+00:00"
+            "time": "2018-07-02T05:29:17+00:00"
         },
         {
             "name": "topthink/think-installer",
@@ -329,7 +329,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/top-think/think-installer/f5400a12c60e513911aef41fe443fa6920952675.zip",
+                "url": "https://api.github.com/repos/top-think/think-installer/zipball/f5400a12c60e513911aef41fe443fa6920952675",
                 "reference": "f5400a12c60e513911aef41fe443fa6920952675",
                 "shasum": ""
             },
@@ -361,6 +361,99 @@
             "time": "2018-05-11T06:45:42+00:00"
         },
         {
+            "name": "topthink/think-worker",
+            "version": "v2.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/think-worker.git",
+                "reference": "eff93014ccf612a9995580929e1a852e2d93abe9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/top-think/think-worker/zipball/eff93014ccf612a9995580929e1a852e2d93abe9",
+                "reference": "eff93014ccf612a9995580929e1a852e2d93abe9",
+                "shasum": ""
+            },
+            "require": {
+                "topthink/framework": "5.1.*",
+                "topthink/think-installer": "^2.0",
+                "workerman/workerman": "^3.3.0"
+            },
+            "type": "think-extend",
+            "extra": {
+                "think-config": {
+                    "worker": "src/config.php",
+                    "worker_server": "src/worker_config.php"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "think\\worker\\": "src"
+                },
+                "files": [
+                    "src/command.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu21st",
+                    "email": "liu21st@gmail.com"
+                }
+            ],
+            "description": "workerman extend for thinkphp5.1",
+            "time": "2018-07-09T07:19:31+00:00"
+        },
+        {
+            "name": "workerman/workerman",
+            "version": "v3.5.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/walkor/Workerman.git",
+                "reference": "cf2538169af989fbba4d55be1bfc8c8d80fa71e9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/walkor/Workerman/zipball/cf2538169af989fbba4d55be1bfc8c8d80fa71e9",
+                "reference": "cf2538169af989fbba4d55be1bfc8c8d80fa71e9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "suggest": {
+                "ext-event": "For better performance. "
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Workerman\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "walkor",
+                    "email": "walkor@workerman.net",
+                    "homepage": "http://www.workerman.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An asynchronous event driven PHP framework for easily building fast, scalable network applications.",
+            "homepage": "http://www.workerman.net",
+            "keywords": [
+                "asynchronous",
+                "event-loop"
+            ],
+            "time": "2018-07-16T02:11:10+00:00"
+        },
+        {
             "name": "zircote/swagger-php",
             "version": "2.0.13",
             "source": {
@@ -370,7 +463,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://files.phpcomposer.com/files/zircote/swagger-php/8b42fdc3d8c5a5e0d1f8d344aa359822c9f085e0.zip",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/8b42fdc3d8c5a5e0d1f8d344aa359822c9f085e0",
                 "reference": "8b42fdc3d8c5a5e0d1f8d344aa359822c9f085e0",
                 "shasum": ""
             },
