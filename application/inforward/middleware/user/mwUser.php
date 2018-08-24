@@ -17,7 +17,7 @@ use think\Exception;
 /**
  * 用户缓存中间件
  * Trait mwUser
- * @package app\inforward\middleware\user
+ * @package app\inforward\logic\user
  */
 trait mwUser
 {

@@ -8,10 +8,9 @@
 
 namespace app\inforward\controller;
 
-use app\inforward\controller\apiHandler\PostApiHandler;
-use app\inforward\middleware\base\mwApi;
+use app\admin\middleware\mwApi;
+use app\inforward\apiHandler\PostApiHandler;
 use think\Controller;
-use think\Exception;
 use think\facade\Request;
 
 class Post extends Controller

@@ -8,6 +8,7 @@
 
 namespace app\inforward\middleware;
 
+use app\inforward\middleware\base\mwModelBase;
 use app\inforward\model\MealMenu as MealMenuModel;
 use think\Exception;
 use think\facade\Log;

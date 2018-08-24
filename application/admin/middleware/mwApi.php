@@ -6,7 +6,7 @@
  * Time: 下午2:35
  */
 
-namespace app\inforward\middleware\base;
+namespace app\admin\middleware;
 
 use think\Controller;
 use think\Exception;

@@ -7,7 +7,7 @@
  */
 namespace app\admin\middleware;
 
-class mwTranslate
+class translate
 {
     public $utf8_gb2312;
     public $utf8_big5;

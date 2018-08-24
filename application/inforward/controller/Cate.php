@@ -8,8 +8,8 @@
 
 namespace app\inforward\controller;
 
-use app\inforward\controller\apiHandler\CateApiHandler;
-use app\inforward\middleware\base\mwApi;
+use app\admin\apiHandler\CateApiHandler;
+use app\admin\middleware\mwApi;
 use think\Controller;
 use think\facade\Request;
 

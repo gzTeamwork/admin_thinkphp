@@ -11,6 +11,11 @@ namespace app\admin\model;
 use app\inforward\middleware\base\mwModelBase;
 use think\Model;
 
+/**
+ * Class configurationModel
+ * @package app\admin\model
+ * @deprecated 本模型类已弃用,改为AdvancedModel.php
+ */
 class configurationModel extends Model
 {
 

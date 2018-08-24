@@ -6,7 +6,7 @@
  * Time: 下午3:41
  */
 
-namespace app\inforward\apiHandler;
+namespace app\admin\apiHandler;
 
 use app\inforward\model\user\userSessionModel;
 use think\Exception;

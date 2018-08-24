@@ -10,6 +10,10 @@ namespace app\inforward\controller;
 
 use think\Controller;
 
+/**
+ * Class Test
+ * @package app\inforward\controller
+ */
 class Test extends Controller
 {
     /**

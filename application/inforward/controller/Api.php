@@ -497,6 +497,10 @@ class Api extends Controller
     }
 
     //  获取7天内员工报餐记录
+
+    /**
+     * @return \think\response\Json
+     */
     public function get_user_daily_meal_in_week()
     {
         header("Access-Control-Allow-Origin:*");
@@ -508,6 +512,13 @@ class Api extends Controller
     }
 
     //  获取明天报餐汇总
+
+    /**
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function get_tomorrow_daily_meals()
     {
         header("Access-Control-Allow-Origin:*");

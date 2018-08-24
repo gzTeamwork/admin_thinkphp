@@ -10,7 +10,6 @@ namespace app\admin\apiHandler;
 
 use app\admin\facade\QueryPageFacade;
 use app\admin\facade\TranslateFacade;
-use app\admin\middleware\mwQueryPage;
 use app\inforward\model\post\PostExtraModel;
 use app\inforward\model\post\PostModel;
 use app\inforward\model\post\PostTemplateModel;
@@ -147,9 +146,12 @@ trait PostApiHandler
             //  是否使用复合查询模型
             if (isset($postExtraQueryDatas['floor'])) {
                 $postModel = PostModel::hasWhere('postExtra', ['name' => 'floor', 'value' => $datas['floor']])->where($postQueryDatas);
+            } elseif (isset($postExtraQueryDatas['unit_house_type'])) {
+                $postModel = PostModel::hasWhere('postExtra', ['name' => 'unit_house_type', 'value' => $datas['unit_house_type']])->where($postQueryDatas);
             } else {
                 $postModel = (new PostModel())->with('postExtra')->where($postQueryDatas);
             }
+
 
             //  执行查询
             $result = $postModel->page($pageDatas['page'], $pageDatas['perPage'])->select();
@@ -167,11 +169,11 @@ trait PostApiHandler
                 //  文章附加数据处理
                 foreach ($post['post_extra'] as $kkey => $extra) {
 
-                    //  数据输出过滤
-                    if (array_key_exists($extra['name'], $postExtraQueryDatas) && $extra['value'] != $postExtraQueryDatas[$extra['name']]) {
-                        unset($result[$key]);
-                        break;
-                    }
+//                    //  数据输出过滤
+//                    if (array_key_exists($extra['name'], $postExtraQueryDatas) && $extra['value'] != $postExtraQueryDatas[$extra['name']]) {
+//                        unset($result[$key]);
+//                        break;
+//                    }
                     //  数据类型转换
                     $value = $needTrans ? TranslateFacade::c2t($extra['value']) : $extra['value'];
                     switch ($extra['type']) {

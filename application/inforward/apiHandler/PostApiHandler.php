@@ -32,7 +32,6 @@ trait PostApiHandler
      */
     public function api_posts_get_office($datas)
     {
-
         try {
             $datas['kind'] = 'office_unit';
             $result = $this->api_posts_get_detail_list($datas, true);
@@ -106,17 +105,17 @@ trait PostApiHandler
 
         foreach ($posts as $key => $item) {
 
-            if (isset($item['is_sold']) && false === $item['is_sold']) {
-            } else {
-                unset($posts[$key]);
-            }
+//            if (isset($item['is_sold']) && false === $item['is_sold']) {
+//            } else {
+//                unset($posts[$key]);
+//            }
             //  过滤对应户型
-            if (isset($datas['unit_house_type']) && isset($item['unit_house_type'])) {
-                if ($item['unit_house_type'] != $datas['unit_house_type']
-                ) {
-                    unset($posts[$key]);
-                }
-            }
+//            if (isset($datas['unit_house_type']) && isset($item['unit_house_type'])) {
+//                if ($item['unit_house_type'] != $datas['unit_house_type']
+//                ) {
+//                    unset($posts[$key]);
+//                }
+//            }
         }
 
         $this->success('获取没有出租的公寓详情数据成功', '', $posts);
