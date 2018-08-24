@@ -12,7 +12,7 @@ namespace app\inforward\middleware\base;
 /**
  * 数据库模型获取器
  * Trait mwModelGetters
- * @package app\inforward\middleware\base
+ * @package app\inforward\logic\base
  */
 trait mwModelGetters
 {

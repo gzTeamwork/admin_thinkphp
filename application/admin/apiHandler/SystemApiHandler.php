@@ -11,6 +11,11 @@ namespace app\admin\apiHandler;
 use app\admin\model\configurationModel;
 use think\Exception;
 
+/**
+ * Trait SystemApiHandler
+ * @package app\admin\apiHandler
+ * @deprecated 本接口已改为AdvancedApiHandler
+ */
 trait SystemApiHandler
 {
 

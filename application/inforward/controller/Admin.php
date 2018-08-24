@@ -20,6 +20,11 @@ use app\inforward\apiHandler\PostApiHandler;
 use think\App;
 use think\Controller;
 
+/**
+ * Class Admin
+ * @package app\inforward\controller
+ * @todo 本类大部分功能已弃用,由于采用数据分离开发模式后,本类功能已经抽离到admin/adminApiHandler中,仅存api方法用于调用对应的apiHandler方法
+ */
 class Admin extends Controller
 {
     use mwControllerBase;

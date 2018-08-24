@@ -2,6 +2,10 @@
 
 namespace \app\inforward\logic;
 
+/**
+ * Class WebsiteLogic
+ * @deprecated 本类已弃用
+ */
 class WebsiteLogic{
 
     /**
