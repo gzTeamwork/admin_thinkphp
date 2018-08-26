@@ -22,12 +22,9 @@ class mwDashboard
      * @param array $where
      * @return array
      */
-    public static function getMenus(array $where = [])
+    public static function adminMenus(array $where = [])
     {
         try {
-
-            $
-
             $menuModel = new menuModel();
             $where = $menuModel->fieldsNeed(['is_active' => 1, 'is_show' => 1], $where);
             $res = $menuModel->where($where)->select();
@@ -43,7 +40,7 @@ class mwDashboard
      * @param array $where
      * @return array
      */
-    public static function getMenusTree(array $where = [])
+    public static function adminMenusTree(array $where = [])
     {
         $menus = self::getMenus($where);
         $menus = mwHelper::hTree($menus);
