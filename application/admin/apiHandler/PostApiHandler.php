@@ -21,11 +21,23 @@ trait PostApiHandler
     /**
      * 获取文章
      * @throws Exception
+     * showdoc
+     * @catalog 文章接口/通用文章接口
+     * @title 通过id获取单个文章
+     * @description 用于单篇文章内容,不包含文章模板数据
+     * @method get
+     * @url [hostname]/inforward/admin/api/do/api_post_get
+     * @param id 必选 int 查询文章的id
+     * @return {}
+     * @return_param data array 文章内容
+     * @number 99
      */
+
     public function api_post_get($datas)
     {
         try {
             $postModel = new PostModel();
+
             if (isset($datas['id'])) {
                 throw new Exception("没有获取到正确的参数");
             }

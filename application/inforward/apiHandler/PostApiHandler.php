@@ -143,6 +143,7 @@ trait PostApiHandler
         }
 
         $this->success('成功获取盈富永泰招聘岗位信息', '', $posts);
+
     }
 
     /**
