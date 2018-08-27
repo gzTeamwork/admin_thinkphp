@@ -28,7 +28,7 @@ trait PostApiHandler
      * @method get
      * @url [hostname]/inforward/admin/api/do/api_post_get
      * @param id 必选 int 查询文章的id
-     * @return {}
+     * @return ""
      * @return_param data array 文章内容
      * @number 99
      */
@@ -52,6 +52,16 @@ trait PostApiHandler
 
     /**
      * @param $datas
+     * showdoc
+     * @catalog 文章接口/通用文章接口
+     * @title 通过id获取单个文章详情
+     * @description 用于单篇文章内容,包含文章模板数据
+     * @method get
+     * @url [hostname]/inforward/admin/api/do/api_post_get_detail
+     * @param id 可选 string 文章id
+     * @return ""
+     * @return_param post array 对应id文章内容
+     * @number 99
      */
     public function api_post_get_detail($datas)
     {
@@ -82,6 +92,17 @@ trait PostApiHandler
      * 获取多个文章
      * @param $datas
      * @return array|\PDOStatement|string|\think\Collection
+     * showdoc
+     * @catalog 文章接口/通用文章接口
+     * @title 获取多个文章
+     * @description 用于获取多个文章,不包含文章模板数据
+     * @method get
+     * @url [hostname]/inforward/admin/api/do/api_posts_get
+     * @param page 可选 string 分页页数
+     * @param perPage 可选 string 分页每页项目数
+     * @return ""
+     * @return_param data array 文章列表
+     * @number 99
      */
     public function api_posts_get($datas, $needReturn = false)
     {
@@ -107,6 +128,17 @@ trait PostApiHandler
     /**
      * 简单列表
      * @param $datas
+     * showdoc
+     * @catalog 文章接口/通用文章接口
+     * @title 获取多个文章列表
+     * @description 获取多个文章列表,不包含文章模板数据
+     * @method get
+     * @url [hostname]/inforward/admin/api/do/api_posts_get_no_detail
+     * @param page 可选 string 分页页数
+     * @param perPage 可选 string 分页每页项目数
+     * @return ""
+     * @return_param data array 文章列表
+     * @number 99
      */
     public function api_posts_get_no_detail($datas)
     {
@@ -125,6 +157,20 @@ trait PostApiHandler
         }
     }
 
+    /**
+     * @param $datas
+     * showdoc
+     * @catalog 文章接口/通用文章接口
+     * @title 获取多个文章详情列表
+     * @description 获取多个文章详情列表,包含文章模板数据
+     * @method get
+     * @url [hostname]/inforward/admin/api/do/api_posts_get_detail
+     * @param page 可选 string 分页页数
+     * @param perPage 可选 string 分页每页项目数
+     * @return ""
+     * @return_param data array 文章列表
+     * @number 99
+     */
     public function api_posts_get_detail($datas)
     {
         try {

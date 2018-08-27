@@ -76,7 +76,7 @@ trait TokenApiHandler
      * 验证token
      * @param $params
      * showdoc
-     * @catalog 用户接口/用户令牌验证
+     * @catalog 用户接口/用户令牌
      * @title 用户令牌验证
      * @description 用于验证用户令牌
      * @method get
