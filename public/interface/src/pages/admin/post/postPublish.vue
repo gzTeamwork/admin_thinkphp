@@ -39,7 +39,14 @@
             <com-vue-mce v-if="!loading" id="postTinymce" v-model.sync="form.content" :other_options="tinymceInit"
                          class="full-width" ref="tinymceEditor"></com-vue-mce>
           </mu-form-item>
-
+          <div class="bar bottom black">
+            <mu-button v-if="$route.query.id" @click="eventPostPublishSubmit">
+              更新文章
+            </mu-button>
+            <mu-button v-else primary @click="eventPostPublishSubmit">
+              提交发布
+            </mu-button>
+          </div>
         </mu-form>
       </mu-flex>
       <mu-flex style="padding:2em">
@@ -47,17 +54,6 @@
         </com-post-extra>
       </mu-flex>
     </mu-flex>
-    <mu-flex class="cms-stick">
-      <div class="bar bottom black">
-        <mu-button v-if="$route.query.id" @click="eventPostPublishSubmit">
-          更新文章
-        </mu-button>
-        <mu-button v-else primary @click="eventPostPublishSubmit">
-          提交发布
-        </mu-button>
-      </div>
-    </mu-flex>
-
   </section>
 </template>
 
@@ -183,8 +179,13 @@
         this.filterable.cateSearch = v;
       }
       ,
-      //  切换文章类别 - 切换附加数据的模板
+      /**
+       * 切换文章类型
+       * @param v
+       * @param exlist
+       */
       eventPostKindChange: function (v, exlist) {
+
         this.form.kind = v
         this.postKinds.map((e, i) => {
           if (e.name === v) {
