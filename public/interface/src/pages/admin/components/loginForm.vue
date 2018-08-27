@@ -65,6 +65,16 @@
           account: '',
           password: '',
           isAutoLogin: true,
+        },
+        formRules: {
+          account: [
+            {validate: (val) => !!val, message: '必须填写管理账户'},
+            {validate: (val) => val.length >= 5, message: '管理账户长度大于5'},
+          ],
+          password:[
+            {validate: (val) => !!val, message: '必须填写管理账户密码'},
+            {validate: (val) => val.length >= 6, message: '账户密码长度大于6'},
+          ]
         }
       }
     },
@@ -73,7 +83,7 @@
       adminLoginSub: function (event) {
         return adminApi.adminLoginSub(this.form);
       },
-      adminLoginSubLight:function (event) {
+      adminLoginSubLight: function (event) {
         return adminApi.adminLoginSubLight(this.adminUser);
       }
     },
